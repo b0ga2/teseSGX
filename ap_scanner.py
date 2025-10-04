@@ -1,12 +1,16 @@
 import subprocess  # Used to run external commands (like nmcli)
 import sys         # Used to access system-specific parameters and functions (like stderr for errors)
+import pandas as pd
+from datetime import datetime
+import os
+
 
 def find_all_aps():
 
     print("Searching for Access Points (APs)...")
 
     try:
-        # Use NetworkManager to perform a new scan
+        # Use NetworkManager to perform a new scan, to garantee the most recent APs
         # This command ensures the list of networks is up-to-date.
         subprocess.run(
             ['nmcli', 'device', 'wifi', 'rescan'], 
@@ -37,6 +41,7 @@ def find_all_aps():
             fields = network_line.split(':')
             
             # A basic check to ensure the line has at least the 4 fields we requested
+            # TODO: Adicionar a verificação do SSID para eduroam
             if len(fields) >= 4:
 
                 # The last field is the channel number
@@ -71,8 +76,6 @@ def find_all_aps():
                 all_aps.append(ap_info)
 
         return all_aps
-
-    # --- Error Handling ---
     except FileNotFoundError:
         # This error occurs if the 'nmcli' command itself is not found
         print("Error: 'nmcli' command not found. Please ensure NetworkManager is installed.", file=sys.stderr)
@@ -88,29 +91,123 @@ def find_all_aps():
         print("Error: The network scan took too long to respond.", file=sys.stderr)
         return None
 
+def get_room_and_position():
+    print("\n=== Room and Position Information ===")
+    
+    # Get room name
+    room = input("Enter room name: ").strip()
+    while not room:
+        print("Room name cannot be empty!")
+        room = input("Enter room name: ").strip()
+    
+    # Get position
+    print("\nAvailable positions:")
+    print("1. Center")
+    print("2. Top Left")
+    print("3. Top Right")
+    print("4. Bottom Left")
+    print("5. Bottom Right")
+    
+    position_choice = input("Select position (1-5): ").strip()
+    position_map = {
+        '1': 'Center',
+        '2': 'Top Left',
+        '3': 'Top Right',
+        '4': 'Bottom Left',
+        '5': 'Bottom Right'
+    }
+    
+    while position_choice not in position_map:
+        print("Invalid choice! Please select 1-5.")
+        position_choice = input("Select position (1-5): ").strip()
+    
+    return room, position_map[position_choice]
+
+def save_to_excel(aps, room, position, filename="wifi_scan_results.xlsx"):
+    """Save APs data to Excel file with room and position information"""
+    
+    if not aps:
+        print("No data to save!")
+        return False
+    
+    try:
+        # Add room and position information to each AP entry
+        for ap in aps:
+            ap['ROOM'] = room
+            ap['POSITION'] = position
+            ap['TIMESTAMP'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Sort the data
+        aps.sort(key=lambda x: (x['BAND'], -int(x['SIGNAL'])))
+        
+        # Create DataFrame
+        df = pd.DataFrame(aps)
+        
+        # Reorder columns for better readability
+        column_order = ['TIMESTAMP', 'ROOM', 'POSITION', 'SSID', 'BSSID', 'SIGNAL', 'CHANNEL', 'BAND']
+        df = df[column_order]
+        
+        # Check if file already exists
+        if os.path.exists(filename):
+            # Load existing data and append new data
+            existing_df = pd.read_excel(filename)
+            combined_df = pd.concat([existing_df, df], ignore_index=True)
+        else:
+            # Create new file
+            combined_df = df
+        
+        # Save to Excel
+        combined_df.to_excel(filename, index=False)
+        
+        print(f"\nData successfully saved to {filename}")
+        print(f"Room: {room}")
+        print(f"Position: {position}")
+        print(f"Total APs found: {len(aps)}")
+        print(f"Total records in file: {len(combined_df)}")
+        
+        return True
+        
+    except Exception as e:
+        print(f"Error saving to Excel: {e}", file=sys.stderr)
+        return False
+    
+def display_current_data(aps, room, position):
+    if not aps:
+        print("\nNo Access Points found.")
+        return
+    
+    print(f"\n=== Scan Results - Room: {room}, Position: {position} ===")
+    print(f"Found {len(aps)} Access Points:\n")
+    
+    # Print a formatted table header
+    print(f"{'SSID':<25} {'BSSID':<20} {'SIGNAL (%)':<10} {'CHANNEL':<7} {'BAND':<10}")
+    print("-" * 80)
+    
+    # Loop through the sorted list and print the details of each AP
+    for ap in aps:
+        print(f"{ap['SSID']:<25} {ap['BSSID']:<20} {ap['SIGNAL']:<10} {ap['CHANNEL']:<7} {ap['BAND']:<10}")
 
 def main():
+    # Get room and position information
+    room, position = get_room_and_position()
+    
+    # Scan for APs
     aps = find_all_aps()
-
-    # Check if the function executed successfully (did not return None)
+    
     if aps is not None:
+        # Display results
+        display_current_data(aps, room, position)
+        
+        save_choice = input("\nSave results to Excel? (y/n): ").strip().lower()
+        
+        if save_choice in ['y', 'yes']:
 
-        # Check if the list of APs is not empty
-        if aps:
-            # Sorts first by Band ("2.4 GHz" then "5 GHz") and then by Signal strength (highest to lowest)
-            aps.sort(key=lambda x: (x['BAND'], -int(x['SIGNAL'])))
+            filename = "wifi_scan_results.xlsx"
 
-            print(f"\nFound {len(aps)} Access Points:\n")
-            
-            # Print a formatted table header
-            print(f"{'SSID':<25} {'BSSID':<20} {'SIGNAL (%)':<10} {'CHANNEL':<7} {'BAND':<10}")
-            print("-" * 80)
-            
-            # Loop through the sorted list and print the details of each AP
-            for ap in aps:
-                print(f"{ap['SSID']:<25} {ap['BSSID']:<20} {ap['SIGNAL']:<10} {ap['CHANNEL']:<7} {ap['BAND']:<10}")
+            # Save to Excel
+            save_to_excel(aps, room, position, filename)
         else:
-            # This message is shown if the scan was successful but found no networks
-            print("\nNo Access Points found.")
+            print("Results not saved.")
+
 if __name__ == "__main__":
     main()
