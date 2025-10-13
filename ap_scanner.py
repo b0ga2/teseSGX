@@ -12,6 +12,7 @@ def find_all_aps():
     try:
         # Use NetworkManager to perform a new scan, to garantee the most recent APs
         # This command ensures the list of networks is up-to-date.
+        # Its necessary to have the Wifi turned on
         subprocess.run(
             ['nmcli', 'device', 'wifi', 'rescan'], 
             check=True,          # If the command returns an error, it will raise an exception
@@ -45,6 +46,7 @@ def find_all_aps():
             if len(fields) >= 4:
 
                 # The last field is the channel number
+                
                 channel_str = fields[-1]
                 
                 # Determine the frequency band based on the channel number
