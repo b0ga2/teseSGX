@@ -1,0 +1,31 @@
+Google Scholar query:
+
+WiFi-based presence detection OR occupancy detection in indoor environments
+- https://www.sciencedirect.com/science/article/abs/pii/S0360132321003401
+- https://ieeexplore.ieee.org/abstract/document/9266493
+- https://www.sciencedirect.com/science/article/abs/pii/S0360132319300794
+- https://dro.deakin.edu.au/articles/journal_contribution/Effectiveness_of_using_WiFi_technologies_to_detect_and_predict_building_occupancy/20790145/1/files/37042060.pdf
+
+
+WiFi data student attendance monitoring university campus
+- https://ieeexplore.ieee.org/abstract/document/9750047
+- https://ieeexplore.ieee.org/abstract/document/8638098
+- https://ieeexplore.ieee.org/abstract/document/7814796
+- https://ieeexplore.ieee.org/abstract/document/8913341
+- https://dl.acm.org/doi/abs/10.1145/2971648.2971657
+
+
+WiFi access point data indoor localization classroom attendance
+- https://ieeexplore.ieee.org/abstract/document/11030449
+- https://arxiv.org/abs/2311.09815
+- https://ualberta.scholaris.ca/items/9225340b-7e4d-4081-befa-36337a75ff2f
+- https://dl.acm.org/doi/full/10.1145/3704522.3704523
+- https://dspacemainprd01.lib.uwaterloo.ca/server/api/core/bitstreams/46f84f5c-e32b-40af-9034-06633c91da3d/content
+- https://peer.asee.org/a-tool-for-checking-attendance-of-students-in-classroom-automatically
+- https://ieeexplore.ieee.org/abstract/document/8938387
+- https://www.mdpi.com/2306-5729/2/4/32
+
+
+indoor localization system using Wifi
+- https://ieeexplore.ieee.org/abstract/document/6288374
+- https://www.sciencedirect.com/science/article/abs/pii/S0167739X19324835
