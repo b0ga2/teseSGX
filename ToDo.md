@@ -1,5 +1,5 @@
 ## Tasks
-### First Tasks (2025-07-25 by André Zuquete)
+### First Task (2025-07-25 by André Zuquete)
 Podes começar por fazer um programa que corra num portátil e que detete todos os APs eduroam nas redondezas.
 O objetivo depois é levantar todos os APs que consegues apanhar em cada sala do DETI.
 Deverás entrar na sala, deixar a porta aberta, e depois colocares o teu portátil em cada lugar sentado.
@@ -12,3 +12,7 @@ Uma vez feito o estudo das salas, é possível depois verificar se um dado aluno
   - https://superuser.com/questions/267170/see-available-wireless-access-points-in-the-terminal
   - https://askubuntu.com/questions/75625/how-do-i-scan-for-wireless-access-points
   - https://github.com/kootenpv/access_points 
+
+
+### Second Task (2025-07-25 by André Zuquete)
+No Google Scholar começar a reunir artigos para o estado da arte
