@@ -96,7 +96,7 @@ def find_all_aps():
                 ap_info = {
                     'SSID': fields[0],                            # The name of the network
                     'BSSID': ':'.join(fields[1:-2]),              # The hardware address of the AP
-                    'SIGNAL': fields[-2],                         # The signal strength (0-100)
+                    'SIGNAL': fields[-2],                 # The signal strength (0-100)
                     'CHANNEL': channel_str,                       # The channel number
                     'BAND': band,                                 # The calculated frequency band
                     'SIGNAL VALUE': signal
@@ -154,8 +154,6 @@ def get_room_and_position():
     return room, position_map[position_choice]
 
 def save_to_excel(aps, room, position, filename="wifi_scan_results.xlsx"):
-    """Save APs data to Excel file with room and position information"""
-    
     if not aps:
         print("No data to save!")
         return False
@@ -174,7 +172,8 @@ def save_to_excel(aps, room, position, filename="wifi_scan_results.xlsx"):
         df = pd.DataFrame(aps)
         
         # Reorder columns for better readability
-        column_order = ['TIMESTAMP', 'ROOM', 'POSITION', 'SSID', 'BSSID', 'SIGNAL', 'CHANNEL', 'BAND']
+        #column_order = ['TIMESTAMP', 'ROOM', 'POSITION', 'SSID', 'BSSID', 'SIGNAL', 'CHANNEL', 'BAND']
+        column_order = ['TIMESTAMP', 'ROOM', 'POSITION', 'SSID', 'BSSID', 'SIGNAL', 'SIGNAL VALUE' , 'CHANNEL', 'BAND']
         df = df[column_order]
         
         # Check if file already exists
@@ -210,12 +209,12 @@ def display_current_data(aps, room, position):
     print(f"Found {len(aps)} Access Points:\n")
     
     # Print a formatted table header
-    print(f"{'SSID':<25} {'BSSID':<20} {'SIGNAL (%)':<10} {'CHANNEL':<7} {'BAND':<10}")
+    print(f"{'SSID':<25} {'BSSID':<20} {'SIGNAL (%)':<10} {'SIGNAL VALUE':<15} {'CHANNEL':<7} {'BAND':<10}")
     print("-" * 80)
     
     # Loop through the sorted list and print the details of each AP
     for ap in aps:
-        print(f"{ap['SSID']:<25} {ap['BSSID']:<20} {ap['SIGNAL']:<10} {ap['CHANNEL']:<7} {ap['BAND']:<10}")
+        print(f"{ap['SSID']:<25} {ap['BSSID']:<20} {ap['SIGNAL']:<10} {ap['SIGNAL VALUE']:<15} {ap['CHANNEL']:<7} {ap['BAND']:<10}")
 
 def main():
     # Get room and position information
