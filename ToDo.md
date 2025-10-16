@@ -16,3 +16,4 @@ Uma vez feito o estudo das salas, é possível depois verificar se um dado aluno
 
 ### Second Task (2025-07-25 by André Zuquete)
 No Google Scholar começar a reunir artigos para o estado da arte
+Os encontrados estão no ficheiro listSOA.txt juntamente com as queries no google Scholar
