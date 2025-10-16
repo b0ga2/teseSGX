@@ -75,10 +75,14 @@ def find_all_aps():
                     # Ref: https://en.wikipedia.org/wiki/List_of_WLAN_channels
 
                     # Wi-Fi channels 1-14 are in the 2.4 GHz band. Higher channels are 5 GHz.
-                    if channel_num <= 14:
+                    if 1 <= channel_num <= 14:
                         band = "2.4 GHz"
-                    else:
+                    elif 36 <= channel_num <= 165:
                         band = "5 GHz"
+                    elif 1 <= channel_num <= 233 and channel_num > 165:
+                        band = "6 GHz"
+                    else:
+                        band = "Unknown"
                 except ValueError:
                     # If the channel is not a valid number, mark it as unknown
                     band = "Unknown"
