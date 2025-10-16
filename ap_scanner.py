@@ -30,20 +30,38 @@ def find_all_aps():
             text=True
         )
 
-        # Process the output from the command
+        # This command is used to obtain the signal field (example: signal: -74 dBm)
+        # TODO: How to integrate this in this script?
+        processSignal = subprocess.run(['iw', 'dev','wlp4s0', 'link'],
+                                       check = True,
+                                       capture_output= True,
+                                       text=True)
+        
+
+
+        # Process the output from the first command
         output = process.stdout                     # Get the raw string output from the command
         found_aps = output.strip().split('\n')      # Clean whitespace and split the string into a list, where each item is a network
 
+        # Process the output from the second command
+        outputSignal = processSignal.stdout
+        signalAP = outputSignal.replace("\t","").strip().split('\n')
+
+        signalSSID = signalAP[0].replace("Connected to ","").replace(":","\\:").upper()
+        signalSSID = signalSSID[:23].strip()
+
+        signalValue = signalAP[5].replace("signal: ","")
+        
+
         all_aps = []
 
-        # Loop through each line of network data returned by nmcli
+        # Loop through each line of network data returned by nmcliW
         for network_line in found_aps:
             # The 'terse' format separates fields with a colon ':'
             fields = network_line.split(':')
             
             # A basic check to ensure the line has at least the 4 fields we requested
-            # TODO: Adicionar a verificação do SSID para eduroam
-            if len(fields) >= 4:
+            if len(fields) >= 4 and fields[0] == 'eduroam':
 
                 # The last field is the channel number
                 
@@ -64,14 +82,24 @@ def find_all_aps():
                 except ValueError:
                     # If the channel is not a valid number, mark it as unknown
                     band = "Unknown"
-                
+                             
+                bbsid = fields[1:-2]
+                bssid_string = ":".join(bbsid)
+                signal = ""
+
+                if bssid_string == signalSSID:
+                    signal = signalValue
+                else:
+                    signal = "-"
+
                 # Create a dictionary to hold the structured data for the current AP
                 ap_info = {
                     'SSID': fields[0],                            # The name of the network
                     'BSSID': ':'.join(fields[1:-2]),              # The hardware address of the AP
                     'SIGNAL': fields[-2],                         # The signal strength (0-100)
                     'CHANNEL': channel_str,                       # The channel number
-                    'BAND': band                                  # The calculated frequency band
+                    'BAND': band,                                 # The calculated frequency band
+                    'SIGNAL VALUE': signal
                 }
 
                 # Add the dictionary for this AP to our main list
