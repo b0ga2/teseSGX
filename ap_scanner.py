@@ -3,9 +3,82 @@ import sys         # Used to access system-specific parameters and functions (li
 import pandas as pd
 from datetime import datetime
 import os
+import re
 
+def parse_iw_scan(interface='wlp4s0'):
 
-def find_all_aps():
+    try:
+        # We use 'sudo' to ensure proper permissions
+        # capture_output=True to capture the stdout
+        # text=True to decode the output as text (UTF-8)
+        # check=True to raise an error if the command fails
+        result = subprocess.run(
+            ['sudo', 'iw', 'dev', interface, 'scan'],
+            capture_output=True,
+            text=True,
+            check=True,
+            encoding='utf-8'
+        )
+        stdout = result.stdout
+    except FileNotFoundError:
+        print(f"Erro: Comando 'iw' ou 'sudo' não encontrado.")
+        print("Por favor, instale o 'iw' (package 'iw') e 'sudo'.")
+        return []
+    except subprocess.CalledProcessError as e:
+        print(f"Erro ao executar 'iw scan' na interface {interface}:")
+        print(e.stderr)
+        print("\nCertifique-se que a interface está correta e que tem permissões (sudo).")
+        return []
+
+    all_aps_info = []
+    
+    # The output of 'iw' lists multiple APs.
+    # Each one starts with "BSS ". We use this to split the text.
+    # We ignore the first element (split[0]) which comes before the first "BSS ".
+    ap_chunks = stdout.split('BSS ')[1:]
+
+    if not ap_chunks:
+        print(f"Nenhum AP encontrado na interface {interface}.")
+        return []
+
+    for chunk in ap_chunks:
+        ap_info = {}
+
+        # 1. BSS (MAC Address)
+        # The BSS is the first thing in the chunk.
+        bss_match = re.match(r'([\da-fA-F:]{17})', chunk)
+        if not bss_match:
+            continue  # Chunk inválido
+        ap_info['BSSID'] = bss_match.group(1)
+
+        # 2. Freq
+        freq_match = re.search(r'freq: ([\d\.]+)', chunk)
+        if freq_match:
+            ap_info['FREQ'] = float(freq_match.group(1))
+
+        # 3. Signal
+        signal_match = re.search(r'signal: ([\-\d\.]+) dBm', chunk)
+        if signal_match:
+            ap_info['SIGNAL'] = float(signal_match.group(1))
+
+        # 4. SSID
+        ssid_match = re.search(r'SSID: (.*)', chunk)
+        if ssid_match:
+            ssid = ssid_match.group(1).strip()
+            # Handles hidden SSIDs that appear as \x00
+            if r'\x00' in ssid:
+                ap_info['SSID'] = '[SSID Oculto]'
+            else:
+                ap_info['SSID'] = ssid
+        else:
+            ap_info['SSID'] = '[Sem SSID]'
+
+        if ap_info['SSID'] == "eduroam":
+            all_aps_info.append(ap_info)
+
+    return all_aps_info
+
+def find_all_aps_with_nmcli():
 
     print("Searching for Access Points (APs)...")
 
@@ -159,7 +232,7 @@ def get_room_and_position():
 
 def save_to_excel(aps, room, position, filename):
     if not aps:
-        print("No data to save!")
+        print("No data to save :(")
         return False
 
     try:
@@ -169,15 +242,11 @@ def save_to_excel(aps, room, position, filename):
             ap['POSITION'] = position
             ap['TIMESTAMP'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
-        # Sort the data
-        aps.sort(key=lambda x: (x['BAND'], -int(x['SIGNAL'])))
-        
         # Create DataFrame
         df = pd.DataFrame(aps)
         
-        # Reorder columns for better readability
-        #column_order = ['TIMESTAMP', 'ROOM', 'POSITION', 'SSID', 'BSSID', 'SIGNAL', 'CHANNEL', 'BAND']
-        column_order = ['TIMESTAMP', 'ROOM', 'POSITION', 'SSID', 'BSSID', 'SIGNAL', 'SIGNAL VALUE' , 'CHANNEL', 'BAND']
+        # TODO: Reorder columns for better readability
+        column_order = ['TIMESTAMP', 'ROOM', 'POSITION', 'SSID', 'BSSID','SIGNAL' , 'FREQ']
         df = df[column_order]
         
         # Check if file already exists
@@ -213,25 +282,23 @@ def display_current_data(aps, room, position):
     print(f"Found {len(aps)} Access Points:\n")
     
     # Print a formatted table header
-    print(f"{'SSID':<25} {'BSSID':<20} {'SIGNAL (%)':<10} {'SIGNAL VALUE':<15} {'CHANNEL':<7} {'BAND':<10}")
+    print(f"{'SSID':<25} {'BSSID':<20} {'SIGNAL':<10} {'FREQ':<10}")
     print("-" * 80)
     
     # Loop through the sorted list and print the details of each AP
     for ap in aps:
-        print(f"{ap['SSID']:<25} {ap['BSSID']:<20} {ap['SIGNAL']:<10} {ap['SIGNAL VALUE']:<15} {ap['CHANNEL']:<7} {ap['BAND']:<10}")
+        print(f"{ap['SSID']:<25} {ap['BSSID']:<20} {ap['SIGNAL']:<10} {ap['FREQ']:<10}")
 
 def main():
 
+    INTERFACE_WIRELESS = "wlp4s0"
     position = ""
     while position != "Bottom Right":
         # Get room and position information
         room, position = get_room_and_position()
-        
-        print(type(position))
-        print(position)
 
         # Scan for APs
-        aps = find_all_aps()
+        aps = parse_iw_scan(INTERFACE_WIRELESS)
         
         if aps is not None:
             # Display results
@@ -246,7 +313,6 @@ def main():
                 # Save to Excel
                 save_to_excel(aps, room, position, filename)
             else:
-                print("Results not saved.")
-
+                print("Results not saved.")  
 if __name__ == "__main__":
     main()
