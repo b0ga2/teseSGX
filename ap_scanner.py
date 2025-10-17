@@ -31,7 +31,6 @@ def find_all_aps():
         )
 
         # This command is used to obtain the signal field (example: signal: -74 dBm)
-        # TODO: How to integrate this in this script?
         processSignal = subprocess.run(['iw', 'dev','wlp4s0', 'link'],
                                        check = True,
                                        capture_output= True,
@@ -52,7 +51,7 @@ def find_all_aps():
 
         signalValue = signalAP[5].replace("signal: ","")
         
-
+        # Create an empty list to store the entries
         all_aps = []
 
         # Loop through each line of network data returned by nmcliW
@@ -63,8 +62,7 @@ def find_all_aps():
             # A basic check to ensure the line has at least the 4 fields we requested
             if len(fields) >= 4 and fields[0] == 'eduroam':
 
-                # The last field is the channel number
-                
+                # The last field is the channel number   
                 channel_str = fields[-1]
                 
                 # Determine the frequency band based on the channel number
@@ -74,7 +72,7 @@ def find_all_aps():
                     
                     # Ref: https://en.wikipedia.org/wiki/List_of_WLAN_channels
 
-                    # Wi-Fi channels 1-14 are in the 2.4 GHz band. Higher channels are 5 GHz.
+                    # Wi-Fi channels 1-14 are in the 2.4 GHz band. Higher channels are 5 GHz and 6 GHz.
                     if 1 <= channel_num <= 14:
                         band = "2.4 GHz"
                     elif 36 <= channel_num <= 165:
@@ -126,13 +124,15 @@ def find_all_aps():
         return None
 
 def get_room_and_position():
+
+    if len(sys.argv) < 2:
+        print("Room wasnt passed as a argument")
+        exit(1)
+
     print("\n=== Room and Position Information ===")
     
     # Get room name
-    room = input("Enter room name: ").strip()
-    while not room:
-        print("Room name cannot be empty!")
-        room = input("Enter room name: ").strip()
+    room = sys.argv[1]
     
     # Get position
     print("\nAvailable positions:")
@@ -141,7 +141,7 @@ def get_room_and_position():
     print("3. Top Right")
     print("4. Bottom Left")
     print("5. Bottom Right")
-    
+
     position_choice = input("Select position (1-5): ").strip()
     position_map = {
         '1': 'Center',
@@ -157,11 +157,11 @@ def get_room_and_position():
     
     return room, position_map[position_choice]
 
-def save_to_excel(aps, room, position, filename="wifi_scan_results.xlsx"):
+def save_to_excel(aps, room, position, filename):
     if not aps:
         print("No data to save!")
         return False
-    
+
     try:
         # Add room and position information to each AP entry
         for ap in aps:
@@ -221,26 +221,32 @@ def display_current_data(aps, room, position):
         print(f"{ap['SSID']:<25} {ap['BSSID']:<20} {ap['SIGNAL']:<10} {ap['SIGNAL VALUE']:<15} {ap['CHANNEL']:<7} {ap['BAND']:<10}")
 
 def main():
-    # Get room and position information
-    room, position = get_room_and_position()
-    
-    # Scan for APs
-    aps = find_all_aps()
-    
-    if aps is not None:
-        # Display results
-        display_current_data(aps, room, position)
-        
-        save_choice = input("\nSave results to Excel? (y/n): ").strip().lower()
-        
-        if save_choice in ['y', 'yes']:
 
-            filename = "wifi_scan_results.xlsx"
+    position = ""
+    while position != "Bottom Right":
+        # Get room and position information
+        room, position = get_room_and_position()
+        
+        print(type(position))
+        print(position)
 
-            # Save to Excel
-            save_to_excel(aps, room, position, filename)
-        else:
-            print("Results not saved.")
+        # Scan for APs
+        aps = find_all_aps()
+        
+        if aps is not None:
+            # Display results
+            display_current_data(aps, room, position)
+            
+            save_choice = input("\nSave results to Excel? (y/n): ").strip().lower()
+            
+            if save_choice in ['y', 'yes']:
+
+                filename = "Rooms/wifi_scan_results_"+room+".xlsx"
+
+                # Save to Excel
+                save_to_excel(aps, room, position, filename)
+            else:
+                print("Results not saved.")
 
 if __name__ == "__main__":
     main()
