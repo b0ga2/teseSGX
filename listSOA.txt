@@ -8,6 +8,7 @@ WiFi-based presence detection OR occupancy detection in indoor environments
 
 indoor location cisco catalyst
 - https://crackedlabs.org/dl/CrackedLabs_Christl_IndoorTracking.pdf
+- https://ieeexplore.ieee.org/abstract/document/9569340
 
 
 WiFi data student attendance monitoring university campus
