@@ -33,3 +33,9 @@ WiFi access point data indoor localization classroom attendance
 indoor localization system using Wifi
 - https://ieeexplore.ieee.org/abstract/document/6288374
 - https://www.sciencedirect.com/science/article/abs/pii/S0167739X19324835
+
+
+indoor location using Wifi data treatment using SGX
+- https://dl.acm.org/doi/full/10.1145/3512892
+- https://dl.acm.org/doi/abs/10.1145/3144730.3144739
+- https://ieeexplore.ieee.org/abstract/document/9490363
