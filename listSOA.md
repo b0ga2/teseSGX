@@ -2,9 +2,13 @@ Google Scholar query:
 
 WiFi-based presence detection OR occupancy detection in indoor environments
 - https://www.sciencedirect.com/science/article/abs/pii/S0360132321003401
-
+  - Method : using Wi-Fi connection data as a proxy to understand building occupancy in an academic setting.
+  - Goal : Energy efficiency
+  - The article addresses privacy by avoiding the collection of sensitive data. It explicitly states: "Privacy concerns are limited in this data collection approach since it only relies on the aggregated device counts (i.e., no personally identifying information is being collected or used)".
+  - The article uses K-means clustering and Poisson regression as its main analysis methods.
 
 - https://ieeexplore.ieee.org/abstract/document/9266493
+  - 
 - https://www.sciencedirect.com/science/article/abs/pii/S0360132319300794
 - https://dro.deakin.edu.au/articles/journal_contribution/Effectiveness_of_using_WiFi_technologies_to_detect_and_predict_building_occupancy/20790145/1/files/37042060.pdf
 
