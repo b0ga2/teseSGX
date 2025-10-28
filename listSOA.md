@@ -8,9 +8,22 @@ WiFi-based presence detection OR occupancy detection in indoor environments
   - The article uses K-means clustering and Poisson regression as its main analysis methods.
 
 - https://ieeexplore.ieee.org/abstract/document/9266493
-  - 
+  - Method: Using Passive Wi-Fi Radar (PWR) to analyze disturbances in existing Wi-Fi signals. It processes signal reflections into Doppler spectrograms to detect human motion.
+  - Goal: Occupancy detection and people counting
+  - Privacy: The article states this Wi-Fi sensing approach can "preserve the privacy of individuals" and avoids the "privacy issues" associated with camera-based systems. The method is device-free and analyzes anonymous signal patterns rather than personal device data
+  - The article uses Cross Ambiguity Function (CAF) processing , a CLEAN algorithm to remove signal interference , and a Convolutional Neural Network (CNN) for classification.
+
 - https://www.sciencedirect.com/science/article/abs/pii/S0360132319300794
+  - Method: Using device-based Wi-Fi data (MAC address and RSS) to solve the problem of discontinuous communication caused by smartphone battery-saving modes. It maintains a list of "inside" devices (an "inside MAC list") which is only updated when an "entering" or "exiting" event is detected.
+  - Goal: To enable demand-driven control of HVAC and lighting systems for energy saving.
+  - Privacy: The article notes that camera-based methods suffer from "privacy intrusiveness". It acknowledges that the MAC address data it uses is sensitive and "should be protected to preserve privacy," suggesting that "dynamic MAC masks or data encryption should be used"
+  - Analysis Methods: The system uses two filters: a non-human MAC address filter (based on heuristics like appearance frequency and stable RSS) and a location filter (based on a calibrated RSS threshold to distinguish "inside" from "outside" devices). The core algorithm is an event-triggered updating method that modifies an "inside MAC list" based on detected "entering" and "exiting" events
+
 - https://dro.deakin.edu.au/articles/journal_contribution/Effectiveness_of_using_WiFi_technologies_to_detect_and_predict_building_occupancy/20790145/1/files/37042060.pdf
+  - Method: Using the hourly count of Wi-Fi connections from existing university Access Points (APs) as a direct proxy for the number of occupants in a classroom. The study simultaneously collected manual occupancy counts and CO2​ sensor data to compare their effectiveness.
+  - Goal: To demonstrate that Wi-Fi connection counts are a more accurate and lower-cost indicator of building occupancy than CO2​ sensors, with the end goal of enabling demand-controlled HVAC systems for energy savings.
+  - Privacy: The article explicitly acknowledges privacy concerns with Wi-Fi tracking, noting that methods like triangulation "raise privacy concerns since it requires identifying each device and its associated MAC address". In this study, "Specific MAC addresses were not provided due to security and privacy concerns", meaning the analysis was performed on pre-aggregated counts provided by the IT department.
+  - Analysis Methods: The study uses Pearson's product-moment correlation to prove the strong, positive relationship between Wi-Fi counts and the actual number of occupants. It also uses Linear Regression and Multiple Regression to model and predict the occupant count based on the Wi-Fi data.
 
 indoor location cisco catalyst
 - https://crackedlabs.org/dl/CrackedLabs_Christl_IndoorTracking.pdf
