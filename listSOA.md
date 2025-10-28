@@ -2,6 +2,8 @@ Google Scholar query:
 
 WiFi-based presence detection OR occupancy detection in indoor environments
 - https://www.sciencedirect.com/science/article/abs/pii/S0360132321003401
+
+
 - https://ieeexplore.ieee.org/abstract/document/9266493
 - https://www.sciencedirect.com/science/article/abs/pii/S0360132319300794
 - https://dro.deakin.edu.au/articles/journal_contribution/Effectiveness_of_using_WiFi_technologies_to_detect_and_predict_building_occupancy/20790145/1/files/37042060.pdf
