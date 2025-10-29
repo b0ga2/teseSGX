@@ -27,8 +27,10 @@ WiFi-based presence detection OR occupancy detection in indoor environments
 
 indoor location cisco catalyst
 - https://crackedlabs.org/dl/CrackedLabs_Christl_IndoorTracking.pdf
-- https://ieeexplore.ieee.org/abstract/document/9569340
-
+  - Method: Using existing wireless networking infrastructure (specifically Wi-Fi Access Points and potentially Bluetooth/BLE beacons or badges) to perform indoor location tracking of employee-carried devices (laptops, smartphones) or dedicated badges. Can also integrate data from motion sensors, security cameras, and video conferencing devices.
+  - Goal: To "gain insights into how people and things move throughout... physical spaces" and "understand the behavior and location of people (visitors, employees)" for various purposes including optimizing space utilization, monitoring employee performance, enhancing workplace safety/security, tracking customer behavior, and enabling targeted applications (e.g., smart cleaning, personalized promotions).
+  - Privacy: The article describes these methods as "intrusive behavioral monitoring and profiling" raising "serious concerns about employee privacy". Systems typically collect device identifiers like MAC addresses by default, which are pseudonymous. While options like MAC randomization exist, vendors may discourage their use as they make analytics "unreliable". The potential to correlate location data with other systems (like HR) increases privacy risks. Repurposing data from security cameras is noted as particularly intrusive.
+  - Analysis Methods: Systems process large volumes of "location data points" to provide real-time location maps , historical movement tracking , aggregate reports (e.g., counts per zone, dwell times, entry/exit times, flow between zones) , and behavioral profiling ("location personas") based on movement patterns. Specific features like proximity tracking and searching for individual devices/users are also available. Integration with third-party tools can add AI-based analysis like anomaly detection.
 
 WiFi data student attendance monitoring university campus
 - https://ieeexplore.ieee.org/abstract/document/9750047
