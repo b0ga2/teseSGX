@@ -6,8 +6,6 @@ import os
 import re
 
 # p1 - .18
-# p2 - .20
-# p3 - 32,20, 19, 17, 
 
 def parse_iw_scan(interface='wlp4s0'):
 
