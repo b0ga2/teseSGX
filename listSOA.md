@@ -34,10 +34,37 @@ indoor location cisco catalyst
 
 WiFi data student attendance monitoring university campus
 - https://ieeexplore.ieee.org/abstract/document/9750047
+  - Method: Using Wi-Fi session logs from a university's existing infrastructure, combined with timetabling data and class enrollment lists. The method is a two-stage process:
+    - AP Mapping: First, it uses unsupervised clustering (K-means, EM-GMM, HC) to automatically identify and map all relevant Access Points (including those in hallways or adjacent rooms) to a specific classroom.
+    - Occupancy Estimation: It then applies a machine-learning pipeline to the data from those mapped APs. This involves classifying individual users as "occupants" or "bystanders" based on behavioral features (like % in time, % out time, Arrival delay, and Num. of devices ), followed by a regression model to predict the final count, which compensates for students not connected to Wi-Fi.
+  - Goal: To develop a low-cost, scalable method to model and estimate classroom occupancy (i.e., class attendance) to help university estate managers optimize space utilization. It specifically aims to overcome the "pollution" and errors caused by simple connection counts, where signals from bystanders and adjoining rooms corrupt the data .
+  - Privacy: The article acknowledges the "sensitive nature" of the Wi-Fi session logs, which contain User IDs and MAC addresses. The study received ethics approval to use "anonymized personal information" . The authors state that their method only measures "metadata of users' activity" and is therefore "less intrusive than camera-based counting methods". The model's reliance on class enrollment lists is also noted.
+  - Analysis Methods: The system uses a chain of machine learning algorithms. Unsupervised Clustering (K-means, EM-GMM, Hierarchical Clustering) is used for the AP mapping phase. For the occupancy modeling, it uses Classification algorithms (Logistic Regression, SVM, and Linear Discriminant Analysis - LDA) to filter users , followed by Regression algorithms (Linear Regression - LR, and Support Vector Regression - SVR) to estimate the final count.
+
+
 - https://ieeexplore.ieee.org/abstract/document/8638098
+  - Method: Using Wi-Fi session logs from a university's existing infrastructure1111. The core of the method is a two-stage supervised learning approach2222:
+    - Classification: First, a classifier (like LDA) is used to distinguish "occupants" from "bystanders"3333. This is based on a "rich set of features" 4extracted for each user, including RSSI 5, Arrival delay 6, Number of sessions 7, Number of devices 8, Percentage of 'in time' ($t_{in}$) 9, and Percentage of 'out time' ($t_{out}$)10.
+    - Regression: The output count from the classifier is then fed into a regression model (like LR or SVR) 11111111 to produce the final occupancy estimate. This step is designed to "compensate for the room occupants who are not captured by WiFi"12121212.
+  - Goal: To estimate room occupancy (specifically, class attendance) to help university estate managers "optimize the usage of classroom space"131313. The aim is to provide a low-cost "soft sensor" alternative to expensive hardware sensors 14141414so that rooms can be allocated based on actual attendance rather than just enrollment numbers15.
+  - Privacy: The article acknowledges that the Wi-Fi logs contain "personal information", including a "unique user identifier" (student/employee ID) and device MAC addresses16161616161616. The researchers anonymized these user identifiers 17and obtained ethical clearance (UNSW HREAP approval number HC17140) to use the data18. The ethics application noted that a term of use for the university Wi-Fi is that "All activity on the wireless network is monitored," which implies users grant "explicit permission"19. To train the model, "class lists" (enrolled students) were used as ground truth to label Wi-Fi users as "occupants" or "bystanders"20202020.
+  - Analysis Methods: The paper uses a two-stage machine learning pipeline21212121.
+    - Stage 1 (Classification): Compares Logistic Regression, SVM, and Linear Discriminant Analysis (LDA)22222222. It found LDA performed best, achieving 84% accuracy in predicting occupants and 81% accuracy in predicting bystanders232323232323232323.
+    - Stage 2 (Regression): Evaluates Linear Regression (LR) and Support Vector Regression (SVR)24242424. The final LR model (Y = 10.3 + 1.25X) "inflate[s]" the classifier's count (X) to produce the final estimate (Y), accounting for occupants not on Wi-Fi25252525.
+    - Pearsons correlation is also used to prove the necessity of filtering: the correlation between actual occupancy and raw "WiFi Occupancy" is only 0.35, but it improves to 0.77 for "Enrolled WiFi Occupancy"26.
+
 - https://ieeexplore.ieee.org/abstract/document/7814796
+  - Não gostei, pouco relacionado
+
 - https://ieeexplore.ieee.org/abstract/document/8913341
+  - Method: Using metadata from existing WiFi Access Points (APs). At the room level, the occupancy is derived by summing the number of unique users connected to all APs inside a room, after filtering out sessions shorter than five minutes (to remove transient users). At the campus level, it uses hourly aggregate device counts from an API , which can be mapped to people counts using a proportionality factor (e.g., 1.3 devices per user).
+  - Goal: To demonstrate the feasibility and effectiveness of using WiFi metadata for occupancy monitoring at both the room level (by comparing it to hardware beam counters) and the campus level (by analyzing broad applications for various stakeholders like students, estate managers, and retailers).
+  - Privacy: The article acknowledges that WiFi metadata contains "user identifiers" which "can endanger students privacy". It contrasts this with beam counters, which are "privacy preserving" because they do not collect private data. The WiFi data collected included unique user IDs and device MAC addresses.
+  - Analysis Methods: The study primarily uses direct comparison and correlation. It filters raw data (e.g., sessions < 5 min) and then sums unique users. The performance is evaluated by calculating the Pearson's product-moment correlation (R) and symmetric mean absolute percentage error (sMAPE) against ground-truth data (hardware beam counters and manual counts). The correlation (R) between WiFi-sensed occupancy and observed occupancy was 0.85.
+
+
 - https://dl.acm.org/doi/abs/10.1145/2971648.2971657
+  - Honestamente, fraco e pouco relacionado
 
 
 WiFi access point data indoor localization classroom attendance
