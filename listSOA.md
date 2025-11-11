@@ -157,7 +157,7 @@ So far:
 
 - How (Your Solution): SGX offers a new solution for this exact problem.
 
-- The Challenge: This is difficult because the complex ML and statistical analysis required for high accuracy will not fit in SGX's limited memory.
+- The Challenge: Data processing inside SGX limited memory
 
 - Your Contribution: Therefore, your thesis builds the necessary platform and execution environment to solve this specific, unaddressed challenge.
 
