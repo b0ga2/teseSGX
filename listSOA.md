@@ -68,22 +68,98 @@ WiFi data student attendance monitoring university campus
 
 
 WiFi access point data indoor localization classroom attendance
-- https://ieeexplore.ieee.org/abstract/document/11030449
-- https://arxiv.org/abs/2311.09815
-- https://ualberta.scholaris.ca/items/9225340b-7e4d-4081-befa-36337a75ff2f
-- https://dl.acm.org/doi/full/10.1145/3704522.3704523
-- https://dspacemainprd01.lib.uwaterloo.ca/server/api/core/bitstreams/46f84f5c-e32b-40af-9034-06633c91da3d/content
-- https://peer.asee.org/a-tool-for-checking-attendance-of-students-in-classroom-automatically
-- https://ieeexplore.ieee.org/abstract/document/8938387
-- https://www.mdpi.com/2306-5729/2/4/32
+- https://ieeexplore.ieee.org/abstract/document/11030449 e https://arxiv.org/abs/2311.09815 (Praticamente o mesmo artigo :/)
+  - Interessante fala do eduroam e algo chamado fine time measuremente que permite calcular a distância entre user e o AP
+  - Method: The system, named EDUM, uses two primary data sources: 1) WLAN data (SNMP polls and traps) collected from all campus Access Points and 2) Crowd-sourced data from student volunteers via two mobile apps (TUNet and TUNow). It determines a student's location by generating and comparing RSSI fingerprints from their device's mobility traces . It also collects the phone's "interactive states" (SCREEN_ON/OFF) from the app to measure usage.
+  - Goal: To measure and characterize classroom education behavior at a large scale. The system is designed to measure students' punctuality (attendance, late arrivals, and early departures) and the "attractiveness" of lectures by quantifying student distraction through mobile phone use.
+  - Privacy: The entire system is built on an opt-in, volunteer-based model. Sensitive information, including the mapping of student IDs to device MAC addresses , course timetables , and personal attributes (like grade and gender) , is crowd-sourced from approximately 700 student volunteers who use the university's mobile apps.
+  - Analysis Methods: EDUM infers a course's venue by merging the RSSI fingerprints of all registered students attending that course . It determines the fine-grained lecture end time by heuristically detecting a "dramatic drop (40% in our case) of the number of appeared students". It then calculates metrics like Attendance Ratio , Late Ratio , and ON Ratio (for distraction) , and correlates these with academic performance (GPA).
 
+- https://ualberta.scholaris.ca/items/9225340b-7e4d-4081-befa-36337a75ff2f
+  - Isto é uma tese (ler mais tarde)
+
+- https://dl.acm.org/doi/full/10.1145/3704522.3704523
+  - Method: Using Wi-Fi fingerprinting for "zone-based localization". The method has two phases:
+    - Offline Profiling Phase: A "radio-map" is created by dividing a classroom and its perimeter into a virtual grid of zones. A custom mobile app is used at each grid point to scan and record a "Wi-Fi signal vector" (a fingerprint) containing the Received Signal Strength (RSS) from all detectable Access Points (APs).
+    - Online Localization Phase: A student's app scans their current Wi-Fi vector. This vector is sent to a server, which compares it to the stored radio-map using a distance metric (like Manhattan distance). The system identifies the k-nearest reference points and uses "majority voting" to classify the student as "inside" or "outside" the room's boundary.
+  - Goal: To create an automated attendance system for educational institutions that accurately confirms if a user is inside a designated area (like a classroom), rather than determining their precise location. The system is designed to "eliminate privacy risks, proxy attendance, and minimizing disruptions".
+  - Privacy: The system is presented as an alternative to biometric systems, which raise "concerns related to privacy and data security". The method requires both teachers and students to use a custom Android app and actively log in to scan and send Wi-Fi data to the server, implying an opt-in model. The data collected consists of AP names (SSIDs) and their corresponding RSS values.
+  - Analysis Methods: The core of the system is a k-Nearest Neighbors (kNN) binary classification algorithm (referred to as "Wi-Fi RSS-Based Location Classification"). The paper evaluates the accuracy of this algorithm using four different distance metrics to find the "nearest" neighbors: Euclidean distance, Manhattan distance, Cosine similarity, and Hamming distance. Experiments showed that Manhattan distance provided the highest accuracy.
+
+
+- https://dspacemainprd01.lib.uwaterloo.ca/server/api/core/bitstreams/46f84f5c-e32b-40af-9034-06633c91da3d/content
+  - Isto é uma tese ler mais tarde (pdf 14_02)
+
+
+- https://peer.asee.org/a-tool-for-checking-attendance-of-students-in-classroom-automatically
+  - Muito focado em Bluetooth (mas fala de algumas desvantagens do Wifi)
+  - Method: This paper explicitly rejects Wi-Fi due to high energy consumption and unstable signal strength. Instead, it uses a Bluetooth Low Energy (BLE) "geofencing" approach. The system requires students to install a smartphone app that measures the Received Signal Strength (RSS) from two BLE beacons: one placed inside the classroom and one outside the door .
+  - Goal: To design a software tool that automatically checks the attendance of students by determining "whether a student is located inside or outside the classroom".
+  - Privacy: The article does not explicitly discuss data privacy, security, or what personal data is sent to the server. The entire system is predicated on students installing a specific application on their smartphones to be tracked.Analysis Methods: The system uses a two-part algorithm to determine location :
+    - An "Inside Detector" checks if the rate of observed beacon frames from the inside beacon is above a set threshold (e.g., more than 5 beacons in 10 seconds) .
+    - An "Entry/Exit Detector" calculates the "RSS difference" between the inside and outside beacons; an increasing (positive) difference signals entry, while a decreasing (negative) difference signals an exit .
+    - Attendance is only confirmed when both detectors agree the student is inside. The app also uses the phone's accelerometer to stop BLE scanning when the student is not moving, saving battery life.
+
+
+- https://ieeexplore.ieee.org/abstract/document/8938387
+  - Mais focado em IOT do que em Wifi (pouco util)
+  - Method: Using a "device-free" Wireless Sensor Network (WSN) composed of low-cost NodeMCU microcontrollers (equipped with Wi-Fi). One node acts as a transmitter (AP) and three others act as receivers. The system detects occupancy by observing fluctuations in the Received Signal Strength Indicator (RSSI); the RSSI is stable when the room is empty but "dips below the threshold" when a human body is present and interferes with the radio signal.
+  - Goal: To create a low-cost, efficient classroom automation system to minimize power consumption. The occupancy monitoring system is used to control a "localised power system," (e.g., turning on lights/AC) only for occupied zones within a classroom.
+  - Privacy: The article contrasts its method with cameras, which are "expensive" and computationally complex. The proposed method is "device-free" , meaning it does not require occupants to carry a specific device (like an RFID tag ) or track their personal phones. It detects anonymous "presence" rather than individual identities.
+  - Analysis Methods: The system uses a "mean algorithm" for detection. It calculates the "average RSSI value of 7 iterations" and compares this to a pre-calibrated "threshold value" (the stable RSSI in an empty room). If the average RSSI dips below this threshold, the system "acknowledges the presence of a person".
+
+- https://www.mdpi.com/2306-5729/2/4/32
+  - Fraco pouco relacionado
+  - Method: Uses Wi-Fi fingerprinting collected via crowdsourcing. A custom Android application was used by volunteers to collect 4648 fingerprints in a university building. Users manually registered their exact location (x, y, z coordinates) in the app, and the app recorded the Received Signal Strength (RSS) vector from all heard Access Points (APs) at that point, along with the device model and date .
+  - Goal: To create and make publicly available an open, benchmark Wi-Fi fingerprinting dataset to allow for fair testing and comparison of different indoor positioning algorithms.
+  - Privacy: The article focuses on signal data collection and does not discuss user privacy. The collection method is based on crowdsourcing from volunteers who installed a specific Android app for this purpose. The data collected consists of the MAC addresses of the heard APs and their RSSI, the manually entered location (x,y,z), the device model, and the date . The building floor maps were not made publicly available "due to privacy and IP issues".
+  - Analysis Methods: The article does not propose a new analysis method but instead benchmarks several existing algorithms using the collected dataset. The tested algorithms include: Weighted Centroid, Log-Gaussian Probabilistic, Clustering (Affinity Propagation and k-means), the UJI KNN algorithm, Rank-Based Fingerprinting (RBF), and Coverage Area-based algorithms
 
 indoor localization system using Wifi
 - https://ieeexplore.ieee.org/abstract/document/6288374
+  - Method: Uses a Wi-Fi fingerprinting approach with two phases.
+    - Offline Phase: A "radio map" is built by collecting multiple RSSI samples (e.g., 100 samples) at known, fixed locations Instead of just averaging the signal, this method captures the full signal strength probability distribution (as a histogram) for each Access Point (AP) at each location .
+    - Online Phase: The user's phone collects a small number of samples (e.g., 5-20) to estimate its current RSSI probability distributions. These are then compared to the distributions stored in the radio map4.
+  - Goal: To create a more accurate Wi-Fi-based indoor positioning system for applications like navigation in airports, classrooms, or supermarkets5555. The method is designed to be "superior to other proposed methods" by using the signal's variations rather than averaging them out6666.
+  - Privacy: The article does not discuss user privacy. The data is collected by a "specifically-designed Java API implemented on an Android smartphone" and consists of RSSI measurements associated with the MAC addresses of detected APs7777.
+  - Analysis Methods: The system calculates the similarity between the online and offline probability distributions for the q strongest APs using the Bhattacharyya coefficient 8. This is converted into an "average Bhattacharyya distance" ($d_l$) for each offline location9. The user's position is then estimated by taking a weighted average of the coordinates of the three nearest neighbors (the locations with the smallest $d_l$), where the weight is inversely proportional to the distance ($w_l = 1/d_l$) This method is shown to outperform the RADAR (Euclidean distance) and LOCATOR (joint probability).
+
+
 - https://www.sciencedirect.com/science/article/abs/pii/S0167739X19324835
+  - Pouco relacionado, mais de ML e tratamento de daoos
+  - Method: Uses a Wi-Fi fingerprinting approach called the "random statistical method".
+    - Offline Handling Process: A large number ($n=100$) of Wi-Fi RSSI samples are collected at each Reference Point (RP) under "different indoor noise conditions" (e.g., varying times of day, different numbers of people present) 1111111111111111. Instead of just storing the mean RSSI, this "standardization process" calculates the expected value ($m^{(t)}$) and the full covariance matrix ($\Sigma^t$) for the vector of AP signals at each RP. This creates the fingerprinting database.
+    - Online Positioning Process: A user's smartphone captures a single, "actual" Wi-Fi signal vector ($x$). This vector is then compared to the statistical fingerprint of every RP in the database .
+  - Goal: To propose an effective method for an Indoor Positioning System (IPS) that improves positioning accuracy by effectively handling the noise and fluctuations of Wi-Fi signals.
+  - Privacy: The article does not discuss user privacy. The system is designed to track a "Smartphone/User" 5by having a "Mobile application" on the "Client" device collect RSSI values and send them to a "Server" for processing and location determination 
+  - Analysis Methods: The core of the method is the use of Mahalanobis distance for the online positioning phase. Unlike Euclidean distance, the Mahalanobis distance ($d(x, m^{(t)})$) measures the distance between the user's current signal vector ($x$) and the statistical mean of a reference point ($m^{(t)}$), while accounting for the inter-correlation of AP signals (the covariance matrix $\Sigma^t$)8888. The user's estimated location is the RP with the minimum Mahalanobis distance9999. This method is shown to be more accurate than the Weighted K-Nearest Neighbor (WKNN) algorithm10101010.
 
 
 indoor location using Wifi data treatment using SGX
 - https://dl.acm.org/doi/full/10.1145/3512892
+  - Acho que não vale a pena
+
+
 - https://dl.acm.org/doi/abs/10.1145/3144730.3144739
-- https://ieeexplore.ieee.org/abstract/document/9490363
+  - Interessante pelo conteudo do SGX e de como utilizar quando se protege serviços delocalização
+  - Method: Proposes an architecture for private Location-Based Services (LBS) using Intel Software Guard eXtensions (SGX). The client's location query is encrypted (along with the response). The service provider's application and database are embedded and processed entirely inside a secure SGX enclave on an untrusted cloud server . This "reverse sandbox" isolates the code and data from the untrusted service provider, OS, and hypervisor.
+  - Goal: To provide privacy-preserving LBS by protecting sensitive user location data from untrusted service providers. It aims to offer an efficient alternative to traditional privacy methods (like k-anonymity or cryptography) that often trade service accuracy or latency for privacy.
+  - Privacy: The system is designed to provide "proactive and de-facto location-privacy". It enforces privacy by ensuring the service provider "cannot link a location to a particular user" (anonymity) or "distinguish between the actual and fake locations" (indistinguishability). The client can verify the application's security using remote attestation . Data stored outside the enclave is encrypted using sealing.
+  - Analysis Methods: The system implements a Point-of-Interest (POI) Locator application inside the SGX enclave. This application computes nearby POIs using the client's decrypted location and a local database. The article evaluates this approach by benchmarking the SGX overhead (e.g., ECalls, OCalls, encryption) and comparing its precision against spatial cloaking with k-anonymity. The results show SGX adds only a "marginal overhead" (10-12% instruction rise) while achieving "near-to-the-perfect results," unlike k-anonymity, which sees precision drop as privacy (k-value) increases
+
+
+So far:
+- What: Wi-Fi data can be used to model classroom occupancy.
+
+- Why (The Problem): This raw data is highly sensitive and its misuse is a major privacy risk.
+
+- How (Existing Solutions & Flaws): Current privacy methods rely on pre-aggregation, user consent via apps, or different "device-free" physics, all of which have limitations.
+
+- How (Your Solution): SGX offers a new solution for this exact problem.
+
+- The Challenge: This is difficult because the complex ML and statistical analysis required for high accuracy will not fit in SGX's limited memory.
+
+- Your Contribution: Therefore, your thesis builds the necessary platform and execution environment to solve this specific, unaddressed challenge.
+
+D+uvidas:
+- Deveria pesquisar algo como "data processing in SGX" ou assim?
