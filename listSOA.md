@@ -147,19 +147,5 @@ indoor location using Wifi data treatment using SGX
   - Privacy: The system is designed to provide "proactive and de-facto location-privacy". It enforces privacy by ensuring the service provider "cannot link a location to a particular user" (anonymity) or "distinguish between the actual and fake locations" (indistinguishability). The client can verify the application's security using remote attestation . Data stored outside the enclave is encrypted using sealing.
   - Analysis Methods: The system implements a Point-of-Interest (POI) Locator application inside the SGX enclave. This application computes nearby POIs using the client's decrypted location and a local database. The article evaluates this approach by benchmarking the SGX overhead (e.g., ECalls, OCalls, encryption) and comparing its precision against spatial cloaking with k-anonymity. The results show SGX adds only a "marginal overhead" (10-12% instruction rise) while achieving "near-to-the-perfect results," unlike k-anonymity, which sees precision drop as privacy (k-value) increases
 
-
-So far:
-- What: Wi-Fi data can be used to model classroom occupancy.
-
-- Why (The Problem): This raw data is highly sensitive and its misuse is a major privacy risk.
-
-- How (Existing Solutions & Flaws): Current privacy methods rely on pre-aggregation, user consent via apps, or different "device-free" physics, all of which have limitations.
-
-- How (Your Solution): SGX offers a new solution for this exact problem.
-
-- The Challenge: Data processing inside SGX limited memory
-
-- Your Contribution: Therefore, your thesis builds the necessary platform and execution environment to solve this specific, unaddressed challenge.
-
 D+uvidas:
 - Deveria pesquisar algo como "data processing in SGX" ou assim?
