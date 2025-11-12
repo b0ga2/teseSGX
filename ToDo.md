@@ -17,3 +17,11 @@ Uma vez feito o estudo das salas, é possível depois verificar se um dado aluno
 ### Second Task (2025-07-25 by André Zuquete)
 No Google Scholar começar a reunir artigos para o estado da arte
 Os encontrados estão no ficheiro listSOA.txt juntamente com as queries no google Scholar
+
+### Third Task and a Note (2025-11-12 by Liliana Paulo (DPO da UA))
+Redigir um documento para recolher o consentimento dos alunos para o tratamento dos dados
+A DPO falou de um documento de Tratamento de Dados Interno (que nos irá fazer chegar) que eu tenho de preencher e apenas eu
+
+#### Notes
+- Os dados recolhidos vão ser de turmas que não tenham alunos em comum para não ser possivel realizar cruzamento de dados
+- Inicialmente terei os dados de mim e dos orientadores para treinar
