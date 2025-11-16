@@ -147,5 +147,20 @@ indoor location using Wifi data treatment using SGX
   - Privacy: The system is designed to provide "proactive and de-facto location-privacy". It enforces privacy by ensuring the service provider "cannot link a location to a particular user" (anonymity) or "distinguish between the actual and fake locations" (indistinguishability). The client can verify the application's security using remote attestation . Data stored outside the enclave is encrypted using sealing.
   - Analysis Methods: The system implements a Point-of-Interest (POI) Locator application inside the SGX enclave. This application computes nearby POIs using the client's decrypted location and a local database. The article evaluates this approach by benchmarking the SGX overhead (e.g., ECalls, OCalls, encryption) and comparing its precision against spatial cloaking with k-anonymity. The results show SGX adds only a "marginal overhead" (10-12% instruction rise) while achieving "near-to-the-perfect results," unlike k-anonymity, which sees precision drop as privacy (k-value) increases
 
+- Intel SGX swapping
+  - https://www.diva-portal.org/smash/record.jsf?pid=diva2%3A1416013&dswid=-3258(https://www.diva-portal.org/smash/get/diva2:1416013/FULLTEXT01.pdf)
+  - 
+
+- Intel SGX out-of-core processing
+  - https://2025.eurosys.org/posters/final/eurosys25posters-final102.pdf
+
+- Intel SGX limited memory
+  - https://dl.acm.org/doi/abs/10.1145/2948618.2954331?casa_token=yCwrPnzdMMUAAAAA:EJeOSrEjGwTQD8_ERZK7jxtvKgQN3s0ZiW5IOMvDHxj9S18a8HdqpikuHegPmBB2agkIDxZXQPk
+  - https://ieeexplore.ieee.org/abstract/document/7878255?casa_token=xtsrNEhy9fUAAAAA:LjdVrD9pFTgwFzmhHrLAKtWyoZTkBp21BLEbAiCosWfgn9Yuus9kuhHhaurd2aCTsWXURpO0
+  - https://d1wqtxts1xzle7.cloudfront.net/96665723/ndss2018_06A-2_Ahmad_paper-libre.pdf?1672617144=&response-content-disposition=inline%3B+filename%3DOBLIVIATE_A_Data_Oblivious_Filesystem_fo.pdf&Expires=1763322899&Signature=gvJRlEbDFpa-3NGQqqljtReu~ccUu8Q4h6VXq0oW5H0F5MR1BZSzy-G1L1oiZcURVkQqiMTZkKsIEU3BSrp-D0wsBOlQiAER~MgfViPLgnCWqB8GGlOFerOtGwAmpqcj--DI8h9hFIVMRSc~QM7c8V3ktPnTAlDAfbLG0Yz7vHWjKqEIFBByZ8nFnH3Tb0MRg9bhW8xpR6ACltT5jhQ8pzsBTPUIv7I9Yai~6FJnuSVSIpUFmLmW6U3vgV1upjrWGbnaG0bkO~0cVTYMUrNaGxQ~U1tD2GCOze-PP8ge3yA1XFf8DW8TnOYq9shr28yackZdZYQVmShmrM1pEvhw~w__&Key-Pair-Id=APKAJLOHF5GGSLRBV4ZA
+
+Some cool stuff:
+- https://eprint.iacr.org/2016/086.pdf
+
 D+uvidas:
 - Deveria pesquisar algo como "data processing in SGX" ou assim?
