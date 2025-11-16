@@ -25,3 +25,7 @@ A DPO falou de um documento de Tratamento de Dados Interno (que nos irá fazer c
 #### Notes
 - Os dados recolhidos vão ser de turmas que não tenham alunos em comum para não ser possivel realizar cruzamento de dados
 - Inicialmente terei os dados de mim e dos orientadores para treinar
+
+#### Fourth Task (2025-11-16 André Zuquete no Documento AIPD)
+- O aluno irá fornecer aos STIC pequenas aplicações que podem ser usadas para pseudonimizar os dados do PACO e do Catalyst.
+OS STIC devem usá-las após validação.
