@@ -161,6 +161,3 @@ indoor location using Wifi data treatment using SGX
 
 Some cool stuff:
 - https://eprint.iacr.org/2016/086.pdf
-
-D+uvidas:
-- Deveria pesquisar algo como "data processing in SGX" ou assim?
