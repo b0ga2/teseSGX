@@ -1,0 +1,53 @@
+\chapter{Related Work}
+
+This chapter provides an overview of the current state-of-the-art regarding indoor 
+positioning and presence detection in indoor environments, also taking in account
+how the privacy and security of the data was handled, if it was.
+
+Driven by technological advancements and institutional needs, nearly all 
+university buildings are now equipped with internet access provided through 
+Wireless Access Points (APs). In the specific case study of the University of Aveiro 
+\textcolor{red}{(mencionar departamento?)}, 
+these APs allow for the determination of user location with a reasonable degree 
+of precision. This location data can be utilized in various scenarios, including:
+
+\begin{itemize}
+    \item {\textcolor{red}{(Colocar referências)}}
+    \item{\normalsize Building Occupancy}
+    \item{\normalsize Energy Efficiency and Saving}
+    \item{\normalsize People Counting}
+    \item{\normalsize Statistics for Comparision to CO2 sensors}
+    \item{\normalsize Monitoring Employee Performance}
+    \item{\normalsize Enhancing wWrkplace Safety/Security}
+    \item{\normalsize Optimize Space Utilization}
+    \item{\normalsize Tracking Customer Behavior}
+    \item{\normalsize Enabling Targeted Applications (p.e Smart Cleaning, Personalized Promotions)}
+    \item{\normalsize Student Attendance Monitoring}
+\end{itemize}
+
+Although useful for generating interesting statistics, the utilization of original 
+raw data necessitates access to sensitive information. 
+This data is qualified as sensitive due to its high 
+granularity and identifiability. Specifically, the raw logs contain:
+
+\begin{itemize}
+    \item {\normalsize Unique Identifier:} MAC addresses that act as static 
+    hardware fingerprints for individuals.
+    \item {\normalsize Universal User (UU):} The institutional email address 
+    associated with the connection, providing a unique 
+    reference to the individual user.
+    \item {\normalsize Spatiotemporal Traces:} Precise records of where a user was 
+    and for how long.
+    \item {\normalsize Spatial Hierarchy:} The nested categorization of location 
+    data (Country, City, Campus, Department, Floor), which allows for the 
+    isolation of user movements within specific buildings or floors.
+\end{itemize}
+
+The aggregation of this data allows for "linkability", which is 
+the ability to correlate a device's location history with external datasets 
+(class schedules) thereby allowing the identification of users and 
+exposing them to surveillance, profiling or stalking.
+
+\section{Attacks on SGX}
+
+Pode ser interessante mencionar alguns ataques conhecidos ao SGX

@@ -1,0 +1,43 @@
+\chapter{Context}
+
+Intro: parágrafo pequeno a explicar que este capítulo introduz as TEE
+
+\section{Trusted Execution Environments (TEEs)}
+Definição de TEE (isolamento de código e dados).
+
+Propriedades principais: Confidencialidade e Integridade.
+
+Diferença entre o ambiente não confiavel e o TEE.
+
+\section{Intel Software Guard Extensions (SGX)}
+    \subsection{Architecture and Workflow}
+    Como funcemina:
+
+    Explicar o conceito de Enclaves.
+
+    Explicar a divisão da memória (EPC - Enclave Page Cache).
+
+    Mecanismo de ECalls e OCalls (entrar e sair do enclave e comunicação com o mundo "inseguro").
+
+    \subsection{Security Mechanisms: Attestation and Sealing}
+    
+    Remote Attestation: Como provar que o código é legítimo 
+
+    Sealing: Como guardar dados cifrados no disco.
+
+    \subsection{Relevance to Privacy and Preserving Analytics}
+    Explicar por que razão o SGX é bom para processar dados sensíveis
+
+\section{Alternative TEE Technologies}
+ARM TrustZone
+
+AMD SEV
+
+Maybe justificar porquê o SGX, se bem que estava no titulo da tese, não escolhi nada
+
+\section{Technical Challenges: Memory Limitations in SGX}
+
+    \subsection{The Enclave Page Cache (EPC) Bottleneck}
+    Explicar que a memória segura é limitada, ver slides para mais detalhes
+
+
