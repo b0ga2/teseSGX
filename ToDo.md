@@ -45,8 +45,10 @@ OS STIC devem usá-las após validação.
 
 
 #### Fifth Task (2025-11-17 by Tomás Bogalho)
-- Começar a escrever o SOA, normalmente este ocupa 4 a 5 páginas
 - Perguntar aos profs, boas teses para verificar como fizeram o SOA (Duarte Mortagua e Fábio Santos)
+- Começar a escrever o SOA, normalmente este ocupa 4 a 5 páginas
+  - (2025-11-30)Escolhi fazer um Related Work porque não há nada igual por isso não é um SOA, mas se calhar a divisão deveria ser Indoor Location e depois falar das várias uti-idades e colocar referências (dava mais jeito para escrever mais)
+
 
 ##### Sixth
 - Pesquisar para SOA algo como "SGX Anonimity"
