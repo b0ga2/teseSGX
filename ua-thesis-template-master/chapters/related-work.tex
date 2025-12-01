@@ -3,51 +3,155 @@
 This chapter provides an overview of the current state-of-the-art regarding indoor 
 positioning and presence detection in indoor environments, also taking in account
 how the privacy and security of the data was handled, if it was.
-
 Driven by technological advancements and institutional needs, nearly all 
 university buildings are now equipped with internet access provided through 
 Wireless Access Points (APs). In the specific case study of the University of Aveiro 
 \textcolor{red}{(mencionar departamento?)}, 
 these APs allow for the determination of user location with a reasonable degree 
-of precision. This location data can be utilized in various scenarios, including:
+of precision, due to the need of the user to authenticate in order to use eduroam. (\textcolor{red}{(explicar o que é o eduroam?)})
+Although useful for generating interesting statistics, indoor location and presence detection
+rely on the processing of sensitive information. 
+This information is classified as sensitive due to its high level of detail 
+and its potential to uniquely identify individuals.
+
+
+Example of sensitive information used for indoor location:
 
 \begin{itemize}
-    \item {\textcolor{red}{(Colocar referências)}}
-    \item{\normalsize Building Occupancy}
-    \item{\normalsize Energy Efficiency and Saving}
-    \item{\normalsize People Counting}
-    \item{\normalsize Statistics for Comparision to CO2 sensors}
-    \item{\normalsize Monitoring Employee Performance}
-    \item{\normalsize Enhancing wWrkplace Safety/Security}
-    \item{\normalsize Optimize Space Utilization}
-    \item{\normalsize Tracking Customer Behavior}
-    \item{\normalsize Enabling Targeted Applications (p.e Smart Cleaning, Personalized Promotions)}
-    \item{\normalsize Student Attendance Monitoring}
+    \item \textbf{Media Access Control (MAC) Address:} A persistent hardware identifier assigned to the network interface controller. 
+    In Wi-Fi tracking, this serves as a static fingerprint that uniquely identifies a user's device across different sessions and locations.
+    \item \textbf{Universal User (UU):} The unique user identifier (such as a student ID, employee username, or email) 
+    required for network authentication.
+    \item \textbf{High-Frequency Connection Logs:} Time records containing precise association and disassociation timestamps,
+    these allow for the reconstruction of a user's daily routine, duration of stay, and punctuality patterns.
+    \item \textbf{Spatial Hierarchy:} Detailed topological data classifying location from macro to micro levels.
+    \item \textbf{Visual and Biometric Data:} In systems utilizing optical sensors, raw data includes high-resolution images 
+    or video feeds capable of revealing biometric features and behavioral signatures.
 \end{itemize}
 
-Although useful for generating interesting statistics, the utilization of original 
-raw data necessitates access to sensitive information. 
-This data is qualified as sensitive due to its high 
-granularity and identifiability. Specifically, the raw logs contain:
+The aggregation of this data creates a risk of linkability, allowing otherwise anonymous 
+location traces to be cross-referenced with external records, such as class or work schedules. 
+This process effectively de-anonymizes users, subjecting them to risks including surveillance 
+and profiling, which constitutes a direct violation of their right to privacy.
 
-\begin{itemize}
-    \item {\normalsize Unique Identifier:} MAC addresses that act as static 
-    hardware fingerprints for individuals.
-    \item {\normalsize Universal User (UU):} The institutional email address 
-    associated with the connection, providing a unique 
-    reference to the individual user.
-    \item {\normalsize Spatiotemporal Traces:} Precise records of where a user was 
-    and for how long.
-    \item {\normalsize Spatial Hierarchy:} The nested categorization of location 
-    data (Country, City, Campus, Department, Floor), which allows for the 
-    isolation of user movements within specific buildings or floors.
-\end{itemize}
+\section{Uses for Indoor Positioning}
 
-The aggregation of this data allows for "linkability", which is 
-the ability to correlate a device's location history with external datasets 
-(class schedules) thereby allowing the identification of users and 
-exposing them to surveillance, profiling or stalking.
+\subsection{Building Occupancy}
+
+01
+
+02
+
+\subsection{Room Occupancy}
+
+07
+
+\subsection{Energy Efficiency and Saving}
+
+03
+
+16
+
+\subsection{People Counting}
+
+02
+
+
+\subsection{Statistics for Comparision with Other Sensors}
+
+04
+
+09
+
+\subsection{Monitoring Employee Performance}
+
+05
+
+\subsection{Enhancing wWrkplace Safety/Security}
+
+05
+
+\subsection{Optimize Space Utilization}
+
+05
+
+\subsection{Tracking User Behavior}
+
+11
+
+\subsection{Enabling Targeted Applications (p.e Smart Cleaning, Personalized Promotions)}
+\subsection{Student Attendance Monitoring}
+
+06
+
+07
+
+13
+
+15
+
+\subsection{Navigation}
+
+18
+
+\subsection{Development of Indoor Positioning Method}
+
+19
+
+
+
+
+
+
+
+
+
+\section{Dealing with User Privacy}
+
+Alguns não usam como o (02) porque 
+neste caso é um radar de sinais
+
+\subsection{Avoids Collecting Sensitive Data}
+
+01
+
+\subsection{Doesn't Deal with it}
+
+03
+
+05
+
+09
+
+17
+
+18
+
+19
+
+\subsection{}
+
+04
+
+\subsection{Anonymized Data}
+
+06
+
+\subsection{Ethical Clearance}
+
+07
+
+\subsection{Volunteer-Based Model or Opt-in Model}
+
+11
+
+13
+
+15
+
+
 
 \section{Attacks on SGX}
 
 Pode ser interessante mencionar alguns ataques conhecidos ao SGX
+Não sei se isto deveria estar aqui ou no context
