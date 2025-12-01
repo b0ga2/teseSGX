@@ -41,6 +41,8 @@ OS STIC devem usá-las após validação.
 #### Notes
 - O prof recomenda utilização de Python para ser mais simples
 - Utilizar Argon2 (porque tem menos parametros e é mais fácil)
+  - Preciso de confirmar que parametros o prof quer que eu passe
+  - Discutir que campos é que vou realmente utilizar
 - Return base64 ou hex
 
 

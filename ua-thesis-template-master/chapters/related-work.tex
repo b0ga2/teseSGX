@@ -1,40 +1,49 @@
 \chapter{Related Work}
 
 This chapter provides an overview of the current state-of-the-art regarding indoor 
-positioning and presence detection in indoor environments, also taking in account
+positioning and presence detection in indoor environments using Wifi, also taking in account
 how the privacy and security of the data was handled, if it was.
-Driven by technological advancements and institutional needs, nearly all 
-university buildings are now equipped with internet access provided through 
-Wireless Access Points (APs). In the specific case study of the University of Aveiro 
-\textcolor{red}{(mencionar departamento?)}, 
-these APs allow for the determination of user location with a reasonable degree 
-of precision, due to the need of the user to authenticate in order to use eduroam. (\textcolor{red}{(explicar o que é o eduroam?)})
-Although useful for generating interesting statistics, indoor location and presence detection
+
+\noindent Driven by technological advancements and institutional needs, nearly all 
+buildings are now equipped with internet access provided through 
+Wireless Access Points (APs). These allow for the determination of user location with a reasonable degree 
+of precision, due to the need of the user to authenticate to a specific AP 
+in order to use the local network.
+
+\noindent Although useful for generating interesting statistics, indoor location and presence detection
 rely on the processing of sensitive information. 
 This information is classified as sensitive due to its high level of detail 
 and its potential to uniquely identify individuals.
 
-
-Example of sensitive information used for indoor location:
+\noindent Example of sensitive information used for indoor location:
 
 \begin{itemize}
     \item \textbf{Media Access Control (MAC) Address:} A persistent hardware identifier assigned to the network interface controller. 
     In Wi-Fi tracking, this serves as a static fingerprint that uniquely identifies a user's device across different sessions and locations.
     \item \textbf{Universal User (UU):} The unique user identifier (such as a student ID, employee username, or email) 
     required for network authentication.
-    \item \textbf{High-Frequency Connection Logs:} Time records containing precise association and disassociation timestamps,
+    \item \textbf{Connection Logs:} Time records containing precise association and disassociation timestamps,
     these allow for the reconstruction of a user's daily routine, duration of stay, and punctuality patterns.
     \item \textbf{Spatial Hierarchy:} Detailed topological data classifying location from macro to micro levels.
     \item \textbf{Visual and Biometric Data:} In systems utilizing optical sensors, raw data includes high-resolution images 
     or video feeds capable of revealing biometric features and behavioral signatures.
 \end{itemize}
 
-The aggregation of this data creates a risk of linkability, allowing otherwise anonymous 
+\newpage
+
+
+\noindent The aggregation of this data creates a risk of linkability, allowing otherwise anonymous 
 location traces to be cross-referenced with external records, such as class or work schedules. 
 This process effectively de-anonymizes users, subjecting them to risks including surveillance 
 and profiling, which constitutes a direct violation of their right to privacy.
 
-\section{Uses for Indoor Positioning}
+\section{Indoor Positioning}
+
+\subsection{Technologies used for Indoor Positioning}
+
+Falar de sinais de rádio, bluetooth, sensores de CO2, camâras, sensores de movimento, RFID
+
+\section {Wifi for Indoor Positioning}
 
 \subsection{Building Occupancy}
 
@@ -154,4 +163,9 @@ neste caso é um radar de sinais
 \section{Attacks on SGX}
 
 Pode ser interessante mencionar alguns ataques conhecidos ao SGX
-Não sei se isto deveria estar aqui ou no context
+Não sei se isto deveria estar aqui ou no 
+
+
+\section{Data Processing on SGX}
+
+Como faz parte das dificuldades da tese, talvez seja interessante ter uma parte relacionad com isto
