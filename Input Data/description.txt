@@ -1,0 +1,25 @@
+Association – Início de comunicação do cliente com o AP
+
+Authentication – Processo de tentativa de autenticação concluído
+
+DHCP – Obtenção de IP por parte do cliente
+
+Onboarding – Conectividade IP do cliente operacional
+
+Roaming – (Eventual) Alteração do AP com que o cliente está a comunicar
+
+ConnectionStatusUpdate – Alguma propriedade do estado da ligação mudou.
+
+ConnectionStatusDisconnection – Deixou de ser detetada a presença do cliente
+
+ 
+
+Para o âmbito deste projeto julgo que o 4 últimos serão suficientes, sendo que o de Update talvez não tenha utilidade. Tipicamente, desde que surge o evento de Association até que ocorre o de Onboarding passam no máximo uns 4/5 segundos. O “ciclo de vida” do cliente, ou melhor, de uma associação irá terminar quando surge um evento de Disconnection. Quando o cliente muda de AP com que está a comunicar, surge um evento de Roaming. mas como estamos a restringr os APs relativamente aos quais estamos a recolher os eventos, poderão surgir sequências de eventos que aparentemente poderão não fazer sentido. Por exemplo, se o utilizador do dispositivo antes de chegar ao local da aula passou junto ao DAO ou à Biologia, poderá surgir um evento Roaming para um AP do DETI que esteja a ser alvo de estudo, no entanto não surgem os anteriores. Por outro lado, o evento de ConnectionStatusDisconnection poderá ocorrer num outro AP que não está a ser alvo do estudo, para o qual entretanto o dispositivo tenha feito Roaming…
+
+Resumidamente, poder-se-á assumir que num determinado período temporal uma pessoa esteve no espaço coberto por um determinado AP quando um dispositivo que se autenticou com o UU dessa pessoa tem no Catalyst um dos seguintes comportamentos/registos:
+
+                Onboarding ou Roaming – marcarão o início da presença
+
+ConnectionStatusUpdate com o estado Connected – indicarão que continua presente (mas poderão também marcar o final da presença…)
+
+ConnectionStatusUpdate com o estado Disconnected – marcarão o final da presença
