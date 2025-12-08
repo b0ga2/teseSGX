@@ -1,5 +1,6 @@
 import pandas as pd # for pandas information https://www.w3schools.com/python/pandas/default.asp
 from pyargon2 import hash
+import sys
 
 # Read the csv
 # Think in a way to do this iterative way, due to the input of large files
