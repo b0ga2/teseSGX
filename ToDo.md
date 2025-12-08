@@ -50,6 +50,13 @@ OS STIC devem usá-las após validação.
 - Perguntar aos profs, boas teses para verificar como fizeram o SOA (Duarte Mortagua e Fábio Santos)
 - Começar a escrever o SOA, normalmente este ocupa 4 a 5 páginas
   - (2025-11-30)Escolhi fazer um Related Work porque não há nada igual por isso não é um SOA, mas se calhar a divisão deveria ser Indoor Location e depois falar das várias uti-idades e colocar referências (dava mais jeito para escrever mais)
+  - (2025-12-08) - Devia usar \noident?
+  - (2025-12-08) - Ler melhor o artigo do IPS, duvidas principais:
+    - O que é APP-CAT
+    - Se o meu cenário está incluido no scene analysis
+    - Ler os artigos a partir do 21 para a frente (estão por ler)
+    - Escrever Wifi sempre da mesma forma, qual a mais correta?
+    - Mencionar que a figura 3.1 também é do autor, o Carlos disse para refazer e dizer que é com base em X
 
 
 ##### Sixth

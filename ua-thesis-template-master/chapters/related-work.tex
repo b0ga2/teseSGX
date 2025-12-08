@@ -1,53 +1,122 @@
 \chapter{Related Work}
+\label{chapter:related_work}
 
-This chapter provides an overview of the current state-of-the-art regarding indoor 
-positioning and presence detection in indoor environments using Wifi, also taking in account
-how the privacy and security of the data was handled, if it was.
+This chapter establishes the context for the proposed work by reviewing the state-of-the-art in 
+Wi-Fi-based indoor positioning and occupancy detection. The review focuses not only on the technical 
+methodologies for extracting location metrics but also on the associated privacy and security challenges.
 
-\noindent Driven by technological advancements and institutional needs, nearly all 
+Driven by technological advances and institutional needs, nearly all 
 buildings are now equipped with internet access provided through 
 \ac{ap}. These allow for the determination of user location with a reasonable degree 
 of precision, due to the need of the user to authenticate to a specific AP 
 in order to use the local network.
 
-\noindent Although useful for generating interesting statistics, indoor location and presence detection
+Although useful for generating interesting statistics, indoor positioning and presence detection
 rely on the processing of sensitive information. 
 This information is classified as sensitive due to its high level of detail 
 and its potential to uniquely identify individuals.
 
-\noindent Example of sensitive information used for indoor location:
 
-\begin{itemize}
-    \item \textbf{\ac{mac} Address:} A persistent hardware identifier assigned to the network interface controller. 
-    In Wi-Fi tracking, this serves as a static fingerprint that uniquely identifies a user's device across different sessions and locations.
-    \item \textbf{\ac{uu}:} The unique user identifier (such as a student ID, employee username, or email) 
-    required for network authentication.
-    \item \textbf{Connection Logs:} Time records containing precise association and disassociation timestamps,
-    these allow for the reconstruction of a user's daily routine, duration of stay, and punctuality patterns.
-    \item \textbf{Spatial Hierarchy:} Detailed topological data classifying location from macro to micro levels.
-    \item \textbf{Visual and Biometric Data:} In systems utilizing optical sensors, raw data includes high-resolution images 
-    or video feeds capable of revealing biometric features and behavioral signatures.
-\end{itemize}
-
-\newpage
-
-
-\noindent The aggregation of this data creates a risk of linkability, allowing otherwise anonymous 
+The aggregation of this data creates a risk of linkability, allowing otherwise anonymous 
 location traces to be cross-referenced with external records, such as class or work schedules. 
 This process effectively de-anonymizes users, subjecting them to risks including surveillance 
 and profiling, which constitutes a direct violation of their right to privacy.
 
-\section{Indoor Positioning}
+FAZER DESCRIÇÂO DO QUE VAI SER ABORDADO E CONCLUSÂO (ver tese Duarte)
 
-\subsection{Technologies used for Indoor Positioning}
+\section{Indoor Positioning System}
 
-Falar de sinais de rádio, bluetooth, sensores de CO2, camâras, sensores de movimento, RFID
+As defined by \citet{indoor_positioning_system} an Indoor Positioning System is viewed as 
+the grouping of three components: positioning principles and corresponding algorithms; technologies; hardware equipment.
+These are considered to have a meaningful impact on the performance of the positioning system (see Figure \ref{fig:struct_ips}).
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{figs/indoor_positioning_system.jpg}
+  \caption{General structure of the model of an indoor positioning system.}
+  \label{fig:struct_ips}
+\end{figure}
+
+
+\subsection{Technologies used for Indoor Positioning System}
+
+There are several technologies used for an Indoor Positioning System, \citet{indoor_positioning_system}
+divided them in three categories, this overview has been expanded to include Optical 
+and Environmental Sensors, reflecting the methodologies found in research literature,
+as shown by Table \ref{table:ips_technologies_category}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Indoor Positioning Categories}
+    \label{table:ips_technologies_category}
+    \begin{tabular}{ l  l }
+        \hline
+        \textbf{Category} & \textbf{Technologies} \\ \hline
+        Radio Frequency (RF) & Wi-Fi \\
+                             & Bluetooth Low Energy (BLE) \\
+                             & Zigbee \\
+                             & Ultra-wide band (UWB) \\
+                             & Radio frequency identification (RFID) \\
+                             & Indoor Global Navigation Satellite System (GNSS) \\
+                             & Frequency modulation radio (FM-radio) \\ \hline
+        Non-Electromagnetic Waves & Ultrasound \\
+                                  & Geomagnetic Waves \\ \hline
+        Full-spectrum light & Range imaging \\
+                            & Visible light positioning \\
+                            & Laser \\ \hline
+        Optical & Cameras / Computer Vision \\
+                & Infrared \\ \hline
+        Environmental Sensors & CO2 Sensors \\ \hline
+    \end{tabular}
+\end{table}
 
 \section {Wifi for Indoor Positioning}
+
+Talvez falar que para a tese como só vai ser utilizado o Wifi as restantes tecnologias foram discartadas
+
+Distinguir alguns termos como: positioning, location, etc
+
+Mencionar usos do WIFI bla bla bla
+
+There are several use cases of Wifi data to calculate for indoor positioning mentioned throughout the research literature, 
+such: as Wifi probe technology done by \citet{23_WANG2018495},
+\ac{rssi} performed by \citet{24_ZOU2017633} and \ac{csi} researched by \citet{25_8293759}.
 
 \subsection{Building Occupancy}
 
 01
+
+Estimating building occupancy is a necessary step for optimizing building operations, in this scenario
+WiFi connection counts are presented as a cost-efficient proxy for occupancy when comparing to most commom methods, 
+even showing a strong correlation with actual people counts as shown by \citet{22_8913341}.
+
+In 2020, \citet{01_ALISHAHI2021107936} proposed a framework that used machine learning models and 
+statistical analysis methods to predict patterns of building occupancy based on Wifi connections.
+
+The authors identified that more traditional methods, often suffer from latency and high maintenance costs. 
+Instead, they utilized associated WiFi device counts, which refer to all devices trying, not necessarily being able to, 
+authenticate with the \ac{ap}.
+
+Their methodology focused on three main objectives regarding occupancy:
+\begin{enumerate}
+    \item \textbf{Occupancy Pattern:} This goal was divided in two phases, the first one was the identification of groups that
+                                      similar patterns and the second was to develop prediction models for each group.
+    \item \textbf{Peak Occupancy:} Analyze and predict peak occupancy by couting the number of maximum WiFi connections and the 
+                                   time of its occurence from the previous week.
+    \item \textbf{Arrival and Departure Times:} Mapping of the \ac{ap} location to the associated zone, then through the observation
+                                                of the first and last WiFi connection calculate arrival and departure.
+\end{enumerate}
+
+The implementation of this framework demonstrated positive results, achieving an 
+average prediction accuracy ($R^{2}$) of 0.98 for weekdays and 0.81 for weekends.
+However, \citet{01_ALISHAHI2021107936} also connoted limitations that must be acknowledged, although
+the correlation between connection counts and occupancy is significant,
+the prediction models require calibration with ground-truth data to account for stationary devices 
+such as printers and desktops, and that the variance in the number of devices carried by each occupant should be taken in account.
+This becomes more pronounced at smaller spaces, such as room-level or zone-level analysis, 
+where attributing connections to a specific zone is difficult without access to granular connection details like the
+ones given by \ac{rssi}.
+
+
 
 02
 

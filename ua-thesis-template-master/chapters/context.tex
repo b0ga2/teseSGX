@@ -1,6 +1,25 @@
 \chapter{Context}
+\label{chapter:context}
 
-Intro: parágrafo pequeno a explicar que este capítulo introduz as TEE
+Intro: parágrafo pequeno a explicar que este capítulo introduz as TEE e o que são dados sensiveis
+
+\section{Sensitive Data}
+
+Arranjar definições de dados sensiveis e como se classificam
+
+Example of sensitive information used for indoor location:
+
+\begin{itemize}
+    \item \textbf{\ac{mac} Address:} A persistent hardware identifier assigned to the network interface controller. 
+    In Wi-Fi tracking, this serves as a static fingerprint that uniquely identifies a user's device across different sessions and locations.
+    \item \textbf{\ac{uu}:} The unique user identifier (such as a student ID, employee username, or email) 
+    required for network authentication.
+    \item \textbf{Connection Logs:} Time records containing precise association and disassociation timestamps,
+    these allow for the reconstruction of a user's daily routine, duration of stay, and punctuality patterns.
+    \item \textbf{Spatial Hierarchy:} Detailed topological data classifying location from macro to micro levels.
+    \item \textbf{Visual and Biometric Data:} In systems utilizing optical sensors, raw data includes high-resolution images 
+    or video feeds capable of revealing biometric features and behavioral signatures.
+\end{itemize}
 
 \section{Trusted Execution Environments (TEEs)}
 Definição de TEE (isolamento de código e dados).
