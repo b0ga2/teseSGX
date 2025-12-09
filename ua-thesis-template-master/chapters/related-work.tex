@@ -2,7 +2,7 @@
 \label{chapter:related_work}
 
 This chapter establishes the context for the proposed work by reviewing the state-of-the-art in 
-Wi-Fi-based indoor positioning and occupancy detection. The review focuses not only on the technical 
+WiFi-based indoor positioning and occupancy detection. The review focuses not only on the technical 
 methodologies for extracting location metrics but also on the associated privacy and security challenges.
 
 Driven by technological advances and institutional needs, nearly all 
@@ -51,7 +51,7 @@ as shown by Table \ref{table:ips_technologies_category}.
     \begin{tabular}{ l  l }
         \hline
         \textbf{Category} & \textbf{Technologies} \\ \hline
-        Radio Frequency (RF) & Wi-Fi \\
+        Radio Frequency (RF) & WiFi \\
                              & Bluetooth Low Energy (BLE) \\
                              & Zigbee \\
                              & Ultra-wide band (UWB) \\
@@ -79,15 +79,17 @@ Mencionar usos do WIFI bla bla bla
 
 There are several use cases of Wifi data to calculate for indoor positioning mentioned throughout the research literature, 
 such: as Wifi probe technology done by \citet{23_WANG2018495},
-\ac{rssi} performed by \citet{24_ZOU2017633} and \ac{csi} researched by \citet{25_8293759}.
+\ac{rssi} performed by \citet{24_ZOU2017633}, \ac{csi} researched by \citet{25_8293759}
+and many other that will mentioned throughout the present chapter.
 
 \subsection{Building Occupancy}
-
-01
 
 Estimating building occupancy is a necessary step for optimizing building operations, in this scenario
 WiFi connection counts are presented as a cost-efficient proxy for occupancy when comparing to most commom methods, 
 even showing a strong correlation with actual people counts as shown by \citet{22_8913341}.
+
+% The following is regarding the article number as 01
+% 
 
 In 2020, \citet{01_ALISHAHI2021107936} proposed a framework that used machine learning models and 
 statistical analysis methods to predict patterns of building occupancy based on Wifi connections.
@@ -96,15 +98,15 @@ The authors identified that more traditional methods, often suffer from latency 
 Instead, they utilized associated WiFi device counts, which refer to all devices trying, not necessarily being able to, 
 authenticate with the \ac{ap}.
 
-Their methodology focused on three main objectives regarding occupancy:
-\begin{enumerate}
-    \item \textbf{Occupancy Pattern:} This goal was divided in two phases, the first one was the identification of groups that
-                                      similar patterns and the second was to develop prediction models for each group.
-    \item \textbf{Peak Occupancy:} Analyze and predict peak occupancy by couting the number of maximum WiFi connections and the 
-                                   time of its occurence from the previous week.
-    \item \textbf{Arrival and Departure Times:} Mapping of the \ac{ap} location to the associated zone, then through the observation
-                                                of the first and last WiFi connection calculate arrival and departure.
-\end{enumerate}
+% Their methodology focused on three main objectives regarding occupancy:
+% \begin{enumerate}
+%     \item \textbf{Occupancy Pattern:} This goal was divided in two phases, the first one was the identification of groups that
+%                                       similar patterns and the second was to develop prediction models for each group.
+%     \item \textbf{Peak Occupancy:} Analyze and predict peak occupancy by couting the number of maximum WiFi connections and the 
+%                                    time of its occurence from the previous week.
+%     \item \textbf{Arrival and Departure Times:} Mapping of the \ac{ap} location to the associated zone, then through the observation
+%                                                 of the first and last WiFi connection calculate arrival and departure.
+% \end{enumerate}
 
 The implementation of this framework demonstrated positive results, achieving an 
 average prediction accuracy ($R^{2}$) of 0.98 for weekdays and 0.81 for weekends.
@@ -117,27 +119,77 @@ where attributing connections to a specific zone is difficult without access to 
 ones given by \ac{rssi}.
 
 
-
-02
-
 \subsection{Room Occupancy}
 
 07
 
 \subsection{Energy Efficiency and Saving}
 
-03
+% The following is regarding the article number as 03
+% WiFi based occupancy detection in a complex indoor space under discontinuous wireless communication: A robust filtering based on event-triggered updating
+
+\citet{03_WANG2019228} addressed the challenge of indoor positioning and discontinuous WiFi 
+communication specifically by smartphones, a phenomenon where devices suspend data transmission 
+to conserve battery, causing users to disappear from conventional scanning systems. 
+To overcome this, the authors developed an event-triggered updating method that estimates occupancy 
+based on entering and exiting events instead of relying on continuous signal detection, 
+with these events, the system estimates the device owner's location using \ac{rssi} data. 
+
+Furthermore, the framework integrates a location filter using \ac{rssi} thresholds to discard devices 
+located outside the target zone by applying a study of the mean values of the measured data in inside 
+and outside positions, and a non-human filter to exclude stationary equipment, 
+such as printers, via \ac{mac} address analysis.
+
+However, the authors acknowledge significant limitations. First, the method is tailored to the specific 
+WiFi operation patterns of smartphones and may not generalize to devices with different behaviors. 
+Second, the reliance on \ac{rssi} thresholds restricts the system to zone-level accuracy, in a 
+virtually partitioned zones without physical walls, outside devices closer to detection nodes may be 
+miscalculated as inside, and thirdly the detection errors arise from user behavior, 
+such as occupants carrying multiple devices or separating from their smartphones, which the authors 
+suggest requires data fusion with other sensors to resolve.
+
 
 16
 
 \subsection{People Counting}
 
-02
+% The following is regarding the article number as 02
+% Occupancy Detection and People Counting Using WiFi Passive Radar
+
+In the 2020 \ac{ieee} Radar Conference \citet{02_9266493} presented a methodology 
+for people counting based on \ac{pwr}. The authors presented this approach 
+to overcome the limitations of standard WiFi sensing, since \ac{rssi} methods are 
+prone to unpredictable fluctuations and false positives due to multipath effects, 
+and \ac{csi} techniques typically require specific hardware modifications 
+or high-rate transmissions that degrade network throughput.
+
+The overall results presented a high accuracy of 99.54\% for 
+tasks of occupancy detection and 98.80\% for people counting. 
+Taking into account the positive results, the authors defend that the \ac{pwr} 
+system is applicable as it leverages existing commercial WiFi 
+\ac{ap}s without requiring any modifications to the WiFi infrastructure or 
+additional devices on the network. 
+However, this advantage comes with added computational 
+complexity, as the system relies completely on signal processing.
 
 
 \subsection{Statistics for Comparision with Other Sensors}
 
-04
+% The following is regarding the article number as 04
+% Effectiveness of using WiFi technologies to detect and predict building occupancy
+
+In 2017, \citet{04_OUF2017005} presented a case study to demonstrate the effectiveness of using 
+WiFi to detect occupancy as opposed to the more common $CO_2$ sensors.
+To facilitate this comparison, the authors simultaneously monitored WiFi connection counts and 
+$CO_2$ concentration levels in a university classroom over one week, using manual occupant counts 
+as ground truth.
+
+The analysis revealed that WiFi counts served as a superior predictor of occupancy, 
+exhibiting a stronger statistical correlation ($r=0.839$) than $CO_2$ levels ($r=0.728$).
+Furthermore, the authors highlighted that while $CO_2$ sensors suffered from a detection lag of 
+approximately 20 minutes and susceptibility to non-occupancy related fluctuations, WiFi data 
+provided a more accurate, real-time proxy for occupancy with the added benefit of utilizing existing 
+infrastructure without additional cost.
 
 09
 
