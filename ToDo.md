@@ -54,7 +54,7 @@ OS STIC devem usá-las após validação.
   - (2025-12-08) - Ler melhor o artigo do IPS, duvidas principais:
     - O que é APP-CAT
     - Se o meu cenário está incluido no scene analysis
-    - Ler os artigos a partir do 21 para a frente (estão por ler)
+    - Ler os artigos a partir do 21 para a frente
     - Escrever Wifi sempre da mesma forma, qual a mais correta?
     - Mencionar que a figura 3.1 também é do autor, o Carlos disse para refazer e dizer que é com base em X
 
