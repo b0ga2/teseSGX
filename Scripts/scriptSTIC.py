@@ -22,7 +22,7 @@ import os
 # Conf
 INPUT_FILE = 'input_data_10000x.csv'
 OUTPUT_FILE = 'dados_anonimizados.csv'
-CHUNK_SIZE = 50000 # TODO: Test this value
+CHUNK_SIZE = 50000 # TODO: Test this value somehow
 SALT_STATIC = "password_dos_STIC" # This is a password introduced by STICK
 
 # Dictionary used to keep hashes so we dont process the same data twice
