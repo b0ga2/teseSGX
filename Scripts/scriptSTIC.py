@@ -20,9 +20,9 @@ import os
 
 
 # Conf
-INPUT_FILE = 'input_data.csv'
+INPUT_FILE = 'input_data_10000x.csv'
 OUTPUT_FILE = 'dados_anonimizados.csv'
-CHUNK_SIZE = 50000  # TODO: Test this value
+CHUNK_SIZE = 50000 # TODO: Test this value
 SALT_STATIC = "password_dos_STIC" # This is a password introduced by STICK
 
 # Dictionary used to keep hashes so we dont process the same data twice
@@ -38,10 +38,11 @@ def anonimize_user(username):
     
     # Verify if the name is in the dictionary
     if username_str in user_hash_cache:
+        #print(f"The user {username_str} is already in the dictionary")
         return user_hash_cache[username_str]
     
     # Argon2 config
-    # time_cost: 4
+    # time_cost: 4 TODO: verificar este valor
     # type: 'i' (Argon2i) 
     # encoding: 'b64' (Base64)
     hashed_value = hash(
@@ -66,6 +67,14 @@ if os.path.exists(OUTPUT_FILE):
 first_chunk = True
 
 counter = 0
+
+df = pd.read_csv(INPUT_FILE)
+num_row = len(df)
+num_iter = (num_row + CHUNK_SIZE - 1) // CHUNK_SIZE
+
+
+print(f"Total number of rows to process: {num_row}...")
+print(f"Total number of necessary iterations: {num_iter}...")
 
 # Open the CSV file in read mode using pandas
 with pd.read_csv(
@@ -105,7 +114,7 @@ with pd.read_csv(
             # No write index 
             index=False,
 
-            # If it's the first chunk, we write the header (True). 
+            # If it's the first chunk, write the header (True). 
             header=first_chunk
         )
 
