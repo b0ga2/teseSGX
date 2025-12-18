@@ -57,7 +57,12 @@ OS STIC devem usá-las após validação.
     - Ler os artigos a partir do 21 para a frente
     - Escrever Wifi sempre da mesma forma, qual a mais correta?
     - Mencionar que a figura 3.1 também é do autor, o Carlos disse para refazer e dizer que é com base em X
+  - Fazer documentação básica, e adicionar memoria em cache com a lista de alunos
 
+##### Tasks SGX
+- Recebe ficheiro texto ou csv para binário protegido pelo cifra
+- Tentar perceber como vou relacionar os logs com as aulas
+- Pensar quais são os dados de input de output, comparar desempenho uma turma de cada vez ou todas em brutas, pensar em Diffie Helman
 
 ##### Sixth
 - Pesquisar para SOA algo como "SGX Anonimity"
