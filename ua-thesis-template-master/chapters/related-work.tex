@@ -90,7 +90,7 @@ and many other that will mentioned throughout the present chapter.
 
 Estimating building occupancy is a necessary step for optimizing building operations, in this scenario
 WiFi connection counts are presented as a cost-efficient proxy for occupancy when comparing to most commom methods, 
-even showing a strong correlation with actual people counts as shown by \citet{22_8913341}.
+even showing a strong correlation with actual people counts as shown by \citet{09_8913341}.
 
 % The following is regarding the article number as 01
 % 
@@ -185,7 +185,16 @@ approximately 20 minutes and susceptibility to non-occupancy related fluctuation
 provided a more accurate, real-time proxy for occupancy with the added benefit of utilizing existing 
 infrastructure without additional cost.
 
-09
+% The following is regarding the article number as 09
+% Role of Campus WiFi Infrastructure for Occupancy Monitoring in a Large University
+
+In the 2018 IEEE International Conference on Information and Automation for Sustainability (ICIAfS), \citet{09_8913341} 
+proposed a study to assess the feasibility of using WiFi \ac{ap} infrastructure for room-level occupancy monitoring across the University of New South Wales campus, a scenario similar to this thesis. 
+The study had a duration of four weeks across rooms with varying numbers of \ac{ap}s, comparing WiFi data against beam counter sensors and ground truth enrollment numbers. 
+To account for transient users, passing by, connecting to the \ac{ap}s, connections lasting less than five minutes were filtered out.
+The results indicated that the WiFi method achieved a stronger correlation with actual occupancy ($R=0.85$) compared to the beam counters ($R=0.68$). 
+it also demonstrated a lower error rate, with a \ac{smape} of 12.1\% compared to 15.6\% for the hardware sensors. 
+
 
 \subsection{Tracking User Behavior}
 
@@ -201,6 +210,17 @@ to profile user behavior. Regarding the methodology of user classification, the 
 located persons into groups such as employee, student or guest based on the SSID category. 
 This suggests that the system identifies the type of user based on the specific Wi-Fi network they connect to, allowing for distinct tracking of 
 different user groups.
+
+10 TERMINAR
+% The following is regarding the article number as 10
+% EDUM: Classroom Education Measurements via Large-scale WiFi Networks
+
+In 2016, \citet{10_10.1145/2971648.2971657} proposed the EDUM (EDUcation Measurement) system to characterize educational behaviors using data collected from large-scale Wi-Fi infrastructures, 
+this system analyzes students punctuality based on longitudinal Wi-Fi connection traces and to assess lecture attractiveness and student distraction, 
+the system utilizes the mobile phone's "interactive state" (screen on/off status) at a per-minute granularity.
+Deployed at Tsinghua University with approximately 700 student volunteers and 2,800 \ac{ap}s, the study provided results that revealed a negative correlation between high mobile phone usage during 
+class and academic performance (GPA), and confirmed that students seated in the back rows exhibit significantly higher distraction levels than those in the front.
+
 
 11
 
