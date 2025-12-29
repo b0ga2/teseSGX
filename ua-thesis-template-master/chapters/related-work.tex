@@ -3,12 +3,11 @@
 
 This chapter establishes the context for the proposed work by reviewing the state-of-the-art in WiFi based indoor positioning and occupancy detection. 
 While nearly identical solutions, combining already existing infrastructure monitoring with hardware enforced privacy, are scarce in the literature, 
-distinct bodies of research provide the necessary pillars for this thesis.
-The review begins by analyzing technical methodologies for Indoor Positioning using standard WiFi technologies, distinguishing between active localization 
-and passive occupancy estimation. 
-It then transitions to the critical challenge of User Privacy in location analytics. 
+distinct bodies of research provide the necessary basis for this thesis.
+The review begins by analyzing technical methodologies for indoor positioning using standard WiFi technologies, 
+it then transitions to the critical challenge of user privacy in location analytics. 
 Finally, the chapter concludes with an analysis of \ac{SGX} as a possibility for secure indoor positioning data processing, evaluating its current status and 
-performance in privacy preserving applications.
+performance in privacy preserving location based applications.
 
 \section{Indoor Positioning System}
 
@@ -57,11 +56,11 @@ as shown by Table \ref{table:ips_technologies_category}.
 
 \section {Wifi for Indoor Positioning}
 
-In the researched literature, several terms related to indoor positioning appear interchangeably, such as positioning, localization, detection, counting, and tracking. 
+In the researche literature, several terms related to indoor positioning appear interchangeably, such as positioning, localization, detection, counting, and tracking. 
 While authors like \citet{24_ZOU2017633} often distinguish these terms based on technical granularity, where localization implies pinpointing specific $(x,y)$ coordinates 
 and tracking involves temporal notion, this thesis adopts a broader operational perspective. 
 
-Instead of focusing on the precise coordinate-level tracking of individual targets, the current work prioritizes occupancy detection and crowd estimation in a certain area, 
+Instead of focusing on the precise coordinate level tracking of targets, the current work prioritizes occupancy detection and crowd estimation in a certain area, 
 in this context, the specific terminology is less about the geometric precision of a single user's location and more about the aggregate presence of devices within a defined zone, 
 treating location as a categorical state.
 
@@ -72,7 +71,6 @@ the measurement of \ac{rssi} performed by \citet{24_ZOU2017633}, and the more co
 These approaches, along with others, form the technical basis for the studies reviewed throughout this chapter.
 
 The following chapter will be divided according to the main goal of the Wifi for Indoor Positioning.
-
 
 \subsection{Energy Savings and Efficiency}
 
@@ -250,7 +248,6 @@ Furthermore, the study demonstrated significant robustness: the accuracy remaine
 when different smartphone models were used.
 
 \subsection{Fingerprinting}
-17
 % The following is regarding the article number as 18
 % WIFI FINGERPRINT INDOOR POSITIONING SYSTEM USING PROBABILITY DISTRIBUTION COMPARISON
 In a study focusing on probabilistic localization, \citet{18_6288374} developed a WiFi fingerprinting system that utilizes probability distribution comparisons 
@@ -273,23 +270,23 @@ The ubiquity of WiFi networks as a sensing infrastructure presents a fundamental
 also introduces significant privacy risks for the individuals being tracked. As noted in the previous sections, transforming a standard wireless network into a 
 soft sensor involves analyzing device footprints, specifically \ac{mac} addresses and signal characteristics, which can serve as strong identifiers of specific individuals.
 
-Consequently, the academic literature reveals a spectrum of methodologies designed to reconcile the trade-off between service utility  and user privacy. 
+Consequently, the academic literature reveals a spectrum of methodologies designed to reconcile the trade-off between service utility and user privacy. 
 These approaches range from simple data minimization strategies, which avoid collecting unique identifiers entirely, to complex anonymization schemes like hashing 
 and k-anonymity. However, as the demand for real-time, room-level precision increases, so does the inadequacy of traditional obfuscation methods. 
 
-This section reviews these divergent privacy-preserving strategies, categorizing them into distinct paradigms found in the literature: 
+This section reviews these privacy preserving strategies, categorizing them into distinct paradigms found in the literature: 
 omission of privacy mechanisms, where technical feasibility takes precedence; 
 data aggregation and minimization, where sensitive data is aggregated at the source; 
 anonymization and pseudonymization, where identifiers are masked; 
 institutional compliance and ethical clearance, relying on governance frameworks; 
 and volunteer-based or opt-in models. 
 
-The chapter concludes by examining hardware enforced security, specifically focusing on Trusted Execution Environments like \ac{sgx}, which represent the state-of-the-art in 
-secure location analytics.
+The chapter concludes by examining hardware enforced security in sensitive data processing, specifically focusing on 
+\ac{tee} like \ac{sgx}.
 
 \subsection{Omission/Inexistence of Privacy Mechanisms}
 
-\citet{03_WANG2019228} focused primarily on the technical feasibility of detecting inactive smartphones to improve zone detection accuracy. 
+\citet{03_WANG2019228} focused on the technical feasibility of detecting inactive smartphones to improve zone detection accuracy. 
 While the system utilizes \ac{mac} address analysis to filter out non-human devices, the study does not explicitly detail mechanisms for anonymizing these addresses or 
 protecting the identity of the smartphone owners.
 
@@ -314,7 +311,7 @@ personal devices.
 
 Similarly, \citet{04_OUF2017005} employed an aggregation strategy to validate WiFi sensing against environmental benchmarks. 
 By utilizing the total number of connections as a bulk metric to correlate with $CO_2$ levels, the authors treated the crowd as a single entity. 
-This approach avoids the privacy difficulties of trajectory tracking, as the system monitors the state of the room and not the behavior of the individuals within it.
+This approach avoids the privacy difficulties of tracking, as the system monitors the state of the room and not the behavior of the individuals within it.
 
 \citet{13_thesis} demonstrated a resource optimization framework that relies on aggregated occupancy density. 
 By only using bulk connection counts directly from the university's central IT department, rather than logging individual devices, the system calculates the "usage intensity"  
@@ -325,14 +322,10 @@ of classrooms.
 \citet{14_Carroll_Woolery} implemented a form of pseudonymization to mitigate the risks of long-term profiling. 
 In this study, the unique identifiers were masked using a hashing algorithm that was reset every 24 hours.
 
-
-06
-
 \subsection{Institutional Compliance and Ethical Clearance}
 
 \citet{06_9750047} addressed the privacy implications of tracking students by explicitly operating under a governance framework. 
 The study obtained formal ethical clearance from the university.
-
 
 \subsection{Volunteer-Based Model or Opt-in Model}
 
@@ -356,8 +349,8 @@ this approach requires students to install and interact with a mobile applicatio
 
 
 \section{Previous Works with SGX in Indoor Positioning}
-
-Althoug few, some works using \ac{sgx} for indoor positioning have been found
+While the literature regarding the specific application of \ac{sgx} to indoor positioning remains scarce, a select number of 
+studies have established a critical foundation for this approach.
 
 % The following is regarding the article number as 20
 % Privacy Protection in 5G Positioning and Location-based Services Based on SGX
