@@ -1,7 +1,16 @@
 \chapter{Context}
 \label{chapter:context}
 
-Intro: parágrafo pequeno a explicar que este capítulo introduz as TEE e o que são dados sensiveis
+The present chapter aims to provide a comprehensive understanding of the technical underpinnings of 
+\ac{sgx} and the protection of sensitive data. 
+It begins by introducing the concept of sensitive data, followed by \ac{tee}s, defining their role and outlining their core advantages. 
+Following this, the chapter compares prominent privacy-preserving technologies, analyzing 
+the technical distinctions between ARM TrustZone, AMD SEV, and Intel \ac{sgx}. 
+The discussion then focuses on Intel \ac{sgx}, detailing its architecture, workflow, and security mechanisms. 
+Finally, the chapter addresses the technical challenges and potential attacks on \ac{sgx}, 
+concluding with observations on data processing within these secure enclaves
+
+\section{Sensitive Data}
 
 Driven by technological advances and institutional needs, nearly all
 buildings are now equipped with internet access provided through 
@@ -17,10 +26,6 @@ The aggregation of this data creates a risk of linkability, allowing otherwise a
 location traces to be cross-referenced with external records, such as class or work schedules. 
 This process effectively de-anonymizes users, subjecting them to several risks, 
 which constitutes a direct violation of their right to privacy.
-
-\section{Sensitive Data}
-
-Arranjar definições de dados sensiveis e como se classificam
 
 Example of sensitive information used for indoor location:
 
@@ -39,9 +44,20 @@ Example of sensitive information used for indoor location:
 \section{Trusted Execution Environments (TEEs)}
 Definição de TEE (isolamento de código e dados).
 
+Distinguir entre hardware e software
+
 Propriedades principais: Confidencialidade e Integridade.
 
 Diferença entre o ambiente não confiavel e o TEE.
+
+\section{TEE Technologies}
+ARM TrustZone
+
+AMD SEV
+
+Intel TDX
+
+Maybe justificar porquê o SGX, se bem que estava no titulo da tese, não escolhi nada
 
 \section{Intel Software Guard Extensions (SGX)}
     \subsection{Architecture and Workflow}
@@ -61,13 +77,6 @@ Diferença entre o ambiente não confiavel e o TEE.
 
     \subsection{Relevance to Privacy and Preserving Analytics}
     Explicar por que razão o SGX é bom para processar dados sensíveis
-
-\section{Alternative TEE Technologies}
-ARM TrustZone
-
-AMD SEV
-
-Maybe justificar porquê o SGX, se bem que estava no titulo da tese, não escolhi nada
 
 \section{Technical Challenges: Memory Limitations in SGX}
 
