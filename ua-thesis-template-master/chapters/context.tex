@@ -5,10 +5,9 @@ The present chapter aims to provide a comprehensive understanding of the technic
 \ac{sgx} and the protection of sensitive data.
 It begins by introducing the concept of sensitive data, followed by \ac{tee}s, defining their role and outlining their core advantages. 
 Following this, the chapter compares prominent privacy-preserving technologies, analyzing 
-the technical distinctions between ARM TrustZone, AMD SEV, and Intel \ac{sgx}. 
+the technical distinctions of several \ac{tee}s implementations. 
 The discussion then focuses on Intel \ac{sgx}, detailing its architecture, workflow, and security mechanisms. 
-Finally, the chapter addresses the technical challenges and potential attacks on \ac{sgx}, 
-concluding with observations on data processing within these secure enclaves
+Finally, the chapter addresses the technical challenges, concluding with potential attacks on \ac{sgx}
 
 \section{Sensitive Data}
 
@@ -18,14 +17,15 @@ buildings are now equipped with internet access provided through
 of precision, due to the need of the user to authenticate to a specific AP 
 in order to use the network.
 
-Although useful for generating interesting statistics, indoor positioning and presence detection
-rely on the processing of sensitive information, due to it's high level of detail 
-and it's potential to uniquely identify individuals.
+Although often categorized as technical metadata, it presents privacy challenges when analyzed by definition of sensitive data, while raw location logs may not possess 
+intrinsic sensitiveness ,like a direct medical diagnosis might, its possible to acquire sensitive information through their 
+processing context. As \citet{04_article} argue, the critical factor is the computational distance required to infer sensitive 
+information from apparently neutral data.
 
-The aggregation of this data creates a risk of linkability, allowing otherwise anonymous 
-location traces to be cross-referenced with external records, such as class or work schedules. 
-This process effectively de-anonymizes users, subjecting them to several risks, 
-which constitutes a direct violation of their right to privacy.
+In the case of indoor positioning, this computational distance is low, the aggregation of location traces creates a elevetad 
+risk of linkability, where disparate datasets, such as anonymous WiFi logs and public class schedules, can be easily cross referenced. 
+This dramatically reduces the effort required to de-anonymize users, effectively transforming technical data into personal 
+identifiable information.
 
 Example of sensitive information used for indoor location mentioned throughout this document:
 
@@ -42,26 +42,133 @@ Example of sensitive information used for indoor location mentioned throughout t
 \end{itemize}
 
 \section{Trusted Execution Environments (TEEs)}
-Definir Trusted Computing
+% Definir Trusted Computing e talvez exemplo
+Before defining \ac{tee}s, it is essential to understand the underlying concept of \ac{tc}, as defined by 
+\citet{01_7345265}, a \ac{tc} aims to enable systems to achieve secure computation, privacy, and robust data protection. 
+Historically, \ac{tc} relied on a dedicated hardware component to provide a functional interface for security operations, 
+one common example is the \ac{tpm}, which allows a system to prove its integrity and securely store cryptographic keys,  
+however, a limitation of the \ac{tpm} is its inability to perform isolated execution of arbitrary code, 
+since it is mainly designed for passive storage and reporting rather than active secure processing.
+But newer approaches to \ac{tc} shift the execution of arbitrary code within a trusted environment that allows tamper resistant 
+execution of its applications.
 
-Definição de TEE (isolamento de código e dados).
+%Definição de TEE (isolamento de código e dados).
+%Propriedades principais: Confidencialidade e Integridade.
+While various terminologies exist in the literature, this dissertation adopts the term \ac{tee}, this is defined by \citet{01_7345265} 
+as a secure, integrity protected computational environment, typically with isolated memory and specific storage capabilities. 
+Its primary objectives are to guarantee the authenticity of the executed code, the integrity of the runtime state and the confidentiality of the data, 
+like \ac{cpu} registers, while effectively protecting code, memory, and sensitive \ac{io} from unauthorized access, in addition 
+a \ac{tee} should have the ability to support remote attestation, allowing third parties to verify the trustworthiness of the environment, 
+although specific implementation details may vary across different types of \ac{tee}s. 
 
-Distinguir entre hardware e software
+% Distinguir entre hardware e software
+The implementation of these can differ, leading to a categorization of \ac{tee}s based on their enforcement mechanism, 
+hardware-based \ac{tee}s rely on specific hardware extensions, such as Intel \ac{sgx}, to enforce isolation at the lower level, 
+effectively anchoring trust in the physical processor, in contrast, software-based \ac{tee}s depend on a privileged software layer 
+typically a hypervisor or microkernel to protect the execution environment. 
+To aid the core essence of \ac{tee} \citet{01_7345265} proposed some definitions represented in the following figure.
+\begin{figure}
+  \includegraphics[width=\linewidth]{figs/TEE_Building_Blocks.png}
+  \caption{Overview of \ac{tee} building blocks, image by \citet{01_7345265}.}
+  \label{fig:TEE_Building_Blocks}
+\end{figure}
+As seen in the previous picture, a TEE in composed by building blocks such as:
+\begin{itemize}
+    \item{\normalsize Secure Boot: guarantees that only code of a certain property can be loaded during boot.}
+    \item{\normalsize Secure Scheduling: }
+    \item{\normalsize Inter-Environment Communication: Interface that allows the \ac{tee} to communicate with the rest of the system.}
+    \item{\normalsize Secure Storage: Storage where confidentiality, integrity and authorized access of stored data is guaranteed.}
+    \item{\normalsize Trusted I/O Path: Communication between \ac{io} peripherals with authenticity and sometimes confidentiality.}
+\end{itemize}
 
-Propriedades principais: Confidencialidade e Integridade.
-
-Diferença entre o ambiente não confiavel e o TEE.
+% Diferença entre o ambiente não confiavel e o TEE.
+In contrast to the strict isolation of the \ac{tee}, the remaining portion of the system is often referred to as the \ac{ree} or the untrusted environment, 
+this includes the traditional operating system, the hypervisor, and the standard application stack (left side of the image below). 
+While the \ac{ree} is optimized for performance, versatility, and accessing peripherals, it looses the security guarantees 
+required for sensitive data processing, as it makes it vulnerable software attacks. 
+The fundamental architectural principle of trusted computing is the strict separation between these two worlds, 
+the \ac{tee} protects its assets even when the surrounding \ac{ree} is fully compromised by malicious actors.
+This seperation can be observed in the following image.
+\begin{figure}
+  \includegraphics[width=\linewidth]{figs/ree_vs_tee.png}
+  \caption{Overview of \ac{ree} and of \ac{tee}, image by \citet{02_phdthesis}.}
+  \label{fig:ree_vs_tee}
+\end{figure}
 
 \section{TEE Technologies}
-ARM TrustZone
+Several \ac{tee} implementations exist, such as ARM TrustZone, AMD \ac{sev}, and Intel most recent \ac{tdx}, 
+this chapter provides a comparative overview of these technologiess, Intel \ac{sgx}, as the primary focus of this dissertation, 
+is reviewed in greater detail in the next chapter.
 
-AMD SEV
+\subsection{ARM TrustZone}
 
-Intel TDX
+% All this text was based on Demystifying Arm TrustZone: A Comprehensive Survey
+Initially introduced in 2004, ARM TrustZone is a set of hardware security extensions available on ARM processors, while first 
+implemented on the Cortex-A series, it was later adapted for the more recent Cortex-M series, with some architectural differences 
+suited for microcontrollers. 
+Contrary to a standalone component, TrustZone is a system wide approach designed to be integrated into a \ac{soc}, 
+securing not just the processor but the entire electronic device, as described by \citet{05_arm_trustzone}, 
+the architecture is centered around the concept of distinct domains, the Secure World, the trusted environment, and 
+the Normal World, the untrusted environment. 
+This hardware enforced isolation allows software to execute with different privilege levels, preventing untrusted applications 
+in the Normal World from directly accessing resources allocated to the Secure World, the state of the processor is determined by 
+the \ac{ns} bit, typically located in the \ac{scr}, which effectively partitions the system's hardware resources.
+\begin{figure}
+  \includegraphics[width=\linewidth]{figs/TrustZone_architecture.png}
+  \caption{ARM TrustZone technology, image by \citet{05_arm_trustzone}.}
+  \label{fig:arm_trustzone}
+\end{figure}
+To manage the transition between worlds, TrustZone employs a monitor mode, which executes in a secure state 
+independent of the \ac{ns} bit, this mode bridges the two software stacks and is entered via the privileged \ac{smc} instruction or through specifically 
+configured hardware exceptions. 
+Hardware isolation is further reinforced by banked registers, which ensure that security critical system registers are 
+either hidden from the untrusted environment or are strictly accessed from the trusted environment.
+Regarding memory infrastructure, TrustZone introduces components such as the \ac{tzasc} for \ac{dram} and the \ac{tzma} for 
+off-chip \ac{rom}/\ac{sram}, these controllers partition memory into trusted and untrusted regions, preventing the Normal World from accessing secure 
+memory while allowing the Secure World full access. 
+A TrustZone \ac{mmu} maintains separate virtual-to-physical translation tables for each domain, and cache isolation is 
+enforced via an additional tag bit on cache lines. 
+Finally, the \ac{tzpc} extends this isolation to system peripherals, restricting access to specific devices based 
+on the security domain.
+In recent years, academic and industrial interest in this technology has surged, largely driven by the availability of 
+technical documentation and accessible development platforms from manufacturers like Xilinx, this transparency has facilitated 
+adoption within the community, particularly in the context of \ac{r&d}.
+
+\subsection{AMD SEV}
+
+Introduced in 2016, \ac{sev} is stated to be the first x86 technology that was design to isolate \ac{vm}s from the hypervisor, since 
+historically these have been considered trusted components, this allows for example, clients in the cloud to secure their \ac{vm} 
+workload from the cloud administrator, keeping their data confidential and minimizing exposure.
+AMD did this using main memory encryption in \ac{sev}, with this individuals \ac{vms} were assigned an individual key to encrypt all data, 
+preventing the hypervisor from reading clear text information, as cited by \citet{05_amd_sev}.
+Later in 2017, a new version came out, the AMD \ac{sev-es} that added the additional feature of \ac{cpu} register state protection, in order to 
+do this, in \ac{sev-es} the \ac{vm} register state is encrypted at each hypervisor transition, preventing the hypervisor to see 
+the data that is being used, adding confidentiality to in-memory data.
+The most recent version is the \ac{sev-snp}, built on top of the previous versions while adds hardware based protections like 
+memory integrity protection to prevent attacks like data replay, memory re-mapping, besides this it also implements 
+protection in interrup behavior, this is, in the reviewed literature, according to \citet{06_amdsev_inteltdx}, the first \ac{cvm}, 
+which are \ac{vm}s made to to alleviate the programmability and usability challenges of the previously proposed enclave-based
+trusted computing technologies, by providing abstraction at the level of the \ac{vm}.
+This technology uses a dedicated processor, the AMD \ac{psp} to manage the security features, this is an ARM-based processor that 
+is separated from the main 32-bit core, but directly integrated in the \ac{cpu}, beside this, it also allows remote attestation.
+\begin{figure}
+  \includegraphics[width=\linewidth]{figs/amd_sev_architecture.png}
+  \caption{AMD \ac{sev} Architecture, image by \citet{06_amdsev_inteltdx}.}
+  \label{fig:amd_sev}
+\end{figure}
+The previous figure shows the overview of the AMD \ac{sev-snp}, this \ac{vm} executes in an isolated 
+environment where its memory and state registers are encrypted via a unique key managed by the \ac{asp}. 
+The \ac{asp} also safeguards the integrity of guest address translations and strictly isolates the 
+execution by blocking \ac{smi} events and preventing access from the \ac{smm}, this architecture also introduces 
+\ac{vmpl}, a four-tiered privilege hierarchy to traditional x86 rings, this enables a \ac{svsm} running at the highest level 
+\ac{vmpl}0 to securely offer services like virtual \ac{tpm} and live migration.
+
+\subsection{Intel TDX}
+
+\section{Intel Software Guard Extensions (SGX)}
 
 Maybe justificar porquê o SGX, se bem que estava no titulo da tese, não escolhi nada
 
-\section{Intel Software Guard Extensions (SGX)}
     \subsection{Architecture and Workflow}
     Como funcemina:
 
@@ -84,6 +191,7 @@ Maybe justificar porquê o SGX, se bem que estava no titulo da tese, não escolh
 
     \subsection{The Enclave Page Cache (EPC) Bottleneck}
     Explicar que a memória segura é limitada, ver slides para mais detalhes
+    Mencionar algumas abordagens no related work
 
 
 \section{Attacks on SGX}
@@ -91,9 +199,5 @@ Maybe justificar porquê o SGX, se bem que estava no titulo da tese, não escolh
 Pode ser interessante mencionar alguns ataques conhecidos ao SGX
 Não sei se isto deveria estar aqui ou no 
 
-
-\section{Data Processing on SGX}
-
-Como faz parte das dificuldades da tese, talvez seja interessante ter uma parte relacionad com isto
 
 
