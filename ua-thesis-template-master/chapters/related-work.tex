@@ -85,11 +85,11 @@ even showing a strong correlation with actual people counts as shown by \citet{0
 
 % The following is regarding the article number as 01
 % A framework to identify key occupancy indicators for optimizing building operation using WiFi connection count data
-In 2021, \citet{01_ALISHAHI2021107936} proposed a framework that utilizes \ac{ml} and statistical analysis to extract key occupancy indicators from simple WiFi 
-connection counts. The authors argued that traditional hardware sensors often suffer from latency, high maintenance costs, and limited scalability. 
-In contrast, they leveraged associated WiFi device counts, defined as devices attempting to authenticate with the \ac{ap}, as a cost effective proxy for human presence.
-The framework yielded positive results, however, \citet{01_ALISHAHI2021107936} also highlighted critical limitations that directly impact the design of this thesis's methodology. 
-They noted that raw connection counts are noisy and require calibration with ground-truth data to account for two main sources of error, the stationary devices like 
+In 2021, \citet{01_ALISHAHI2021107936} proposed a framework that uses \ac{ml} alongside with statistical analysis to extract occupancy indicators from WiFi 
+connection counts, the authors argued that traditional sensors often suffer from latency, high maintenance costs, and limited scalability. 
+In contrast, stated that associated WiFi device counts, which are devices attempting to authenticate with the \ac{ap} not necessarily being able to, as a cost effective proxy for human presence.
+The framework showed positive results, however, \citet{01_ALISHAHI2021107936} also highlighted limitations that impact the design of this thesis's methodology. 
+It was noted that raw connection counts can possesse a degree of noise and require calibration with ground-truth data to account for two sources of error, the stationary devices like 
 printers, desktops, and projectors that permanently connect to the network must be filtered out and the device to occupant ratio, which is the variance in the number of 
 devices carried by each user. The study emphasizes that these errors become more pronounced at smaller spaces, where attributing a connection to a specific zone is 
 difficult without the precise localization data provided by metrics like \ac{rssi}.
@@ -113,30 +113,23 @@ complexity, as the system relies completely on signal processing.
 
 % The following is regarding the article number as 03
 % WiFi based occupancy detection in a complex indoor space under discontinuous wireless communication: A robust filtering based on event-triggered updating
-\citet{03_WANG2019228} addressed the critical challenge of discontinuous communication, where smartphones suspend WiFi transmission to conserve battery, 
-causing users to intermittently disappear from network scans. To maintain accuracy during these silence periods, the authors developed an event triggered updating 
-framework that estimates occupancy based on entry and exit events rather than relying on continuous signal presence. 
-Furthermore, the framework integrates a location filter using \ac{rssi} thresholds to discard devices 
-located outside the target zone by applying a study of the mean values of the measured data in inside 
-and outside positions which could be helpful for the current work, and a non-human filter to exclude stationary equipment, 
-such as printers, via \ac{mac} address analysis. 
-The authors also acknowledge significant limitations such as the reliance on \ac{rssi} thresholds restricts the system to zone level accuracy, the behavior 
-of smartphones suspension of data transmission and the detection errors arise from user behavior, 
-such as occupants carrying multiple devices or separating from their smartphones.
+\citet{03_WANG2019228} approached the challenge of discontinuous communication in mobile devices, where smartphones suspend WiFi transmission to conserve battery, 
+causing users to disappear temporarily from network scans. To maintain accuracy during these periods, the authors developed an event triggered 
+framework that estimates occupancy based on entry and exit events. 
+The framework also integrates a location filter using \ac{rssi} thresholds to discard devices located outside the target zone by applying a study of the mean values of the measured data in inside 
+and outside positions which could be helpful for the current work, and a non-human filter to exclude stationary equipment, such as printers, via \ac{mac} address analysis. 
+The authors also acknowledge limitations such as the reliance on \ac{rssi} thresholds restricts the system to zone level accuracy, the behavior 
+of smartphones suspension of data transmission and the detection errors from user behavior, 
+like occupants carrying multiple devices or separating from their smartphones.
 
 % The following is regarding the article number as 04
 % Effectiveness of using WiFi technologies to detect and predict building occupancy
-In 2017, \citet{04_OUF2017005} presented a case study to demonstrate the effectiveness of using 
-WiFi to detect occupancy as opposed to the more common $CO_2$ sensors. 
-To facilitate this comparison, the authors simultaneously monitored WiFi connection counts and 
-$CO_2$ concentration levels in a university classroom over one week, using manual occupant counts 
-as ground truth. 
-The analysis revealed that WiFi counts served as a superior predictor of occupancy, 
-exhibiting a stronger statistical correlation ($r=0.839$) than $CO_2$ levels ($r=0.728$).
-Furthermore, the authors highlighted that while $CO_2$ sensors suffered from a detection lag of 
-approximately 20 minutes and susceptibility to non-occupancy related fluctuations, WiFi data 
-provided a more accurate, real time proxy for occupancy with the added benefit of utilizing existing 
-infrastructure without additional cost.
+In 2017, \citet{04_OUF2017005} presented a case study to demonstrate the effectiveness of using WiFi to detect occupancy as opposed to the more common $CO_2$ sensors. 
+To allow this comparison, the authors monitored WiFi connection counts and 
+$CO_2$ at the same time, observing concentration levels in a university classroom over one week, using manual occupant counts as ground truth. 
+The analysis revealed that WiFi counts served as a more suited predictor of occupancy, showing a statistical correlation of $r=0.839$ when $CO_2$ levels show $r=0.728$.
+Furthermore, the authors highlighted that while $CO_2$ sensors suffered from a detection lag of approximately 20 minutes and susceptibility to non-occupancy related fluctuations, WiFi data 
+provided a more accurate, real time proxy for occupancy with the added benefit of utilizing existing infrastructure without additional cost.
 
 % The following is regarding the article number as 13
 % Classroom Occupancy-based Human Resource Optimization using Sensor- and WiFi-based Location Tracking
@@ -152,15 +145,14 @@ with 90.5\% actively logged into the university network, confirming that WiFi co
 
 % The following is regarding the article number as 16
 % Classroom Automation Using RSSI
-In 2019, \citet{16_8938387} proposed an architecture model for an occupancy monitoring system based on the \ac{rssi} detected by low-cost ESP8266 microcontrollers. 
-To address the inherent instability of wireless signals, the system employs a mean algorithm, which triggers an occupancy state only when the average \ac{rssi} over 
+In 2019, \citet{16_8938387} proposed a model for an occupancy monitoring system based on the \ac{rssi} detected by low-cost microcontrollers. 
+To address the instability of wireless signals, the system employs a mean algorithm, which triggers an occupancy state only when the average \ac{rssi} over 
 seven iterations dips below a calibrated threshold. 
 Experimental trials demonstrated a high detection accuracy of 95\%, approximately one error every 20 minutes, but only within a limited 3 meter line of sight range. 
-The authors explicitly noted that beyond this 3 meter radius, the accuracy degrades significantly due to multipath propagation. 
+The authors noted that beyond this 3 meter radius, the accuracy degrades due to multipath propagation. 
 \footnote{Phenomenon in wireless communication where a transmitted signal reaches the receiver antenna through multiple paths due to reflections and scattering 
 from environmental objects, resulting in different signal copies with varying attenuation, phase shifts, and time delays as defined by \citet{KALUUBA2006621}}
-This observation is particularly relevant to the current thesis, as it highlights the physical limitations of \ac{rssi} based ranging in complex indoor environments, 
-confirming that simple signal strength thresholds are often insufficient for reliable room level tracking in larger educational spaces.
+This observation is relevant to the current thesis, as it highlights the physical limitations of \ac{rssi} based ranging in indoor environments.
 
 \subsection{Behavioral Monitoring}
 
@@ -168,13 +160,12 @@ confirming that simple signal strength thresholds are often insufficient for rel
 % TRACKING INDOOR LOCATION , MOVEMENT AND DESK OCCUPANCY IN THE WORKPLACE
 A case study performed by \citet{05_CRACKED_LABS} in 2024 analyzed the privacy implications of existing technologies for behavioral monitoring and profiling. 
 The report examined solutions from major vendors such as Cisco, Juniper, Spacewell, and Locatee, identifying a trend where 
-workplace infrastructure is used for tracking user/employee behavior. 
+workplace infrastructure is used for tracking user behavior. 
 Specifically in Section 3.2, the study focuses on Cisco, the manufacturer of the devices generating the logs utilized in this dissertation. 
-The report highlights a product called Cisco Spaces, a cloud based platform that processes massive amounts of data
-to profile user behavior. Regarding the methodology of user classification, the report notes that the system categorizes 
-located persons into groups such as employee, student or guest based on the SSID category. 
-This suggests that the system identifies the type of user based on the specific WiFi network they connect to, allowing for distinct tracking of 
-different user groups.
+The report shows a product called Cisco Spaces, a cloud platform that processes large amounts of data to profile user behavior. 
+For user classification, the report notes that the system categorizes persons into groups like employee, student or guest based on the SSID category, 
+this points that the system identifies the type of user based of the WiFi network the user connects to, allowing for distinct tracking of 
+different user groups and their behaviors.
 
 % The following is regarding the article number as 10
 % EDUM: Classroom Education Measurements via Large-scale WiFi Networks
@@ -186,15 +177,15 @@ class and academic performance (GPA), and confirmed that students seated in the 
 
 % The following is regarding the article number as 11
 % Integrating Indoor Localization Technologies for Enhanced Smart Education: Challenges, Innovations, and Applications
-Later in 2025, \citet{11_11030449} conducted a study to investigate indoor location technologies for future integration in Smart Education (SE) environments, the authors 
+Later in 2025, \citet{11_11030449} realized a study to investigate indoor location technologies for future integration in Smart Education (SE) environments, the authors 
 reviewed several technologies, as mentioned earlier on this chapter, but for the sake of the thesis the focus will be toward WiFi. 
-The authors identified WiFi as the most accessible technology for SE, citing it's widespread availability in educational institutions and the seamless 
+The authors identified WiFi as a accessible technology for SE, citing it's availability in educational institutions and the  
 connectivity provided by networks like eduroam, the one used on the present thesis. 
-Regarding it's capabilities, the study emphasized the potential of the \ac{ieee} 802.11mc standard, which allows for precise 
-ranging, approximately 1 meter, and preserves user privacy with calculations on the client device side. 
-However, in their experimental Proof of Concept (POC) for automatic attendance, the WiFi only approach achieved a classification accuracy of 93.77\% using a regression model. 
-While effective, it was slightly outperformed by 5G (97.21\%), leading the authors to conclude that while WiFi is a useful 
-standalone tool due to it's low cost and presence, a fusion of technologies provides the most robust solution for critical attendance monitoring.
+Regarding its capabilities, the study showed the potential of the \ac{ieee} 802.11mc standard, which allows for ranging, within approximately 1 meter, and preserves user 
+privacy with calculations on the client device side. 
+However, in their experimental \ac{poc} for automatic attendance, the WiFi approach achieved an accuracy of 93.77\% using a regression model, 
+it was outperformed by 5G (97.21\%), leading the authors to conclude that while WiFi is a useful tool due to it's low cost and presence, 
+a fusion of technologies provides the most robust solution for critical attendance monitoring.
 
 \subsection{Occupancy Monitoring}
 
@@ -230,14 +221,12 @@ transient users are merely noise.
 
 % The following is regarding the article number as 08
 % Attendance monitoring in classroom using smartphone & Wi-Fi fingerprinting
-Earlier in 2016, \citet{08_7814796} proposed a mobile attendance system that combines facial recognition for user authentication 
-with WiFi network analysis to verify the student's location. 
+Earlier in 2016, \citet{08_7814796} proposed a attendance system that combines facial recognition for user authentication with WiFi network analysis to verify the student's location. 
 While the authors acknowledged methods like trilateration 
 \footnote{Trilateration is a geometric method of determining location by measuring distances from at least three known reference points using signal strength.}, 
-but due to signal interference adopted a fingerprinting approach using the k-Nearest Neighbor algorithm. 
-Regarding the results, the system demonstrated high precision, achieving a positioning error between 1 and 2.5 meters. 
-In practical testing, this methodology identified whether a student was inside the target classroom 94\% of the time, 
-proving that low-cost fingerprinting can effectively predict proxy attendance without the need for dedicated hardware.
+due to signal interference adopted a fingerprinting approach using the \ac{ml} algorithm. 
+Regarding the results, the system demonstrated positive precision, achieving a positioning error between 1 and 2.5 meters. 
+In practical testing, this methodology identified whether a student was inside the target classroom 94\% of the time.
 
 % The following is regarding the article number as 14
 % WiFi Received Signal Strength (RSS) Based Automated Attendance System for Educational Institutions
@@ -273,9 +262,10 @@ The ubiquity of WiFi networks as a sensing infrastructure presents a fundamental
 also introduces significant privacy risks for the individuals being tracked. As noted in the previous sections, transforming a standard wireless network into a 
 soft sensor involves analyzing device footprints, specifically \ac{mac} addresses and signal characteristics, which can serve as strong identifiers of specific individuals.
 
-Consequently, the academic literature reveals a spectrum of methodologies designed to reconcile the trade off between service utility and user privacy. 
-These approaches range from simple data minimization strategies, which avoid collecting unique identifiers entirely, to complex anonymization schemes like hashing 
-and k-anonymity. However, as the demand for real time, room level precision increases, so does the inadequacy of traditional obfuscation methods. 
+Consequently, the academic literature demonstrates a variety of methodologies designed to connect the trade off between service utility and user privacy. 
+These approaches range from data minimization strategies, that avoid collecting unique identifiers, to more complex anonymization schemes like hashing 
+and k-anonymity. 
+However, as the demand for room level precision increases, so does the inadequacy of traditional methods. 
 
 This section reviews these privacy preserving strategies, categorizing them into distinct paradigms found in the literature: 
 omission of privacy mechanisms, where technical feasibility takes precedence; 
@@ -286,16 +276,16 @@ and volunteer based or opt-in models.
 
 \subsection{Omission/Inexistence of Privacy Mechanisms}
 
-\citet{03_WANG2019228} focused on the technical feasibility of detecting inactive smartphones to improve zone detection accuracy. 
-While the system utilizes \ac{mac} address analysis to filter out non-human devices, the study does not explicitly detail mechanisms for anonymizing these addresses or 
+\citet{03_WANG2019228} focused on the technical application of detecting inactive smartphones to improve detection accuracy. 
+While the system utilizes \ac{mac} address analysis to filter non-human devices, the study does not detail any mechanisms for anonymizing these addresses or 
 protecting the identity of the smartphone owners.
 
 Furthermore, \citet{05_CRACKED_LABS} provided an analysis of commercial indoor positioning systems, identifying a lack of 
-privacy by design. The report highlights that these platforms often prioritize behavioral profiling, categorizing users into groups like employees or 
+privacy by design in several applications. The report shows that these platforms often prioritize profiling and categorizing users into groups like employees or 
 students, over data protection, allowing for the tracking of individual movements without obfuscation or user optional mechanisms.
 
-\citet{09_8913341} conducted a large scale validation of WiFi occupancy sensing by benchmarking it against hardware beam counters across a university campus. 
-The study focused almost exclusively on the utility of the metadata, like user's \ac{mac} address which can endanger students privacy, since 
+\citet{09_8913341} conducted a validation of WiFi occupancy sensing by benchmarking it against hardware counters across a university campus. 
+The study focused on the utility of the metadata, like user's \ac{mac} address which can endanger students privacy, since 
 the authors did not detail privacy preserving architectures, it leads to the assumption of inexistence of privacy preserving mechanisms.
 
 \subsection{Data Aggregation and Minimization}
@@ -325,8 +315,8 @@ to what will be done during the development process of this dissertation.
 
 \subsection{Institutional Compliance and Ethical Clearance}
 
-\citet{06_9750047} addressed the privacy implications of tracking students by explicitly operating under a governance framework. 
-The study obtained formal ethical clearance from the university.
+\citet{06_9750047} addressed the privacy implications of tracking students by operating under a governance framework, since 
+the study obtained formal ethical clearance from the university.
 
 \subsection{Volunteer Based Model or Opt-in Model}
 
@@ -351,12 +341,12 @@ studies have established a base foundation for this approach.
 
 % The following is regarding the article number as 20
 % Privacy Protection in 5G Positioning and Location-based Services Based on SGX
-To address the critical privacy concerns associated with collecting user location data, \citet{20_10.1145/3512892} proposed a trusted computing framework based on \ac{sgx}. 
-The authors argued that traditional privacy preserving techniques such as k-anonymity or homomorphic encryption, often incur prohibitive computational overheads or 
-require reliance on a \ac{ttp}, which introduces a single point of failure.
-In contrast, their work demonstrates that SGX enables a lightweight, integrated privacy scheme, by processing sensitive location data within a hardware protected 
-enclave the system ensures that raw identity information remains inaccessible to the operating system or 
-the service provider, allowing for secure positioning and occupancy analysis without exposing individual user trajectories. 
+To address the privacy concerns associated with collecting user location data, \citet{20_10.1145/3512892} proposed a trusted computing framework based on \ac{sgx}. 
+The authors stated that traditional techniques like k-anonymity or encryption, may include computational overheads or 
+require dependencies on a \ac{ttp}.
+In contrast, their work demonstrates that SGX allows a privacy scheme, by processing sensitive location data within a hardware protected 
+enclave, the system ensures that raw identity information remains inaccessible to the operating system or 
+the service provider, allowing secure analysis without exposing individual user data. 
 This approach validates the architectural choice in this thesis to utilize SGX enclaves for processing sensitive WiFi logs, ensuring compliance with privacy 
 standards while maintaining system performance.
 
@@ -370,7 +360,7 @@ enclave, protected from the host system.
 Furthermore, the authors quantified the performance cost of this security, finding that \ac{sgx} introduces only a small compared to bare metal implementation, due to 
 the one time events such as the enclave creation, copying data, sealing and unsealing.
 This finding is important for the current thesis, as it validates that shifting the occupancy estimation logic into an \ac{sgx} enclave is a viable strategy that secures 
-student data without compromising the real time performance or the accuracy of the occupancy counts.
+student data without compromising the real time performance or the accuracy of the occupancy counts. 
 
 \section{Data Processing in \ac{sgx}}
 
@@ -384,9 +374,9 @@ Unlike systems that attempt to execute entire legacy applications or libraries f
 the heavy lifting of job scheduling and data storage remains in the untrusted Hadoop (open source framework for distributed storage and processing of large datasets). 
 Only the specific map and reduce functions, along with a minimal cryptographic shim, are loaded into the protected enclave.
 To cope with the memory constraints of the enclave, \ac{vc3} relies on a streaming data model. 
-Encrypted data is ingested in manageable input splits, processed within the enclave's isolated heap, and the results are immediately encrypted and streamed out. 
+Encrypted data is ingested in input splits and processed within the enclaves heap, and the results are encrypted and then streamed out. 
 To mitigate the performance overhead of \ac{sgx} context switches, between ECalls and OCalls, \ac{vc3} utilizes a shared memory region for communication and implements aggressive batching. 
-By processing key value pairs in batches, rather than individually, the system significantly reduces the frequency of expensive enclave transitions.
+By processing key value pairs in batches, rather than individually, the system reduces the frequency of expensive enclave transitions.
 Furthermore, to avoid the memory footprint of standard libraries, \ac{vc3} utilizes a custom runtime library and heap allocator, 
 ensuring that the limited secure memory is dedicated primarily to the user's data and logic.
 
