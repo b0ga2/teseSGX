@@ -5,37 +5,38 @@ The present chapter provides a comprehensive understanding of the technical unde
 \ac{sgx} and the protection of sensitive data.
 It begins with the introduction of the concept of sensitive data, followed by \ac{tee}s, giving an overview of this type of mechanism. 
 Then the chapter compares technologies, analyzing the distinctions between several \ac{tee}s implementations. 
-Then the discussion focuses on Intel \ac{sgx}, detailing its architecture, workflow, and security mechanisms. 
-Finally, the chapter addresses the technical challenges, concluding with potential attacks on \ac{sgx}
+After this, the discussion focuses on Intel \ac{sgx}, detailing its architecture, workflow, and security mechanisms, followed by
+the technical challenges of data processing in an enclave and concluding with potential attacks on \ac{sgx}.
 
 \section{Sensitive Data}
 
 Driven by technological advances and institutional needs, nearly all
 buildings are now equipped with internet access provided through 
 \ac{ap}. These allow for the determination of user location with a reasonable degree 
-of precision, due to the need of the user to authenticate to a specific AP 
+of precision, due to the need of the user to connect to a specific AP 
 in order to use the network.
 
-Although often categorized as technical metadata, it presents privacy challenges when analyzed by definition of sensitive data, while raw location logs may not possess 
-intrinsic sensitiveness ,like a direct medical diagnosis might, its possible to acquire sensitive information through their 
+Although often categorized as technical metadata, it presents privacy challenges when analyzed by definition of sensitive data, 
+while raw location logs may not possess 
+intrinsic sensitiveness, like a direct medical diagnosis might, its possible to acquire sensitive information through their 
 processing context. As \citet{04_article} argue, the critical factor is the computational distance required to infer sensitive 
 information from apparently neutral data.
 
-In the case of indoor positioning, this computational distance is low, the aggregation of location traces creates a elevetad 
+In the case of indoor positioning, this computational distance is low, the aggregation of location traces creates a high 
 risk of linkability, where disparate datasets, such as anonymous WiFi logs and public class schedules, can be easily cross referenced. 
-This dramatically reduces the effort required to de-anonymize users, effectively transforming technical data into personal 
+This reduces the effort necessary to de-anonymize users, effectively transforming technical data into personal 
 identifiable information.
 
 Example of sensitive information used for indoor location mentioned throughout this document:
 
 \begin{itemize}
-    \item \textbf{\ac{mac} Address:} A persistent hardware identifier assigned to the network interface controller. 
-    In Wi-Fi tracking, this serves as a static fingerprint that uniquely identifies a user's device across different sessions and locations.
+    \item \textbf{\ac{mac} Address:} A persistent hardware identifier assigned to the network interface controller, 
+    this serves as a static fingerprint that uniquely identifies a user's device across different sessions and locations.
     \item \textbf{\ac{uu}:} The unique user identifier (such as a student ID, employee username, or email) 
     required for network authentication.
     \item \textbf{Connection Logs:} Time records containing precise association and disassociation timestamps,
     these allow for the reconstruction of a user's daily routine, duration of stay, and punctuality patterns.
-    \item \textbf{Spatial Hierarchy:} Detailed topological data classifying location from macro to micro levels.
+    \item \textbf{Spatial Hierarchy:} Topological data classifying location from macro to micro levels.
     \item \textbf{Visual and Biometric Data:} In systems utilizing optical sensors, raw data includes high-resolution images 
     or video feeds capable of revealing biometric features and behavioral signatures.
 \end{itemize}
@@ -47,8 +48,8 @@ Before defining \ac{tee}s, it is essential to understand the underlying concept 
 Historically, \ac{tc} relied on a dedicated hardware component to provide a functional interface for security operations, 
 one common example is the \ac{tpm}, which allows a system to prove its integrity and securely store cryptographic keys,  
 however, a limitation of the \ac{tpm} is its inability to perform isolated execution of arbitrary code, 
-since it is mainly designed for passive storage and reporting rather than active secure processing.
-But newer approaches to \ac{tc} shift the execution of arbitrary code within a trusted environment that allows tamper resistant 
+since it is mainly designed for passive storage and reporting, rather than active processing.
+But more recent approaches to \ac{tc} shift the execution of arbitrary code to a trusted environment that allows tamper resistant 
 execution of its applications.
 
 %Definição de TEE (isolamento de código e dados).
@@ -71,6 +72,7 @@ typically a hypervisor or microkernel to protect the execution environment.
   \caption{Overview of \ac{tee} building blocks, image by \citet{01_7345265}.}
   \label{fig:TEE_Building_Blocks}
 \end{figure}
+\newpage
 As seen in the previous picture, a TEE in composed by building blocks such as:
 \begin{itemize}
     \item{\normalsize Secure Boot: guarantees that only code of a certain property can be loaded during boot.}
@@ -87,11 +89,13 @@ While the \ac{ree} is optimized for performance, versatility, and accessing peri
 required for sensitive data processing, as it makes it vulnerable software attacks. 
 The architectural principle of trusted computing is the strict separation between these two worlds, 
 the \ac{tee} protects its assets even when the surrounding \ac{ree} is fully compromised.
-This seperation can be observed in the following image.
+This separation can be observed in the Figure \ref{fig:ree_vs_tee}.
 \begin{figure}
-  \includegraphics[width=\linewidth]{figs/ree_vs_tee.png}
+  \begin{center}
+  \includegraphics[scale=0.8]{figs/ree_vs_tee.png}
   \caption{Overview of \ac{ree} and of \ac{tee}, image by \citet{02_phdthesis}.}
   \label{fig:ree_vs_tee}
+  \end{center}
 \end{figure}
 
 \section{TEE Technologies}
@@ -108,18 +112,26 @@ suited for microcontrollers.
 Contrary to a standalone component, TrustZone is an approach designed to be integrated into a \ac{soc}, 
 securing not just the processor but the entire electronic device, as described by \citet{05_arm_trustzone}, in this model
 the architecture is centered around the concept of distinct domains, the Secure World, the trusted environment, and 
-the Normal World, the untrusted environment. 
-This hardware enforced isolation allows software to execute with different privilege levels, preventing untrusted applications 
-in the Normal World from directly accessing resources allocated to the Secure World. 
-The state of the processor is determined by the \ac{ns} bit, typically located in the \ac{scr}, which effectively partitions the system's hardware resources.
+the Normal World, the untrusted environment, as seen in Figure \ref{fig:arm_trustzone}.
+
 \begin{figure}
-  \includegraphics[width=\linewidth]{figs/TrustZone_architecture.png}
+  \begin{center}
+  \includegraphics[scale=1.1]{figs/TrustZone_architecture.png}
   \caption{ARM TrustZone technology, image by \citet{05_arm_trustzone}.}
   \label{fig:arm_trustzone}
+  \end{center}
 \end{figure}
+
+\newpage
+
+This isolation allows software to execute with different privilege levels, preventing untrusted applications 
+in the Normal World from directly accessing resources allocated to the Secure World. 
+The state of the processor is determined by the \ac{ns} bit, typically located in the \ac{scr}, which effectively partitions the system's hardware resources.
+
 To manage the transition between worlds, TrustZone employs a monitor mode, which executes in a secure state 
 independent of the \ac{ns} bit, this mode bridges the two software stacks and is entered via the privileged \ac{smc} instruction or through specifically 
 configured hardware exceptions. 
+
 Hardware isolation is reinforced by banked registers, which guarantees that security critical system registers are 
 either hidden from the untrusted environment or are strictly accessed from the trusted environment.
 Regarding memory infrastructure, TrustZone introduces components such as the \ac{tzasc} for \ac{dram} and the \ac{tzma} for 
@@ -129,7 +141,8 @@ TrustZone \ac{mmu} maintains separate virtual to physical translation tables for
 enforced via an additional tag bit on cache lines. 
 Finally, the \ac{tzpc} extends this isolation to system peripherals, restricting access to specific devices based 
 on the security domain.
-In recent years, academic and industrial interest in this technology has surged, largely driven by the availability of 
+
+In recent years, academic and industrial interest in this technology has surged, driven by the availability of 
 technical documentation and accessible development platforms from manufacturers like Xilinx, this transparency has facilitated 
 adoption within the community, particularly in the context of \ac{rd}.
 
@@ -143,24 +156,35 @@ preventing the hypervisor from reading clear text information, as cited by \cite
 Later in 2017, a new version came out, the AMD \ac{sev-es} that added the additional feature of \ac{cpu} register state protection, in order to 
 do this, in \ac{sev-es} the \ac{vm} register state is encrypted at each hypervisor transition, preventing the hypervisor to see 
 the data that is being used, adding confidentiality to in-memory data.
+
 The most recent version is the \ac{sev-snp}, built on top of the previous versions while adds hardware based protections like 
-memory integrity protection to prevent attacks like data replay, memory re-mapping, besides this, it also implements 
+memory integrity protection to prevent attacks like data replay, memory re-mapping, it also implements 
 protection in interrup behavior. 
+
 This is, in the reviewed literature, according to \citet{06_amdsev_inteltdx}, the first \ac{cvm}, 
 which are \ac{vm}s made to to alleviate the programmability and usability challenges of the previously proposed 
 trusted computing technologies, by providing abstraction at the level of the \ac{vm}.
-This technology uses a dedicated processor, the AMD \ac{psp} to manage the security features, this is an ARM-based processor that 
-is separated from the main 32-bit core, but directly integrated in the \ac{cpu}, besides this, it also allows remote attestation.
+This technology uses a dedicated processor, the \ac{asp} to manage the security features, this is an ARM-based processor that 
+is separated from the main 32-bit core, but directly integrated in the \ac{cpu}, which also allows for remote attestation.
+
 \begin{figure}
-  \includegraphics[width=\linewidth]{figs/amd_sev_snp_architecture.png}
+  \begin{center}
+  \includegraphics[scale=1.25]{figs/amd_sev_snp_architecture.png}
   \caption{AMD \ac{sev} Architecture, image by \citet{06_amdsev_inteltdx}.}
   \label{fig:amd_sev}
+  \end{center}
 \end{figure}
-The previous figure shows the overview of the AMD \ac{sev-snp}, this \ac{vm} executes in an isolated 
-environment where its memory and state registers are encrypted via a unique key managed by the \ac{asp}. 
-The \ac{asp} also safeguards the integrity of guest address translations and strictly isolates the 
-execution by blocking \ac{smi} events and preventing access from the \ac{smm}, this architecture also introduces 
-\ac{vmpl}, a four-tiered privilege hierarchy to traditional x86 rings, this enables a \ac{svsm} running at the highest level 
+
+\newpage
+
+The Figure \ref{fig:amd_sev} shows the overview of the AMD \ac{sev-snp}, where green zones ilustrate \ac{cvm}s with unmodified software (orange) 
+and with modified software (purple) and the blue areas are trusted components, the vertical black line indicates that 
+each \ac{cvm} is isolated from the host and other encrypted \ac{vm}s. This \ac{vm} executes in an isolated 
+environment where its memory and state registers are encrypted via a unique key managed by the \ac{asp}, 
+this safeguards the integrity of guest address translations and strictly isolates the 
+execution by blocking \ac{smi} events and preventing access from the \ac{smm}. 
+This architecture also introduces \ac{vmpl}, a four-tiered privilege hierarchy to traditional x86 rings  
+that enables a \ac{svsm} running at the highest level 
 \ac{vmpl}0 to securely offer services like virtual \ac{tpm} and live migration.
 
 \subsection{Intel TDX}
