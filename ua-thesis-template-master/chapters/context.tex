@@ -195,12 +195,14 @@ This technology facilitates the deployment of \ac{vm}s, referred to as \ac{td}s,
 state and memory, with integrity protection and remote attestation, addressing scenarios where the cloud host platform is considered 
 untrustworthy within the threat model
 \footnote{A threat model is a structured approach to identifyingpotential security risks, defining attacks from the perspective of 
-an adversary to strengthen system defenses \citep{threat_model}.}.
+an adversary to strengthen system defenses \citep{threat_model}.}. 
+
 Technically, \ac{tdx} builds upon other Intel technologies such as \ac{vt} and \ac{mktme}, together, these components enforce 
 the confidentiality and integrity of \ac{td} memory and \ac{cpu} states, ensuring that they can neither be accessed nor tampered with by other 
 entities in the environment, such as the hypervisor or neighboring \ac{vm}s in the same cloud tenant. Although it also uses \ac{dcap} and \ac{sgx} 
-for remote attestation.
-According to \citet{12_intel_tdx} achieves the previous using a combination of three components, namely, memory access control, runtime memory encryption and an 
+for remote attestation. 
+
+According to \citet{12_intel_tdx} it achieves the previous using a combination of three components, namely, memory access control, runtime memory encryption and an 
 Intel-signed \ac{tdx} module that does the handling of security-sensitive \ac{td} management operations. 
 
 \newpage
@@ -218,9 +220,10 @@ functional capabilities like hardware-assisted virtualization, memory encryption
 The previous module is loaded in to the \ac{seam} range, a portion of memory that is reserved during boot. Another component present in this range 
 is the \ac{seam} loader, which is responsible for installing and updating the module. 
 \ac{seam} provides two execution modes, the \ac{seam} \ac{vmx} root mode and non-root mode, a \ac{tdx} compatible hypervisor operates in the \ac{vmx} root mode 
-and uses the SEAMCALL introduction to call host-side functions, functions that start with TDH, of the modulea. This is possible since the the logical processor 
-changes \ac{vmx} root mode into \ac{seam} \ac{vmx} root mode and starts executing code within the TDX Module, upon completing it returns in \ac{vmx} root mode 
-with the instruction SEAMRET. 
+and uses the SEAMCALL introduction to call host-side functions, functions that start with TDH, of the modulea. 
+
+This is possible since the the logical processor changes \ac{vmx} root mode into \ac{seam} \ac{vmx} root mode and starts executing code within the TDX Module, 
+upon completing it returns in \ac{vmx} root mode with the instruction SEAMRET. 
 The \ac{td}s run in \ac{seam} \ac{vmx} non-root mode, since \ac{tdx} supports the execution of unmodified user-level applications within a \ac{td}, like a normal 
 \ac{vm}, but the guest \ac{os} kernel (TDX-enlightened OS in Figure \ref{fig:intel_tdx}), needs to be altered in order to align with the \ac{tdx} plataform, namely 
 managing \ac{tdx} exceptions via an internal handler, implementation of a mechanism for communication between the \ac{td} and the \ac{tdx} module, 
