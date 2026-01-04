@@ -24,10 +24,9 @@ information from apparently neutral data.
 
 In the case of indoor positioning, this computational distance is low, the aggregation of location traces creates a high 
 risk of linkability, where disparate datasets, such as anonymous WiFi logs and public class schedules, can be easily cross referenced. 
-This reduces the effort necessary to de-anonymize users, effectively transforming technical data into personal 
-identifiable information.
+This reduces the effort necessary to de-anonymize users, transforming technical data into identifiable information.
 
-Example of sensitive information used for indoor location mentioned throughout this document:
+Example of some sensitive information used for indoor location mentioned throughout this document:
 
 \begin{itemize}
     \item \textbf{\ac{mac} Address:} A persistent hardware identifier assigned to the network interface controller, 
@@ -36,9 +35,9 @@ Example of sensitive information used for indoor location mentioned throughout t
     required for network authentication.
     \item \textbf{Connection Logs:} Time records containing precise association and disassociation timestamps,
     these allow for the reconstruction of a user's daily routine, duration of stay, and punctuality patterns.
-    \item \textbf{Spatial Hierarchy:} Topological data classifying location from macro to micro levels.
+    \item \textbf{Spatial Hierarchy:} Topological data classifying location from macro to micro levels, like the location of the \ac{ap} the user connected to.
     \item \textbf{Visual and Biometric Data:} In systems utilizing optical sensors, raw data includes high-resolution images 
-    or video feeds capable of revealing biometric features and behavioral signatures.
+    or video capable of revealing biometric features and behavioral signatures.
 \end{itemize}
 
 \section{Trusted Execution Environments (TEEs)}
@@ -232,39 +231,181 @@ transitioning memory pages from private to shared \ac{io} operations, although i
 
 \section{Intel Software Guard Extensions (SGX)}
 
-Maybe justificar porquê o SGX, se bem que estava no titulo da tese, não escolhi nada
-  Usar artigo de comparação com a AMD, e dizer que no TDX não existe a necessidade
+% Maybe justificar porquê o SGX, se bem que estava no titulo da tese, não escolhi nada
+% Usar artigo de comparação com a AMD, e dizer que no TDX não existe a necessidade
 
-    \subsection{Architecture and Workflow}
-    Como funcemina:
+In similarity with previous \ac{tee} implementations, \ac{sgx} is a set of extensions for the Intel architecture with the goal to allow 
+for integrity and confidentiality during security-sensitive computation in a computer where the all the privileged components might be compromised, as defined by \citet{sgx}.
 
-    Explicar o conceito de Enclaves.
+This emerged as a solution to a recurring problem known as secure remote computation, which refers to the difficulty of executing software on a remote computer owned and maintained by 
+an untrusted party. 
+In this context, \ac{sgx} is one of many attempts to address this challenge by leveraging trusted hardware. 
+To achieve this, the hardware establishes a secure container and a service that enables secure computation for the user.
 
-    Explicar a divisão da memória (EPC - Enclave Page Cache).
+In simpler terms, trust in this model relies on software attestation, a capability that allows the hardware to prove to a remote user that they are 
+communicating with the intended application on non-compromised hardware, proving that the code has not been altered.
 
-    Mecanismo de ECalls e OCalls (entrar e sair do enclave e comunicação com o mundo "inseguro").
+This is achieved through a cryptographic signature that certifies the hash of the enclave's content, the user verifies this signature against a root of trust in 
+the manufacturer's hardware, confirming the validity of the attestation key.
 
-    \subsection{Security Mechanisms: Attestation and Sealing}
-    
-    Remote Attestation: Como provar que o código é legítimo 
+% Dizer o que se vai explicar a seguir?
 
-    Sealing: Como guardar dados cifrados no disco 
-    Unsealing
+\subsection{Enclave}
+% Explicar o conceito de Enclaves.
+An important concept in \ac{sgx} technology is an enclave, as described by \citet{12_intel_tdx}, is a protected region within an application's 
+address space that allows the isolation sensitive code and data from the rest of the system. 
 
-    \subsection{Relevance to Privacy and Preserving Analytics}
-    Explicar por que razão o SGX é bom para processar dados sensíveis
+% Enclave Control Structure 
+To maintain the security properties and persistent identity of each enclave instance, \ac{sgx} employs a control structure known as the \ac{secs}. 
+This structure contains the stored metadata for each individual enclave and is kept in a dedicated \ac{epc} page with the type \texttt{PT\_SECS}. 
+During the enclave's lifecycle, the \ac{secs} is the first page allocated and the last to be deallocated, serving as the persistent identifier, consequently, the system software utilizes the 
+virtual address of the \ac{secs} to reference the specific enclave when issuing \ac{sgx} instructions. 
+Despite being mapped for identification purposes, the \ac{secs} page remains inaccessible to the trusted enclave code and the untrusted system software, due to 
+the present of sensitive information regarding the enclave.
 
-\section{Technical Challenges: Memory Limitations in SGX}
+% Enclave Memory Layout
+With the enclave's identity and attributes anchored in the \ac{secs}, its execution context is defined by a window in the virtual address space, known as the \ac{elrange}. 
+This range is used to map all code and sensitive data to the corresponding \ac{epc} pages and any memory access attempted by the enclave outside this defined area is automatically 
+mapped to access non-\ac{epc} memory via the same virtual addresses, allowing for interaction with the rest of the application.
 
-    \subsection{The Enclave Page Cache (EPC) Bottleneck}
-    Explicar que a memória segura é limitada, ver slides para mais detalhes
-    Mencionar algumas abordagens no related work
+%Mencionar atributos
+While the \ac{elrange} defines the memory boundaries of the enclave, the nature of its execution environment is defined by the ATTRIBUTES field within the \ac{secs}, 
+via flags such as \texttt{DEBUG}, \ac{xfrm}, and \texttt{MODE64BIT}. 
+The \texttt{DEBUG} is intended to be used during development, since when set, it enables debugging features that allow the reading and modification 
+of the enclave's memory. 
+The \ac{xfrm} enforces the enclave code to run with the architectural extensions enabled by the compiler, done by defining the value for the \texttt{XCR0} register during execution. 
+Finally, the \texttt{MODE64BIT} flag determines whether the enclave operates using the 64-bit architecture, likely for backward compatibility.
 
+%Mencionar o ciclo de vida
+Once these operational parameters are defined in the metadata, the enclave must pass through a specific sequence of states to become executable. 
+Consequently, the enclave lifecycle is related with resource management, specifically the allocation of \ac{epc} pages. 
+This process begins with creation, where the \texttt{ECREATE} instruction transforms a free \ac{epc} page into the enclave's \ac{secs}, initializing it with architectural parameters and setting the 
+INIT attribute to false, still in this state, the lifecycle enters the loading phase, where the system software uses \texttt{EADD} to allocate pages for code and data, 
+while \texttt{EEXTEND} updates the enclave's cryptographic measurement for future attestation. 
+After loading, initialization is started by the \texttt{EINIT} instruction, that validates a token and sets the \texttt{INIT} attribute to true, 
+sealing the enclave from modification and enabling execution in Ring 3. 
+Finally, the destruction of the enclave occurs with the EREMOVE instruction, which deallocates pages by clearing their \texttt{VALID} bit, ensuring that the \ac{secs} page is only destroyed once all other 
+pages associated with the enclave have been successfully removed, as shown in Figure \ref{fig:sgx_enclave_lifecycle}.
 
-\section{Attacks on SGX}
+\newpage
+\begin{figure}
+  \begin{center}
+  \includegraphics[scale=0.6]{figs/sgx_enclave_lifecycle.png}
+  \caption{An enclave lifecycle, by \citet{sgx}.}
+  \label{fig:sgx_enclave_lifecycle}
+  \end{center}
+\end{figure}
 
-Pode ser interessante mencionar alguns ataques conhecidos ao SGX
-Não sei se isto deveria estar aqui ou no 
+\subsection{Architecture and Workflow}
 
+To secure its memory from the untrusted environment, \ac{sgx} reserves a region in \ac{dram} known as the \ac{prm}. 
+This region is isolated by the \ac{cpu}, blocking all non-enclave memory accesses from softwares such as the kernel or hypervisor, 
+as well as protecting against \ac{smm} and \ac{dma} attacks from peripherals.
 
+In the \ac{prm} alo is the \ac{epc}, which consists of 4KB memory pages that store the enclave's code and data. 
+While the allocation of these \ac{epc} pages is managed by the untrusted system software, the security is enforced by hardware. 
+The \ac{cpu} tracks the state and permissions of every \ac{epc} page in the \ac{epcm} to guarantee that each page belongs to a specific 
+enclave and cannot be mapped by unauthorized entities.
+
+The workflow begins with the loading of code and data into the enclave, during this operation the untrusted system software asks the \ac{cpu} to 
+copy data from unprotected memory into the \ac{epc} pages and assigns them to the just created enclave. 
+After the loading is completed, the system software indicates to the \ac{cpu} to mark the enclave as initialized, at this point the loaded code becomes executable in the 
+enclave and the loading method is dissabled to prevent modification. 
+Throughout this process, the \ac{cpu} computes a cryptographic hash of the enclave's content, which becomes the enclave's measurement hash.
+This allows a remote party to execute a software attestation process, to prove the communication is done with an enclave with a specific measurement hash, 
+and is running in a safe environment.
+
+The execution flow of an enclave is governed by specific \ac{cpu} instructions, these are similar to context switching between user mode and kernel mode, 
+but the enclave execution remains within Ring 3.
+
+\subsection{Enclave Page Cache}
+% Explicar a divisão da memória (EPC - Enclave Page Cache).
+As mentioned previously, the content of the enclave and necessary data are data structures in the \ac{epc} as shown in the Figure \ref{fig:sgx_epc}.
+
+\newpage
+\begin{figure}
+  \begin{center}
+  \includegraphics[scale=0.8]{figs/sgx_epc_overview.png}
+  \caption{\ac{epc} Memory overview, by \citet{sgx}.}
+  \label{fig:sgx_epc}
+  \end{center}
+\end{figure}
+
+The \ac{sgx} design allows for multiple enclaves running at the same time, which translates to the necessity of a multi-process environment. This is possible due to the capability of the \ac{epc} 
+to assign different pages to different enclaves.
+Non-trusted software cannot directly access this, since it is contained in the \ac{prm}.
+
+This mechanism is managed by the same system software that manages the rest of the computers physical memory, which could be a hypervisor or the \ac{os} kernel. Both accomplish this with the use 
+of \ac{sgx} introductions to allocate and free pages in the enclaves. But as mentioned previously, this is not a trusted component, so the \ac{sgx} processors verifies every allocation decision, 
+and has the possibility to refuse them if they compromise any security guarantee.
+
+To perform these verifications, \ac{sgx} keeps some information about previous allocation decisions for each \ac{epc} page in the \ac{epcm}, an array with one entry per page. 
+The three main fields in each entry that determin the ownership of the page are \texttt{VALID}, a bit indicating whether an EPC page is currently active and allocated to an enclave, if 
+set to one it signifies the page is in use, preventing reallocation or overwriting by other instructions, \texttt{PT}, eight bits that define the type of page and \texttt{ENCLAVESECS} which identifies the 
+enclave that owns the page.
+
+The contents of this map can only be read by the \ac{sgx} as stated in Intel \ac{sdm}.
+
+\subsection{ECalls and OCalls}
+%Mecanismo de ECalls e OCalls (entrar e sair do enclave e comunicação com o mundo "inseguro").
+In Intel SGX, \texttt{ECALL} and \texttt{OCALL} are mechanisms for communication between the untrusted application and the trusted enclave. 
+
+\texttt{ECALL}s allow the untrusted application to invoke a pre-defined function inside the enclave, passing input parameters and pointers to shared memory within the application.
+
+On the other hand, \texttt{OCALLs} enable the enclave to invoke a pre-defined function in the untrusted application, but unlike \texttt{ECALL}s, 
+cannot share enclave memory directly and must copy parameters into the application's memory before the call.
+
+Both \texttt{ECALL}s and \texttt{OCALL}s are defined using the \ac{edl}, where \texttt{ECALL}s are declared in the trusted section and OCALLs in the untrusted section of the file.
+During the build process, the Edger8r
+\footnote{Tool provided by the Intel SGX \ac{sdk} that automatically generates the code that connects the untrusted application and the trusted enclave}
+tool parses the \ac{edl} file and generates functions wrappers around the actual functions.
+
+\subsection{Attestation, Sealing and Unsealing}
+SGX relies on software attestation to prove to a remote party that it is communicating with a specific piece of software running in a secure container hosted by trusted hardware. 
+Central to this process is the enclave's identity, which is cryptographically established during its initialization and loading phases, as mentioned previously.
+
+The identity of an enclave is primarily defined by two measurement registers located in the enclave's \ac{secs}. 
+The first, \texttt{MRENCLAVE}, contains a SHA-256 hash that uniquely identifies the enclave's code and data contents, acting as a cryptographic log of the creation process, 
+it incorporates every instruction used to build the enclave, consequently, any modification to the loaded code, data, or their order results in a completely 
+different MRENCLAVE value, ensuring that the running software corresponds exactly to the developer's intent. 
+Complementing this is MRSIGNER, which identifies the entity that signed the enclave rather than the code itself. 
+This register stores the SHA-256 hash of the public RSA key modulus used to sign the SIGSTRUCT certificate, allowing remote parties to trust an 
+enclave based on the author's reputation. 
+
+\newpage
+\begin{figure}
+  \begin{center}
+  \includegraphics[scale=0.8]{figs/enclave_identity.png}
+  \caption{Establishing an Enclave’s Identity, by \citet{sgx}.}
+  \label{fig:enclave_identity}
+  \end{center}
+\end{figure}
+
+The attestation process leverages these identities through a mechanism known as local attestation, where an enclave proves its identity to another enclave on the same platform using the 
+EREPORT instruction. 
+To extend this trust remotely, \ac{sgx} uses a privileged enclave known as the Quoting Enclave, that receives the local report, verifies it, and replaces the local MAC with a 
+cryptographic signature produced by the processor's unique attestation key. 
+This signature, which includes the MRENCLAVE and MRSIGNER, serves as the final proof to the remote service provider that the enclave is authentic and running on genuine hardware.
+
+The initialization process is finalized by the \texttt{EINIT} instruction, which validates the enclave's \texttt{SIGSTRUCT}, this checks that the measurement in the certificate 
+matches the calculated \texttt{MRENCLAVE} and populates the \texttt{MRSIGNER} field in the \ac{secs}, defining the enclave's identity before it can begin execution.
+
+\section{Memory and Performance Limitations in SGX}
+% The Enclave Page Cache (EPC) Bottleneck
+% Explicar que a memória segura é limitada, ver slides para mais detalhes
+% Mencionar algumas abordagens no related work
+
+Eventhough \ac{sgx} provides confidentiality and integrity, it introduces performance overheads and resource constraints.
+These limitations are derived from the restricted size of the secure memory region and the high cost of transitioning between trusted and 
+untrusted execution modes.
+
+One constraint is the limited capacity of the \ac{epc}, since it resides within the \ac{prm}, its size is usually 128 MB. 
+When an application's working set exceeds the available \ac{epc} capacity, the system software must perform paging to evict \ac{epc} pages to 
+unprotected \ac{dram}. 
+Unlike normal paging, \ac{sgx} paging requires cryptographic operations, where the hardware encrypts the page before writing it to untrusted memory, and verify and decrypt it upon restoration. 
+This causes performance degradation, often referred to as the \ac{epc} Bottleneck, making large-memory workloads impractical without careful optimization. 
+Various approaches in related work, such as data partitioning and demand paging optimization, attempt to mitigate this by minimizing the frequency of page swaps.
+
+In addition to memory capacity, the cost of entering (\texttt{ECALL}) and exiting (\texttt{OCALL}) an enclave is evident. 
+A domain transition involves hardware operations, including flushes, security checks, and context saving, which are necessary to prevent information leakage. 
 
