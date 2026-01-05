@@ -16,6 +16,8 @@ To resolve this, a paradigm known as confidential computing occurs, unlike priva
 confidential computing uses hardware-based \ac{tee}s to protect data. 
 This ensures that only code that is authorized and authenticated can process data, without exposing it to the underlying infrastructure or privileged users.
 
+\newpage
+
 \section{Motivations}
 
 The University of Aveiro possesses a large wireless infrastructure that generates continuous connection data whenever a user 
@@ -24,8 +26,8 @@ Since this infrastructure is already in place, it represents an opportunity to e
 such as room occupancy and attendance flows, without additional investment. 
 However, this data currently remains unused due to the privacy risks associated with handling of the logs.
 
-While \ac{sgx} offers the security required to use this information, applying it presents a challenge. 
-Processing large volumes of data within an enclave is restricted by the memory limits of the \ac{epc}. 
+While \ac{sgx} offers the security required to use this information, applying it presents a challenge,  
+the processing of large volumes of data within an enclave, since it is restricted by the memory limits of the \ac{epc}. 
 
 Standard \ac{sgx} implementations lack efficient native swapping for large datasets, meaning that an application would 
 quickly run out of available memory in the enclave. 

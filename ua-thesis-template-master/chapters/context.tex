@@ -11,13 +11,13 @@ concluding with an analysis of the technical challenges associated with data pro
 \section{Sensitive Data}
 
 Driven by technological advances and institutional needs, nearly all buildings are now equipped with internet access provided through 
-\ac{ap}. These allow for the determination of user location with a reasonable degree of precision, 
+\ac{ap}s. These allow for the determination of user location with a reasonable degree of precision, 
 as users must connect to a specific \ac{ap} to access the network.
 
-Although often categorized as technical metadata, it presents privacy challenges when through the lens of sensitive data. 
+Although often categorized as technical metadata, it presents privacy challenges when observed through the lens of sensitive data. 
 While raw location logs may not possess intrinsic sensitiveness, like a direct medical diagnosis might, it is possible to 
 acquire sensitive information through their processing context. 
-As \citet{04_article} argue, the critical factor is the computational distance required to infer sensitive 
+As \citet{04_article} states, the critical factor is the computational distance required to infer sensitive 
 information from apparently neutral data.
 
 In the case of indoor positioning, this computational distance is low, the aggregation of location traces creates a high 
@@ -81,9 +81,9 @@ As seen in the previous picture, a TEE in composed by building blocks such as:
 
 % Diferença entre o ambiente não confiavel e o TEE.
 In contrast to the isolation of the \ac{tee}, the remaining portion of the system is often referred to as the \ac{ree} or the untrusted environment, 
-this includes the traditional operating system, the hypervisor, and the standard application stack (yellow component of the Figure\ref{fig:ree_vs_tee}). 
-While the \ac{ree} is optimized for performance, versatility, and accessing peripherals, it looses the security guarantees 
-required for sensitive data processing, as it makes it vulnerable software attacks. 
+this includes the traditional operating system, the hypervisor, and the standard application stack (yellow component of Figure \ref{fig:ree_vs_tee}). 
+While the \ac{ree} is optimized for performance, versatility, and accessing peripherals, it loses the security guarantees 
+required for sensitive data processing, as it makes it vulnerable to software attacks. 
 The architectural principle of trusted computing is the strict separation between these two worlds, 
 the \ac{tee} protects its assets even when the surrounding \ac{ree} is fully compromised.
 This separation can be observed in the Figure \ref{fig:ree_vs_tee}.
@@ -148,7 +148,7 @@ less suitable for the available infrastructure, where x86 architectures are more
 
 \subsection{AMD SEV}
 
-Introduced in 2016, \ac{sev} is stated to be the first x86 technology that was design to isolate \ac{vm}s from the hypervisor, since 
+Introduced in 2016, \ac{sev} is stated to be the first x86 technology that was designed to isolate \ac{vm}s from the hypervisor, since 
 historically these have been considered trusted components, this allows for example, clients in the cloud to secure their \ac{vm} 
 workload from the cloud administrator, keeping their data confidential and minimizing exposure.
 AMD did this using main memory encryption in \ac{sev}, with this, individuals \ac{vm}s were assigned an individual key to encrypt all data, 
@@ -157,9 +157,9 @@ Later in 2017, a new version came out, the AMD \ac{sev-es} that added the additi
 do this, in \ac{sev-es} the \ac{vm} register state is encrypted at each hypervisor transition, preventing the hypervisor from seeing 
 the data that is being used, adding confidentiality to in-memory data.
 
-The most recent version is the \ac{sev-snp}, built on top of the previous versions while adds hardware based protections like 
+The most recent version is the \ac{sev-snp}, built on top of the previous versions while adding hardware based protections like 
 memory integrity protection to prevent attacks like data replay, memory re-mapping, it also implements 
-protection in interrup behavior. 
+protection in interrupt behavior. 
 
 This is, in the reviewed literature, according to \citet{06_amdsev_inteltdx}, the first \ac{cvm}, 
 which are \ac{vm}s designed to alleviate the programmability and usability challenges of the previously proposed 
@@ -225,7 +225,7 @@ and uses the SEAMCALL introduction to call host-side functions, functions that s
 This is possible since the the logical processor changes \ac{vmx} root mode into \ac{seam} \ac{vmx} root mode and starts executing code within the TDX Module, 
 upon completing it returns in \ac{vmx} root mode with the instruction SEAMRET. 
 The \ac{td}s run in \ac{seam} \ac{vmx} non-root mode, since \ac{tdx} supports the execution of unmodified user-level applications within a \ac{td}, like a normal 
-\ac{vm}, but the guest \ac{os} kernel (TDX-enlightened OS in Figure \ref{fig:intel_tdx}), needs to be altered in order to align with the \ac{tdx} plataform, namely 
+\ac{vm}, but the guest \ac{os} kernel (TDX-enlightened OS in Figure \ref{fig:intel_tdx}), needs to be altered in order to align with the \ac{tdx} platform, namely 
 managing \ac{tdx} exceptions via an internal handler, implementation of a mechanism for communication between the \ac{td} and the \ac{tdx} module, 
 transitioning memory pages from private to shared \ac{io} operations, although implementation details may vary according to the \ac{os} in use.
 
@@ -259,7 +259,7 @@ This structure contains the stored metadata for each individual enclave and is k
 During the enclave's lifecycle, the \ac{secs} is the first page allocated and the last to be deallocated, serving as the persistent identifier, consequently, the system software utilizes the 
 virtual address of the \ac{secs} to reference the specific enclave when issuing \ac{sgx} instructions. 
 Despite being mapped for identification purposes, the \ac{secs} page remains inaccessible to the trusted enclave code and the untrusted system software, due to 
-the present of sensitive information regarding the enclave.
+the presence of sensitive information regarding the enclave.
 
 % Enclave Memory Layout
 With the enclave's identity and attributes anchored in the \ac{secs}, its execution context is defined by a window in the virtual address space, known as the \ac{elrange}. 
