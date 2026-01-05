@@ -375,7 +375,7 @@ the heavy lifting of job scheduling and data storage remains in the untrusted Ha
 Only the specific map and reduce functions, along with a minimal cryptographic shim, are loaded into the protected enclave.
 To cope with the memory constraints of the enclave, \ac{vc3} relies on a streaming data model. 
 Encrypted data is ingested in input splits and processed within the enclaves heap, and the results are encrypted and then streamed out. 
-To mitigate the performance overhead of \ac{sgx} context switches, between ECalls and OCalls, \ac{vc3} utilizes a shared memory region for communication and implements aggressive batching. 
+To mitigate the performance overhead of \ac{sgx} context switches, between \texttt{ECalls} and \texttt{OCalls}, \ac{vc3} utilizes a shared memory region for communication and implements aggressive batching. 
 By processing key value pairs in batches, rather than individually, the system reduces the frequency of expensive enclave transitions.
 Furthermore, to avoid the memory footprint of standard libraries, \ac{vc3} utilizes a custom runtime library and heap allocator, 
 ensuring that the limited secure memory is dedicated primarily to the user's data and logic.
@@ -412,3 +412,25 @@ The literature confirms that while WiFi connection counts are a viable proxy for
 rely on opt-in models that limit scalability. 
 
 While \ac{sgx} provides the necessary hardware enforced privacy, standard big data frameworks like VC3 or EnclaveDB introduce development complexity.
+
+\section{Summary}
+The review of the literature reveals a gap in the intersection of indoor positioning and privacy-preserving technologies. 
+The dependency on logs introduces challenges that requires the usage of filters, as identified in the reviewed literature, 
+occupancy estimation is affected by stationary devices, transient users or bystanders who are passing by the access point's range, 
+and discontinuous communications from mobile devices entering power-saving modes. 
+
+Although literature validates WiFi connection logs as an effective and scalable proxy for occupancy monitoring, 
+reviewed implementations face a dilemma, overlook user privacy to prioritize utility or rely on opt-in models 
+that introduces scalability and accuracy issues.
+
+\ac{tee}, such as Intel \ac{sgx}, appears as a possible solution to this limitation, allowing for the processing of sensitive data 
+without exposing it to the infrastructure administrators. 
+However, \ac{sgx} in large-scale data processing introduces challenges, due to the limited \ac{epc} size and the overhead of 
+context switching between trusted and untrusted environments.
+
+Although frameworks like ac{vc3} and EnclaveDB large-scale processing, they are solutions that 
+introduce complexity and dependencies, which are not suitable for the specific requirements of this dissertation, 
+a lightweight, persistent monitoring system capable of handling continuous streams of WiFi 
+logs with state preservation over long periods.
+
+Consequently, this thesis proposes a architecture that uses the security mechanisms of \ac{sgx} but implements a custom memory management strategy. 
