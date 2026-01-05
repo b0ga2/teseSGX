@@ -220,10 +220,10 @@ functional capabilities like hardware-assisted virtualization, memory encryption
 The previous module is loaded in to the \ac{seam} range, a portion of memory that is reserved during boot. Another component present in this range 
 is the \ac{seam} loader, which is responsible for installing and updating the module. 
 \ac{seam} provides two execution modes, the \ac{seam} \ac{vmx} root mode and non-root mode, a \ac{tdx} compatible hypervisor operates in the \ac{vmx} root mode 
-and uses the SEAMCALL introduction to call host-side functions, functions that start with TDH, of the modulea. 
+and uses the \texttt{SEAMCALL} introduction to call host-side functions, functions that start with TDH, of the modulea. 
 
 This is possible since the the logical processor changes \ac{vmx} root mode into \ac{seam} \ac{vmx} root mode and starts executing code within the TDX Module, 
-upon completing it returns in \ac{vmx} root mode with the instruction SEAMRET. 
+upon completing it returns in \ac{vmx} root mode with the instruction \texttt{SEAMRET}. 
 The \ac{td}s run in \ac{seam} \ac{vmx} non-root mode, since \ac{tdx} supports the execution of unmodified user-level applications within a \ac{td}, like a normal 
 \ac{vm}, but the guest \ac{os} kernel (TDX-enlightened OS in Figure \ref{fig:intel_tdx}), needs to be altered in order to align with the \ac{tdx} platform, namely 
 managing \ac{tdx} exceptions via an internal handler, implementation of a mechanism for communication between the \ac{td} and the \ac{tdx} module, 
@@ -242,7 +242,7 @@ an untrusted party.
 In this context, \ac{sgx} is one of many attempts to address this challenge by leveraging trusted hardware. 
 To achieve this, the hardware establishes a secure container and a service that enables secure computation for the user.
 
-In simpler terms, this model relies on software attestation, a capability that allows the hardware to prove to a remote user that they are 
+In simpler terms, this model relies on software attestation, a capability that allows the hardware to prove to a user that they are 
 communicating with the intended application on non-compromised hardware and that the code has not been altered.
 
 This is achieved through a cryptographic signature that certifies the hash of the enclave's content, the user verifies this signature against a root of trust in 
@@ -335,7 +335,7 @@ to assign different pages to different enclaves.
 Non-trusted software cannot directly access it, since it is contained in the \ac{prm}.
 
 This mechanism is managed by the same system software that manages the rest of the computer's physical memory, which could be a hypervisor or the \ac{os} kernel. Both accomplish this with the use 
-of \ac{sgx} introductions to allocate and free pages in the enclaves. But as mentioned previously, this is not a trusted component, so the \ac{sgx} processor verifies every allocation decision, 
+of \ac{sgx} instructions to allocate and free pages in the enclaves. But as mentioned previously, this is not a trusted component, so the \ac{sgx} processor verifies every allocation decision, 
 and has the possibility to refuse them if they compromise any security guarantee.
 
 To perform these verifications, \ac{sgx} keeps some information about previous allocation decisions for each \ac{epc} page in the \ac{epcm}, an array with one entry per page. 
@@ -371,6 +371,7 @@ different \texttt{MRENCLAVE} value, ensuring that the running software correspon
 Complementing this is \texttt{MRSIGNER}, which identifies the entity that signed the enclave rather than the code itself. 
 This register stores the SHA-256 hash of the public RSA key modulus used to sign the \texttt{SIGSTRUCT} certificate, allowing remote parties to trust an 
 enclave based on the author's reputation. 
+The figure \ref{fig:enclave_identity} shows how an enclave identity is established.
 
 \newpage
 \begin{figure}
