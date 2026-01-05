@@ -5,28 +5,26 @@ The present chapter provides a comprehensive understanding of the technical unde
 \ac{sgx} and the protection of sensitive data.
 It begins with the introduction of the concept of sensitive data, followed by \ac{tee}s, giving an overview of this type of mechanism. 
 Then the chapter compares technologies, analyzing the distinctions between several \ac{tee}s implementations. 
-After this, the discussion focuses on Intel \ac{sgx}, detailing its architecture, workflow, and security mechanisms, concluding with
-the technical challenges of data processing in an enclave.
+After this, the discussion focuses on Intel \ac{sgx}, detailing its architecture, workflow, and security mechanisms, 
+concluding with an analysis of the technical challenges associated with data processing within an enclave.
 
 \section{Sensitive Data}
 
-Driven by technological advances and institutional needs, nearly all
-buildings are now equipped with internet access provided through 
-\ac{ap}. These allow for the determination of user location with a reasonable degree 
-of precision, due to the need of the user to connect to a specific AP 
-in order to use the network.
+Driven by technological advances and institutional needs, nearly all buildings are now equipped with internet access provided through 
+\ac{ap}. These allow for the determination of user location with a reasonable degree of precision, 
+as users must connect to a specific \ac{ap} to access the network.
 
-Although often categorized as technical metadata, it presents privacy challenges when analyzed by definition of sensitive data, 
-while raw location logs may not possess 
-intrinsic sensitiveness, like a direct medical diagnosis might, its possible to acquire sensitive information through their 
-processing context. As \citet{04_article} argue, the critical factor is the computational distance required to infer sensitive 
+Although often categorized as technical metadata, it presents privacy challenges when through the lens of sensitive data. 
+While raw location logs may not possess intrinsic sensitiveness, like a direct medical diagnosis might, it is possible to 
+acquire sensitive information through their processing context. 
+As \citet{04_article} argue, the critical factor is the computational distance required to infer sensitive 
 information from apparently neutral data.
 
 In the case of indoor positioning, this computational distance is low, the aggregation of location traces creates a high 
 risk of linkability, where disparate datasets, such as anonymous WiFi logs and public class schedules, can be easily cross referenced. 
 This reduces the effort necessary to de-anonymize users, transforming technical data into identifiable information.
 
-Example of some sensitive information used for indoor location mentioned throughout this document:
+The following list exemplifies sensitive information used for indoor location mentioned throughout this document:
 
 \begin{itemize}
     \item \textbf{\ac{mac} Address:} A persistent hardware identifier assigned to the network interface controller, 
@@ -98,7 +96,7 @@ This separation can be observed in the Figure \ref{fig:ree_vs_tee}.
 \end{figure}
 
 \section{TEE Technologies}
-Several \ac{tee} implementations exist, such as ARM TrustZone, AMD \ac{sev}, and Intel most recent \ac{tdx}, 
+Several \ac{tee} implementations exist, such as ARM TrustZone, AMD \ac{sev}, and Intel's most recent \ac{tdx}, 
 this chapter provides a comparative overview of these technologies, however, Intel \ac{sgx}, the focus of this dissertation, 
 is reviewed in greater detail in the subsequent chapter.
 
@@ -146,7 +144,7 @@ technical documentation and accessible development platforms from manufacturers 
 adoption within the community, particularly in the context of \ac{rd}.
 
 While TrustZone provides a robust \ac{tee} for the mobile and embedded ecosystem, its reliance on ARM architecture makes it 
-less suitable for the available infrastructure, where x86 architecture are more common.
+less suitable for the available infrastructure, where x86 architectures are more common.
 
 \subsection{AMD SEV}
 
@@ -156,7 +154,7 @@ workload from the cloud administrator, keeping their data confidential and minim
 AMD did this using main memory encryption in \ac{sev}, with this, individuals \ac{vm}s were assigned an individual key to encrypt all data, 
 preventing the hypervisor from reading clear text information, as cited by \citet{05_amd_sev}.
 Later in 2017, a new version came out, the AMD \ac{sev-es} that added the additional feature of \ac{cpu} register state protection, in order to 
-do this, in \ac{sev-es} the \ac{vm} register state is encrypted at each hypervisor transition, preventing the hypervisor to see 
+do this, in \ac{sev-es} the \ac{vm} register state is encrypted at each hypervisor transition, preventing the hypervisor from seeing 
 the data that is being used, adding confidentiality to in-memory data.
 
 The most recent version is the \ac{sev-snp}, built on top of the previous versions while adds hardware based protections like 
@@ -164,7 +162,7 @@ memory integrity protection to prevent attacks like data replay, memory re-mappi
 protection in interrup behavior. 
 
 This is, in the reviewed literature, according to \citet{06_amdsev_inteltdx}, the first \ac{cvm}, 
-which are \ac{vm}s made to to alleviate the programmability and usability challenges of the previously proposed 
+which are \ac{vm}s designed to alleviate the programmability and usability challenges of the previously proposed 
 trusted computing technologies, by providing abstraction at the level of the \ac{vm}.
 This technology uses a dedicated processor, the \ac{asp} to manage the security features, this is an ARM-based processor that 
 is separated from the main 32-bit core, but directly integrated in the \ac{cpu}, which also allows for remote attestation.
@@ -196,7 +194,7 @@ enable confidential computing.
 This technology facilitates the deployment of \ac{vm}s, referred to as \ac{td}s, under the supervision of the \ac{seam}, this provides encrypted \ac{cpu} 
 state and memory, with integrity protection and remote attestation, addressing scenarios where the cloud host platform is considered 
 untrustworthy within the threat model
-\footnote{A threat model is a structured approach to identifyingpotential security risks, defining attacks from the perspective of 
+\footnote{A threat model is a structured approach to identifying potential security risks, defining attacks from the perspective of 
 an adversary to strengthen system defenses \citep{threat_model}.}. 
 
 Technically, \ac{tdx} builds upon other Intel technologies such as \ac{vt} and \ac{mktme}, together, these components enforce 
@@ -236,11 +234,8 @@ for the specific purpose of this dissertation, a lightweight application to proc
 
 \section{Intel Software Guard Extensions (SGX)}
 
-% Maybe justificar porquê o SGX, se bem que estava no titulo da tese, não escolhi nada
-% Usar artigo de comparação com a AMD, e dizer que no TDX não existe a necessidade
-
 In similarity with previous \ac{tee} implementations, \ac{sgx} is a set of extensions for the Intel architecture with the goal to allow 
-for integrity and confidentiality during computation in a computer where the all the privileged components might be compromised, as defined by \citet{sgx}.
+for integrity and confidentiality during computation in a computer where all privileged components might be compromised, as defined by \citet{sgx}.
 
 This emerged as a solution to a recurring problem known as secure remote computation, which refers to the difficulty of executing software on a remote computer owned and maintained by 
 an untrusted party. 
@@ -253,12 +248,10 @@ communicating with the intended application on non-compromised hardware and that
 This is achieved through a cryptographic signature that certifies the hash of the enclave's content, the user verifies this signature against a root of trust in 
 the manufacturer's hardware, confirming the validity of the attestation key.
 
-% Dizer o que se vai explicar a seguir?
-
 \subsection{Enclave}
 % Explicar o conceito de Enclaves.
 An important concept in \ac{sgx} terminology is an enclave, as described by \citet{12_intel_tdx}, is a protected region within an application's 
-address space that allows the isolation sensitive code and data from the rest of the system. 
+address space that allows the isolation of sensitive code and data from the rest of the system. 
 
 % Enclave Control Structure 
 To maintain the security properties and persistent identity of each enclave instance, \ac{sgx} employs a control structure known as the \ac{secs}. 
@@ -307,7 +300,7 @@ To secure its memory from the untrusted environment, \ac{sgx} reserves a region 
 This region is isolated by the \ac{cpu}, blocking all non-enclave memory accesses from softwares such as the kernel or hypervisor, 
 as well as protecting against \ac{smm} and \ac{dma} attacks from peripherals.
 
-In the \ac{prm} also is the \ac{epc}, which consists of 4KB memory pages that store the enclave's code and data. 
+The \ac{prm} also contains the \ac{epc}, which consists of 4KB memory pages that store the enclave's code and data. 
 While the allocation of these \ac{epc} pages is managed by the untrusted system software, the security is enforced by hardware. 
 The \ac{cpu} tracks the state and permissions of every \ac{epc} page in the \ac{epcm} to guarantee that each page belongs to a specific 
 enclave and cannot be mapped by unauthorized entities.
@@ -315,7 +308,7 @@ enclave and cannot be mapped by unauthorized entities.
 The workflow begins with the loading of code and data into the enclave, during this operation the untrusted system software asks the \ac{cpu} to 
 copy data from unprotected memory into the \ac{epc} pages and assigns them to the enclave. 
 After the loading is completed, the system software indicates to the \ac{cpu} to mark the enclave as initialized. 
-At this point the loaded code becomes executable in the enclave and the loading method is dissabled to prevent modifications. 
+At this point the loaded code becomes executable in the enclave and the loading method is disabled to prevent modifications. 
 % Throughout this process, the \ac{cpu} computes a cryptographic hash of the enclave's content, which becomes the enclave's measurement hash.
 % This allows a remote party to execute a software attestation process, to prove the communication is done with an enclave with a specific measurement hash, 
 % and is running in a safe environment.
@@ -341,8 +334,8 @@ The \ac{sgx} design allows for multiple enclaves running at the same time, which
 to assign different pages to different enclaves.
 Non-trusted software cannot directly access it, since it is contained in the \ac{prm}.
 
-This mechanism is managed by the same system software that manages the rest of the computers physical memory, which could be a hypervisor or the \ac{os} kernel. Both accomplish this with the use 
-of \ac{sgx} introductions to allocate and free pages in the enclaves. But as mentioned previously, this is not a trusted component, so the \ac{sgx} processors verifies every allocation decision, 
+This mechanism is managed by the same system software that manages the rest of the computer's physical memory, which could be a hypervisor or the \ac{os} kernel. Both accomplish this with the use 
+of \ac{sgx} introductions to allocate and free pages in the enclaves. But as mentioned previously, this is not a trusted component, so the \ac{sgx} processor verifies every allocation decision, 
 and has the possibility to refuse them if they compromise any security guarantee.
 
 To perform these verifications, \ac{sgx} keeps some information about previous allocation decisions for each \ac{epc} page in the \ac{epcm}, an array with one entry per page. 
@@ -364,7 +357,7 @@ cannot share enclave memory directly and must copy parameters into the applicati
 Both \texttt{ECALL}s and \texttt{OCALL}s are defined using the \ac{edl}, where \texttt{ECALL}s are declared in the trusted section and OCALLs in the untrusted section of the file.
 During the build process, the Edger8r
 \footnote{Tool provided by the Intel SGX \ac{sdk} that automatically generates the code that connects the untrusted application and the trusted enclave}
-tool parses the \ac{edl} file and generates functions wrappers around the actual functions.
+tool parses the \ac{edl} file and generates function wrappers around the actual functions.
 
 \subsection{Attestation, Sealing and Unsealing}
 SGX relies on software attestation to prove to a remote party that it is communicating with a specific piece of software running in a secure container hosted by trusted hardware. 
@@ -398,17 +391,13 @@ The initialization process is finalized by the \texttt{EINIT} instruction, which
 matches the calculated \texttt{MRENCLAVE} and populates the \texttt{MRSIGNER} field in the \ac{secs}, defining the enclave's identity before it can begin execution.
 
 \section{Memory and Performance Limitations in SGX}
-% The Enclave Page Cache (EPC) Bottleneck
-% Explicar que a memória segura é limitada, ver slides para mais detalhes
-% Mencionar algumas abordagens no related work
-
-Eventhough \ac{sgx} provides confidentiality and integrity, it introduces performance overheads and resource constraints.
+Even though \ac{sgx} provides confidentiality and integrity, it introduces performance overheads and resource constraints.
 These limitations are derived from the restricted size of the secure memory region and the high cost of transitioning between trusted and 
 untrusted execution modes.
 
 One constraint is the limited capacity of the \ac{epc}, since it resides within the \ac{prm}, where the memory is limited.
-When an application's working set exceeds the available \ac{epc} capacity, the system must perform paging to evict \ac{epc} pages to 
-unprotected \ac{dram}. 
+When an application's working set exceeds the available \ac{epc} capacity, the system must perform paging
+operations to evict \ac{epc} pages to unprotected \ac{dram}. 
 Unlike normal paging, \ac{sgx} paging requires cryptographic operations, where the hardware encrypts the page before writing it to untrusted memory, and verify and decrypt it upon restoration. 
 This causes a performance overhead, often referred to as the \ac{epc} Bottleneck, making large-memory workloads impractical without optimization. 
 Various approaches appear in related work, such as data partitioning and demand paging optimization, attempt to mitigate this by minimizing the frequency of page swaps.

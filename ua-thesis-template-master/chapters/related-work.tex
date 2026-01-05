@@ -80,7 +80,7 @@ The following chapters will be divided according to the main goal of the Wifi fo
 \subsection{Energy Savings and Efficiency}
 
 Estimating building occupancy is a necessary step for optimizing building operations, in this scenario
-WiFi connection counts are presented as a cost efficient proxy for occupancy when comparing to most commom methods, 
+WiFi connection counts are presented as a cost efficient proxy for occupancy when comparing to most common methods, 
 even showing a strong correlation with actual people counts as shown by \citet{09_8913341}.
 
 % The following is regarding the article number as 01
@@ -89,7 +89,7 @@ In 2021, \citet{01_ALISHAHI2021107936} proposed a framework that uses \ac{ml} al
 connection counts, the authors argued that traditional sensors often suffer from latency, high maintenance costs, and limited scalability. 
 In contrast, stated that associated WiFi device counts, which are devices attempting to authenticate with the \ac{ap} not necessarily being able to, as a cost effective proxy for human presence.
 The framework showed positive results, however, \citet{01_ALISHAHI2021107936} also highlighted limitations that impact the design of this thesis's methodology. 
-It was noted that raw connection counts can possesse a degree of noise and require calibration with ground-truth data to account for two sources of error, the stationary devices like 
+It was noted that raw connection counts can possess a degree of noise and require calibration with ground-truth data to account for two sources of error, the stationary devices like 
 printers, desktops, and projectors that permanently connect to the network must be filtered out and the device to occupant ratio, which is the variance in the number of 
 devices carried by each user. The study emphasizes that these errors become more pronounced at smaller spaces, where attributing a connection to a specific zone is 
 difficult without the precise localization data provided by metrics like \ac{rssi}.
@@ -192,11 +192,10 @@ a fusion of technologies provides the most robust solution for critical attendan
 % The following is regarding the article number as 09
 % Role of Campus WiFi Infrastructure for Occupancy Monitoring in a Large University
 In the 2018 IEEE International Conference on Information and Automation for Sustainability (ICIAfS), \citet{09_8913341} 
-proposed a study to assess the feasibility of using WiFi \ac{ap} infrastructure for room level occupancy monitoring across the University of New South Wales campus, a scenario similar to this thesis. 
+proposed a study to assess the feasibility of using WiFi \ac{ap} infrastructure for room level occupancy monitoring across the University of New South Wales campus, a scenario similar to that of this thesis. 
 The study had a duration of four weeks across rooms with varying numbers of \ac{ap}s, comparing WiFi data against beam counter sensors and ground truth enrollment numbers. 
 To account for transient users, passing by, connecting to the \ac{ap}s, connections lasting less than five minutes were filtered out. 
-The results indicated that the WiFi method achieved a stronger correlation with actual occupancy ($R=0.85$) compared to the beam counters ($R=0.68$). 
-it also demonstrated a lower error rate.
+The results indicated that the WiFi method achieved a stronger correlation with actual occupancy ($R=0.85$) compared to the beam counters ($R=0.68$).
 
 % The following is regarding the article number as 06 and 07 (precursor)
 % Modeling Classroom Occupancy Using Data of WiFi Infrastructure in a University Campus
@@ -208,8 +207,8 @@ Besides the similar data source, \citet{06_9750047} identified critical limitati
 such as the overlapping coverage of \ac{ap}s (where a student inside a room connects to a hallway \ac{ap}), 
 the presence of "bystanders", and the variability of multiple device connections per user. 
 Ultimately, the framework achieved a symmetric Mean Absolute Percentage Error of 13.1\%, a result comparable to dedicated beam counter sensors, 
-this once more demonstrated that existing WiFi infrastructure can yield accurate occupancy estimation 
-with no additional deployment costs only computing costs.
+this once more demonstrated that existing WiFi infrastructure can result in accurate occupancy estimation 
+with no additional deployment costs, only computing costs.
 
 % The following is regarding the article number as 14_02
 % Localization and Counting of Indoor Populations on a University Campus using Wi-Fi Connection Logs and Floor Plans
@@ -262,7 +261,7 @@ The ubiquity of WiFi networks as a sensing infrastructure presents a fundamental
 also introduces significant privacy risks for the individuals being tracked. As noted in the previous sections, transforming a standard wireless network into a 
 soft sensor involves analyzing device footprints, specifically \ac{mac} addresses and signal characteristics, which can serve as strong identifiers of specific individuals.
 
-Consequently, the academic literature demonstrates a variety of methodologies designed to connect the trade off between service utility and user privacy. 
+Consequently, the academic literature demonstrates a variety of methodologies designed to balance the trade off between service utility and user privacy. 
 These approaches range from data minimization strategies, that avoid collecting unique identifiers, to more complex anonymization schemes like hashing 
 and k-anonymity. 
 However, as the demand for room level precision increases, so does the inadequacy of traditional methods. 
@@ -329,7 +328,7 @@ the researchers recruited approximately 700 students who consented to having the
 
 \citet{11_11030449} highlighted the privacy advantages of the IEEE 802.11mc standard, which shifts the location calculation to the client device. 
 To demonstrate this architecture, the authors developed a mobile application, by requiring students to actively install and engage with this software to register their 
-presence, the system uses a opt-in model.
+presence, the system uses an opt-in model.
 
 Likewise, \citet{14_10_1145_3704522_3704523} developed a smartphone based attendance system that leverages \ac{rssi} zoning to verify student presence. 
 Since the primary utility is the validation of attendance records using the students smartphone, the architecture operates on an opt-in model where 
@@ -357,7 +356,7 @@ explicitly comparing it against traditional k-anonymity techniques. The study hi
 that traditional obfuscation methods degrades service accuracy to achieve privacy. 
 In contrast, their experiments demonstrated that an \ac{sgx} based approach provides better result accuracy because the computation occurs on exact data within the secure 
 enclave, protected from the host system.
-Furthermore, the authors quantified the performance cost of this security, finding that \ac{sgx} introduces only a small compared to bare metal implementation, due to 
+Furthermore, the authors quantified the performance cost of this security, finding that \ac{sgx} introduces only a small penalty compared to bare metal implementation, due to 
 the one time events such as the enclave creation, copying data, sealing and unsealing.
 This finding is important for the current thesis, as it validates that shifting the occupancy estimation logic into an \ac{sgx} enclave is a viable strategy that secures 
 student data without compromising the real time performance or the accuracy of the occupancy counts. 
@@ -370,14 +369,14 @@ transitions between trusted and untrusted memory.
 \citet{s01_7163017} presented \ac{vc3}, a distributed MapReduce model 
 \footnote{Programming model for processing large data sets, users write map and reduce functions, and the execution of both functions is automatically parallelized and distributed, as defined by \citet{MapReduce}}
 designed to address these limitations by strictly minimizing the \ac{tcb}.
-Unlike systems that attempt to execute entire legacy applications or libraries from the \ac{os} inside an enclave, \ac{vc3} adopts a partitioned architecture where 
+Unlike systems that attempt to execute entire legacy applications or libraries from the \ac{os} inside an enclave, \ac{vc3} adopts a partitioned architecture, where 
 the heavy lifting of job scheduling and data storage remains in the untrusted Hadoop (open source framework for distributed storage and processing of large datasets). 
 Only the specific map and reduce functions, along with a minimal cryptographic shim, are loaded into the protected enclave.
 To cope with the memory constraints of the enclave, \ac{vc3} relies on a streaming data model. 
 Encrypted data is ingested in input splits and processed within the enclaves heap, and the results are encrypted and then streamed out. 
 To mitigate the performance overhead of \ac{sgx} context switches, between \texttt{ECalls} and \texttt{OCalls}, \ac{vc3} utilizes a shared memory region for communication and implements aggressive batching. 
 By processing key value pairs in batches, rather than individually, the system reduces the frequency of expensive enclave transitions.
-Furthermore, to avoid the memory footprint of standard libraries, \ac{vc3} utilizes a custom runtime library and heap allocator, 
+Furthermore, to avoid the memory footprint of standard libraries, \ac{vc3} uses a custom runtime library and heap allocator, 
 ensuring that the limited secure memory is dedicated primarily to the user's data and logic.
 
 \begin{figure}
@@ -421,16 +420,16 @@ and discontinuous communications from mobile devices entering power-saving modes
 
 Although literature validates WiFi connection logs as an effective and scalable proxy for occupancy monitoring, 
 reviewed implementations face a dilemma, overlook user privacy to prioritize utility or rely on opt-in models 
-that introduces scalability and accuracy issues.
+that introduce scalability and accuracy issues.
 
 \ac{tee}, such as Intel \ac{sgx}, appears as a possible solution to this limitation, allowing for the processing of sensitive data 
 without exposing it to the infrastructure administrators. 
 However, \ac{sgx} in large-scale data processing introduces challenges, due to the limited \ac{epc} size and the overhead of 
 context switching between trusted and untrusted environments.
 
-Although frameworks like ac{vc3} and EnclaveDB large-scale processing, they are solutions that 
+Although frameworks like \ac{vc3} and EnclaveDB large-scale processing, they are solutions that 
 introduce complexity and dependencies, which are not suitable for the specific requirements of this dissertation, 
 a lightweight, persistent monitoring system capable of handling continuous streams of WiFi 
 logs with state preservation over long periods.
 
-Consequently, this thesis proposes a architecture that uses the security mechanisms of \ac{sgx} but implements a custom memory management strategy. 
+Consequently, this thesis proposes an architecture that uses the security mechanisms of \ac{sgx} but implements a custom memory management strategy. 
