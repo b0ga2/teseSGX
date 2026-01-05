@@ -24,7 +24,7 @@ The University of Aveiro possesses a large wireless infrastructure that generate
 attempts to connect to an \ac{ap}. 
 Since this infrastructure is already in place, it represents an opportunity to extract statistical indicators, 
 such as room occupancy and attendance flows, without additional investment. 
-However, this data currently remains unused due to the privacy risks associated with handling of the logs.
+However, this data remains unused due to the privacy risks associated with handling of the logs.
 
 While \ac{sgx} offers the security required to use this information, applying it presents a challenge,  
 the processing of large volumes of data within an enclave, since it is restricted by the memory limits of the \ac{epc}. 
@@ -41,17 +41,17 @@ raw WiFi logs. This process aims to generate statistical data for the university
  
 However, extracting and processing these indicators in a trusted environment presents technical challenges, like the limits of the secure memory 
 available to an enclave and the lack of native operating system swapping. 
-The execution environment should then provide ways to provide essential primitives for various programs, such as memory usage monitors, the secure ingestion 
+The execution environment should then provide essential primitives for various programs, such as memory usage monitors, the secure ingestion 
 of encrypted data from external sources, and the production of results for various destinations, these mechanisms should include an equivalent 
 to a swap area to allow the processing of large datasets despite the internal enclave memory, 
 or  a snapshot capability to enable discontinuous processing.
 
-In order to explore a solution to this problem, this work focused on the below steps:
+In order to explore a solution to this problem, the current work focuses on the steps below:
 \begin{enumerate}
     \item Elaboration of the state-of-the-art regarding WiFi-based indoor positioning, the application of \ac{sgx} in this domain, 
         and techniques for large-scale data processing. 
         
-    \item Definition of a generic architecture capable of processing large volumes of data, supporting both the simultaneous processing and over extended periods.
+    \item Definition of a generic architecture capable of processing large volumes of data, supporting simultaneous processing or over extended periods.
     
     \item Development and documentation of a \ac{poc} application to demonstrate the proposed architecture.
     

@@ -2,11 +2,13 @@
 \label{chapter:related_work}
 
 This chapter establishes the context for the proposed work by reviewing the related work in WiFi based indoor positioning and occupancy detection. 
-Besides this, it examines the application of \ac{sgx} in location based systems and analyzes architectural strategies for secure large data processing within enclaves
+Besides this, it examines the application of \ac{sgx} in location based systems and analyzes architectural strategies for secure large data processing within enclaves. 
 While nearly identical solutions, combining already existing infrastructure monitoring with hardware enforced privacy, are scarce in the literature, 
 distinct bodies of research provide the necessary basis for this dissertation.
+
 The review begins by analyzing technical methodologies for indoor positioning using standard WiFi technologies, 
 it then transitions to the critical challenge of user privacy in location analytics. 
+
 The following chapter analyzes \ac{sgx} as a possibility for secure indoor positioning, evaluating its current status and performance in privacy preserving 
 location based applications. 
 Finishing with the specific analysis of data processing within \ac{sgx}, reviewing architectural strategies for handling large scale sensitive 
@@ -266,12 +268,11 @@ These approaches range from data minimization strategies, that avoid collecting 
 and k-anonymity. 
 However, as the demand for room level precision increases, so does the inadequacy of traditional methods. 
 
-This section reviews these privacy preserving strategies, categorizing them into distinct paradigms found in the literature: 
-omission of privacy mechanisms, where technical feasibility takes precedence; 
-data aggregation and minimization, where sensitive data is aggregated at the source; 
-anonymization and pseudonymization, where identifiers are masked; 
-institutional compliance and ethical clearance, relying on governance frameworks; 
-and volunteer based or opt-in models. 
+This section reviews these privacy preserving strategies, categorizing them into distinct paradigms found in the literature,  
+omission of privacy mechanisms, where technical feasibility takes precedence,  
+data aggregation and minimization, where sensitive data is aggregated at the source,  
+anonymization and pseudonymization, where identifiers are masked, 
+institutional compliance and ethical clearance, relying on governance frameworks and volunteer based or opt-in models. 
 
 \subsection{Omission/Inexistence of Privacy Mechanisms}
 
@@ -388,7 +389,7 @@ ensuring that the limited secure memory is dedicated primarily to the user's dat
 % The following is regarding the article number as 02 in the SGX folder
 In contrast to the streaming model employed by MapReduce frameworks, \citet{s02_8418608} proposed EnclaveDB, a database engine designed to minimize the 
 overhead of data processing by keeping all sensitive state resident within the enclave memory. 
-Leveraging the Hekaton, a \ac{sql} engine, EnclaveDB avoids the cost of disk I/O by ensuring that encryption and decryption occur only at the 
+Leveraging the Hekaton, a \ac{sql} engine, EnclaveDB avoids the cost of disk \ac{io} by ensuring that encryption and decryption occur only at the 
 transaction boundaries rather than at the page level during execution. 
 To reduce the \ac{tcb} and optimize memory usage, the system adopts a pre-compiled execution model, complex query parsing and optimization are 
 offloaded to a trusted client, and only the resulting native machine code is deployed to the enclave. 
@@ -405,7 +406,7 @@ These blocks are dynamically loaded into the enclave for processing and evicted 
 effectively bypassing the performance overhead of the operating system's paging. 
 Crucially, to address the vulnerability of side-channel attacks, SGX-BigMatrix enforces data oblivious execution, 
 by utilizing vectorized oblivious primitives and a specialized compiler to manage block transitions, the framework ensures that the sequence of 
-memory accesses remains independent of the sensitive data, thereby preventing adversaries from inferring information through memory access traces.
+memory accesses remains independent of the sensitive data, preventing adversaries from inferring information through memory access traces.
 
 The literature confirms that while WiFi connection counts are a viable proxy for occupancy detection, current implementations either lack rigorous privacy protections or 
 rely on opt-in models that limit scalability. 

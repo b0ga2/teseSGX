@@ -144,7 +144,7 @@ technical documentation and accessible development platforms from manufacturers 
 adoption within the community, particularly in the context of \ac{rd}.
 
 While TrustZone provides a robust \ac{tee} for the mobile and embedded ecosystem, its reliance on ARM architecture makes it 
-less suitable for the available infrastructure, where x86 architectures are more common.
+less suitable for the available infrastructure.
 
 \subsection{AMD SEV}
 
@@ -345,16 +345,16 @@ enclave that owns the page.
 
 The contents of this map can only be read by the \ac{sgx} as stated in Intel \ac{sdm}.
 
-\subsection{ECalls and OCalls}
+\subsection{ECALLs and OCALLs}
 %Mecanismo de ECalls e OCalls (entrar e sair do enclave e comunicação com o mundo "inseguro").
 In Intel SGX, \texttt{ECALL} and \texttt{OCALL} are mechanisms for communication between the untrusted application and the trusted enclave. 
 
-\texttt{ECALL}s allow the untrusted application to invoke a pre-defined function inside the enclave, passing input parameters and pointers to shared memory within the application.
+\texttt{ECALLs} allow the untrusted application to invoke a pre-defined function inside the enclave, passing input parameters and pointers to shared memory within the application.
 
-On the other hand, \texttt{OCALLs} enable the enclave to invoke a pre-defined function in the untrusted application, but unlike \texttt{ECALL}s, 
+On the other hand, \texttt{OCALLs} enable the enclave to invoke a pre-defined function in the untrusted application, but unlike \texttt{ECALLs}, 
 cannot share enclave memory directly and must copy parameters into the application's memory before the call.
 
-Both \texttt{ECALL}s and \texttt{OCALL}s are defined using the \ac{edl}, where \texttt{ECALL}s are declared in the trusted section and OCALLs in the untrusted section of the file.
+Both \texttt{ECALLs} and \texttt{OCALLs} are defined using the \ac{edl}, where \texttt{ECALLs} are declared in the trusted section and \texttt{OCALLs} in the untrusted section of the file.
 During the build process, the Edger8r
 \footnote{Tool provided by the Intel SGX \ac{sdk} that automatically generates the code that connects the untrusted application and the trusted enclave}
 tool parses the \ac{edl} file and generates function wrappers around the actual functions.
@@ -391,9 +391,11 @@ This signature, which includes the \texttt{MRENCLAVE} and \texttt{MRSIGNER}, ser
 The initialization process is finalized by the \texttt{EINIT} instruction, which validates the enclave's \texttt{SIGSTRUCT}, this checks that the measurement in the certificate 
 matches the calculated \texttt{MRENCLAVE} and populates the \texttt{MRSIGNER} field in the \ac{secs}, defining the enclave's identity before it can begin execution.
 
+\newpage
+
 \section{Memory and Performance Limitations in SGX}
 Even though \ac{sgx} provides confidentiality and integrity, it introduces performance overheads and resource constraints.
-These limitations are derived from the restricted size of the secure memory region and the high cost of transitioning between trusted and 
+These limitations are derived from the restricted size of the secure memory region and the cost of transitioning between trusted and 
 untrusted execution modes.
 
 One constraint is the limited capacity of the \ac{epc}, since it resides within the \ac{prm}, where the memory is limited.
