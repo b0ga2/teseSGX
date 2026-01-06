@@ -11,8 +11,9 @@ concluding with an analysis of the technical challenges associated with data pro
 \section{Sensitive Data}
 
 Driven by technological advances and institutional needs, nearly all buildings are now equipped with internet access provided through 
-\ac{ap}s. These allow for the determination of user location with a reasonable degree of precision, 
-as users must connect to a specific \ac{ap} to access the network.
+\ac{ap}s. 
+These allow for the determination of user location with a reasonable degree of precision, as users must connect to a specific \ac{ap} to access the network, 
+and every attempt, successful or not, is logged.
 
 Although often categorized as technical metadata, it presents privacy challenges when observed through the lens of sensitive data. 
 While raw location logs may not possess intrinsic sensitiveness, like a direct medical diagnosis might, it is possible to 
@@ -24,12 +25,20 @@ In the case of indoor positioning, this computational distance is low, the aggre
 risk of linkability, where disparate datasets, such as anonymous WiFi logs and public class schedules, can be easily cross referenced. 
 This reduces the effort necessary to de-anonymize users, transforming technical data into identifiable information.
 
+It is relevant to mention that the collection of connection logs is not driven by the production 
+of occupancy analytics, but from a contractual obligation imposed on institutions that implement the eduroam network. 
+As stated in \citet{eduroam_compliance}, \ac{sp}s are required to maintain logging information for a minimum retention period of 
+three months, although this duration may vary depending on national regulations. 
+Specifically, this logging includes the timestamps of authentication requests, the outer \ac{eap} identity, 
+the client's \ac{mac} address, and the identification of the specific \ac{ap} used for the connection, which will be used 
+in the present dissertation.
+
 The following list exemplifies sensitive information used for indoor location mentioned throughout this document:
 
 \begin{itemize}
     \item \textbf{\ac{mac} Address:} A persistent hardware identifier assigned to the network interface controller, 
-    this serves as a static fingerprint that uniquely identifies a user's device across different sessions and locations.
-    \item \textbf{\ac{uu}:} The unique user identifier (such as a student ID, employee username, or email) 
+    this serves as a fingerprint that uniquely identifies a user's device.
+    \item \textbf{\ac{uu}:} The unique user identifier, such as a student ID, employee username, or email, 
     required for network authentication.
     \item \textbf{Connection Logs:} Time records containing precise association and disassociation timestamps,
     these allow for the reconstruction of a user's daily routine, duration of stay, and punctuality patterns.
@@ -194,7 +203,7 @@ enable confidential computing.
 This technology facilitates the deployment of \ac{vm}s, referred to as \ac{td}s, under the supervision of the \ac{seam}, this provides encrypted \ac{cpu} 
 state and memory, with integrity protection and remote attestation, addressing scenarios where the cloud host platform is considered 
 untrustworthy within the threat model
-\footnote{A threat model is a structured approach to identifying potential security risks, defining attacks from the perspective of 
+\footnote{Structured approach to identifying potential security risks, defining attacks from the perspective of 
 an adversary to strengthen system defenses \citep{threat_model}.}. 
 
 Technically, \ac{tdx} builds upon other Intel technologies such as \ac{vt} and \ac{mktme}, together, these components enforce 
@@ -267,7 +276,7 @@ This range is used to map all code and sensitive data to the corresponding \ac{e
 mapped to access non-\ac{epc} memory via the same virtual addresses, allowing for interaction with the rest of the application.
 
 %Mencionar atributos
-While the \ac{elrange} defines the memory boundaries of the enclave, the nature of its execution environment is defined by the ATTRIBUTES field within the \ac{secs}, 
+While the \ac{elrange} defines the memory boundaries of the enclave, the nature of its execution environment is defined by the \texttt{ATTRIBUTES} field within the \ac{secs}, 
 via flags such as \texttt{DEBUG}, \ac{xfrm}, and \texttt{MODE64BIT}. 
 The \texttt{DEBUG} is intended to be used during development, since when set, it enables debugging features that allow the reading and modification 
 of the enclave's memory. 
@@ -282,7 +291,7 @@ INIT attribute to false, while in this state, the lifecycle enters the loading p
 while \texttt{EEXTEND} updates the enclave's cryptographic measurement. 
 After loading, initialization is started by the \texttt{EINIT} instruction, that validates a token and sets the \texttt{INIT} attribute to true, 
 sealing the enclave from modification and enabling execution in Ring 3. 
-Finally, the destruction of the enclave occurs with the EREMOVE instruction, which deallocates pages by clearing their \texttt{VALID} bit, ensuring that the \ac{secs} page is only destroyed once all other 
+Finally, the destruction of the enclave occurs with the \texttt{EREMOVE} instruction, which deallocates pages by clearing their \texttt{VALID} bit, ensuring that the \ac{secs} page is only destroyed once all other 
 pages associated with the enclave have been successfully removed, as shown in Figure \ref{fig:sgx_enclave_lifecycle}.
 
 \newpage
@@ -368,6 +377,7 @@ The identity of an enclave is primarily defined by two measurement registers loc
 The first, \texttt{MRENCLAVE}, contains a SHA-256 hash that uniquely identifies the enclave's code and data contents, acting as a cryptographic log of the creation process, 
 it incorporates every instruction used to build the enclave, consequently, any modification to the loaded code, data, or their order results in a completely 
 different \texttt{MRENCLAVE} value, ensuring that the running software corresponds exactly to the developer's intent. 
+
 Complementing this is \texttt{MRSIGNER}, which identifies the entity that signed the enclave rather than the code itself. 
 This register stores the SHA-256 hash of the public RSA key modulus used to sign the \texttt{SIGSTRUCT} certificate, allowing remote parties to trust an 
 enclave based on the author's reputation. 
