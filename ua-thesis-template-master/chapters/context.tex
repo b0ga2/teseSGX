@@ -12,10 +12,10 @@ concluding with an analysis of the technical challenges associated with data pro
 
 Driven by technological advances and institutional needs, nearly all buildings are now equipped with internet access provided through 
 \ac{ap}s. 
-These allow for the determination of user location with a reasonable degree of precision, as users must connect to a specific \ac{ap} to access the network, 
-and every attempt, successful or not, is logged.
+These allow for the determination of user location with a reasonable degree of precision, as users must connect to a specific \ac{ap} 
+to access the network, and every attempt, successful or not, is logged.
 
-Although often categorized as technical metadata, it presents privacy challenges when observed through the lens of sensitive data. 
+Although often categorized as technical metadata, it presents privacy challenges when observed through the analysis of sensitive data. 
 While raw location logs may not possess intrinsic sensitiveness, like a direct medical diagnosis might, it is possible to 
 acquire sensitive information through their processing context. 
 As \citet{04_article} states, the critical factor is the computational distance required to infer sensitive 
@@ -26,7 +26,8 @@ risk of linkability, where disparate datasets, such as anonymous WiFi logs and p
 This reduces the effort necessary to de-anonymize users, transforming technical data into identifiable information.
 
 It is relevant to mention that the collection of connection logs is not driven by the production 
-of occupancy analytics, but from a contractual obligation imposed on institutions that implement the eduroam network. 
+of occupancy analytics, but from a contractual obligation imposed on institutions, like the University of Aveiro, 
+that implement the eduroam network. 
 As stated in \citet{eduroam_compliance}, \ac{sp}s are required to maintain logging information for a minimum retention period of 
 three months, although this duration may vary depending on national regulations. 
 Specifically, this logging includes the timestamps of authentication requests, the outer \ac{eap} identity, 
