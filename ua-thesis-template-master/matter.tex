@@ -307,8 +307,8 @@
 \midsloppy
 \raggedbottom
 
-\setcounter{tocdepth}{2} %subsections are added to the TOC
-\setcounter{secnumdepth}{4} %subsubsections are numbered
+% \setcounter{tocdepth}{2} %subsections are added to the TOC
+% \setcounter{secnumdepth}{4} %subsubsections are numbered
 
 % Initial document tables start here: TOC, LOF, LOT, Glossary
 % Table of contents with slightly smaller font
@@ -325,6 +325,9 @@
 % List of code snippets
 
 % Fix for Listings with memoir
+
+\maxtocdepth{subsection} %subsections are added to the TOC
+\setsecnumdepth{subsubsection} %subsubsections are numbered
 
 \RenewDocumentCommand \chapter { s O{#3} m }{%
   \FloatBarrier
@@ -345,9 +348,9 @@
   \oldchapter#1{#2}
 }
 
-% Print Glossary
+% Print Acronyms
 \clearpage
-{\small\include{glossary}}
+{\small\include{acronyms}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Main document starts here
