@@ -336,7 +336,7 @@ Since the primary utility is the validation of attendance records using the stud
 students consent to the tracking of their devices.
 
 \section{Previous Works with \ac{sgx} in Indoor Positioning}
-While the literature regarding the specific application of \ac{sgx} to indoor positioning remains scarce, a select number of 
+While the literature regarding the specific application of \ac{sgx} to indoor positioning remains limited, a select number of 
 studies have established a base foundation for this approach.
 
 % The following is regarding the article number as 20
@@ -367,6 +367,7 @@ student data without compromising the real time performance or the accuracy of t
 % The following is regarding the article number as 01 in the SGX folder
 Processing large scale data within \ac{sgx} introduces memory challenges, primarily due to the limited size of the \ac{epc} and the high cost of 
 transitions between trusted and untrusted memory. 
+
 \citet{s01_7163017} presented \ac{vc3}, a distributed MapReduce model 
 \footnote{Programming model for processing large data sets, users write map and reduce functions, and the execution of both functions is automatically parallelized and distributed, as defined by \citet{MapReduce}}
 designed to address these limitations by strictly minimizing the \ac{tcb}.
@@ -411,7 +412,8 @@ memory accesses remains independent of the sensitive data, preventing adversarie
 The literature confirms that while WiFi connection counts are a viable proxy for occupancy detection, current implementations either lack rigorous privacy protections or 
 rely on opt-in models that limit scalability. 
 
-While \ac{sgx} provides the necessary hardware enforced privacy, standard big data frameworks like VC3 or EnclaveDB introduce development complexity.
+While \ac{sgx} provides the necessary hardware enforced privacy, standard big data frameworks like \ac{vc3} or EnclaveDB 
+introduce development complexity.
 
 \section{Summary}
 The review of the literature reveals a gap in the intersection of indoor positioning and privacy-preserving technologies. 
@@ -424,13 +426,13 @@ reviewed implementations face a dilemma, overlook user privacy to prioritize uti
 that introduce scalability and accuracy issues.
 
 \ac{tee}, such as Intel \ac{sgx}, appears as a possible solution to this limitation, allowing for the processing of sensitive data 
-without exposing it to the infrastructure administrators. 
+without exposing it to the infrastructure. 
 However, \ac{sgx} in large-scale data processing introduces challenges, due to the limited \ac{epc} size and the overhead of 
 context switching between trusted and untrusted environments.
 
 Although frameworks like \ac{vc3} and EnclaveDB address large-scale processing, they are solutions that 
 introduce complexity and dependencies, which are not suitable for the specific requirements of this dissertation, 
-a lightweight, persistent monitoring system capable of handling continuous streams of WiFi 
-logs with state preservation over long periods.
+a lightweight, monitoring system capable of handling continuous streams of WiFi 
+logs or over time.
 
 Consequently, this thesis proposes an architecture that uses the security mechanisms of \ac{sgx} but implements a custom memory management strategy. 

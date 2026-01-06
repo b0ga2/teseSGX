@@ -32,7 +32,7 @@ As stated in \citet{eduroam_compliance}, \ac{sp}s are required to maintain loggi
 three months, although this duration may vary depending on national regulations. 
 Specifically, this logging includes the timestamps of authentication requests, the outer \ac{eap} identity, 
 the client's \ac{mac} address, and the identification of the specific \ac{ap} used for the connection, which will be used 
-in the present dissertation.
+in the course of this dissertation.
 
 The following list exemplifies sensitive information used for indoor location mentioned throughout this document:
 
@@ -416,6 +416,6 @@ Unlike normal paging, \ac{sgx} paging requires cryptographic operations, where t
 This causes a performance overhead, often referred to as the \ac{epc} Bottleneck, making large-memory workloads impractical without optimization. 
 Various approaches appear in related work, such as data partitioning and demand paging optimization, attempt to mitigate this by minimizing the frequency of page swaps.
 
-In addition to memory capacity, the cost of entering (\texttt{ECALL}) and exiting (\texttt{OCALL}) an enclave is evident, since a 
-domain transition involves hardware operations, including flushes, security checks, and context saving, which are necessary to prevent information leakage. 
+In addition to memory capacity, the cost of entering (\texttt{ECALL}) and exiting (\texttt{OCALL}) an enclave is worth mentioning, since a 
+domain transition involves several hardware operations, including flushes, security checks, and context saving. 
 
