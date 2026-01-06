@@ -291,7 +291,7 @@ Finally, the \texttt{MODE64BIT} flag determines whether the enclave operates usi
 Once these operational parameters are defined in the metadata, the enclave must pass through a specific sequence of states to become executable. 
 % Consequently, the enclave lifecycle is related with resource management, specifically the allocation of \ac{epc} pages. 
 This process begins with creation, where the \texttt{ECREATE} instruction transforms a free \ac{epc} page into the enclave's \ac{secs}, initializing it with architectural parameters and setting the 
-INIT attribute to false, while in this state, the lifecycle enters the loading phase, where the system software uses \texttt{EADD} to allocate pages for code and data, 
+texttt{INIT} attribute to false, while in this state, the lifecycle enters the loading phase, where the system software uses \texttt{EADD} to allocate pages for code and data, 
 while \texttt{EEXTEND} updates the enclave's cryptographic measurement. 
 After loading, initialization is started by the \texttt{EINIT} instruction, that validates a token and sets the \texttt{INIT} attribute to true, 
 sealing the enclave from modification and enabling execution in Ring 3. 
@@ -351,7 +351,7 @@ of \ac{sgx} instructions to allocate and free pages in the enclaves. But as ment
 and has the possibility to refuse them if they compromise any security guarantee.
 
 To perform these verifications, \ac{sgx} keeps some information about previous allocation decisions for each \ac{epc} page in the \ac{epcm}, an array with one entry per page. 
-Three relevant fields in each entry that affect the ownership of the \ac{epc} page are \texttt{VALID}, a bit indicating whether an EPC page is currently active and allocated to an enclave, if 
+Three relevant fields in each entry that affect the ownership of the \ac{epc} page are \texttt{VALID}, a bit indicating whether an \ac{epc} page is currently active and allocated to an enclave, if 
 set to one it signifies the page is in use, preventing reallocation or overwriting by other instructions, \texttt{PT}, eight bits that define the type of page and \texttt{ENCLAVESECS} which identifies the 
 enclave that owns the page.
 
