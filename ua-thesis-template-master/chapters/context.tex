@@ -13,9 +13,9 @@ concluding with an analysis of the technical challenges associated with data pro
 Driven by technological advances and institutional needs, nearly all buildings are now equipped with internet access provided through 
 \ac{ap}s. 
 These allow for the determination of user location with a reasonable degree of precision, as users must connect to a specific \ac{ap} 
-to access the network, and every attempt, successful or not, is logged.
+to access the network.
 
-Although often categorized as technical metadata, it presents privacy challenges when observed through the analysis of sensitive data. 
+Although often categorized as technical metadata, it presents privacy challenges due to its potential to uncover sensitive information. 
 While raw location logs may not possess intrinsic sensitiveness, like a direct medical diagnosis might, it is possible to 
 acquire sensitive information through their processing context. 
 As \citet{04_article} states, the critical factor is the computational distance required to infer sensitive 
@@ -28,7 +28,7 @@ This reduces the effort necessary to de-anonymize users, transforming technical 
 It is relevant to mention that the collection of connection logs is not driven by the production 
 of occupancy analytics, but from a contractual obligation imposed on institutions, like the University of Aveiro, 
 that implement the eduroam network. 
-As stated in \citet{eduroam_compliance}, \ac{sp}s are required to maintain logging information for a minimum retention period of 
+As stated in \citet{eduroam_compliance}, a \ac{sp} is required to maintain logging information for a minimum retention period of 
 three months, although this duration may vary depending on national regulations. 
 Specifically, this logging includes the timestamps of authentication requests, the outer \ac{eap} identity, 
 the client's \ac{mac} address, and the identification of the specific \ac{ap} used for the connection, which will be used 
@@ -48,7 +48,7 @@ The following list exemplifies sensitive information used for indoor location me
     or video capable of revealing biometric features and behavioral signatures.
 \end{itemize}
 
-\section{Trusted Execution Environments (TEEs)}
+\section{Trusted Execution Environment (TEE)}
 % Definir Trusted Computing e talvez exemplo
 Before defining \ac{tee}s, it is essential to understand the underlying concept of \ac{tc}, as defined by 
 \citet{01_7345265}, a \ac{tc} aims to enable systems to achieve secure computation, privacy, and data protection. 
@@ -73,14 +73,13 @@ The implementation of these can differ, leading to a categorization of \ac{tee}s
 hardware-based \ac{tee}s rely on specific hardware extensions, such as Intel \ac{sgx}, to enforce isolation at the lower level, 
 effectively anchoring trust in the physical processor, in contrast, software-based \ac{tee}s depend on a software layer 
 typically a hypervisor or microkernel to protect the execution environment. 
-\citet{01_7345265} proposed some definitions represented in the following figure.
 \begin{figure}
   \includegraphics[width=\linewidth]{figs/TEE_Building_Blocks.png}
   \caption{Overview of \ac{tee} building blocks, image by \citet{01_7345265}.}
   \label{fig:TEE_Building_Blocks}
 \end{figure}
-\newpage
-As seen in the previous picture, a TEE in composed by building blocks such as:
+
+As seen in the Figure \ref{fig:TEE_Building_Blocks} by \citet{01_7345265}, a TEE in composed by building blocks such as:
 \begin{itemize}
     \item{\normalsize Secure Boot: guarantees that only code of a certain property can be loaded during boot.}
     \item{\normalsize Secure Scheduling: provides a balanced coordination between the \ac{tee} and the rest of the system.}
@@ -94,9 +93,10 @@ In contrast to the isolation of the \ac{tee}, the remaining portion of the syste
 this includes the traditional operating system, the hypervisor, and the standard application stack (yellow component of Figure \ref{fig:ree_vs_tee}). 
 While the \ac{ree} is optimized for performance, versatility, and accessing peripherals, it loses the security guarantees 
 required for sensitive data processing, as it makes it vulnerable to software attacks. 
+
 The architectural principle of trusted computing is the strict separation between these two worlds, 
-the \ac{tee} protects its assets even when the surrounding \ac{ree} is fully compromised.
-This separation can be observed in the Figure \ref{fig:ree_vs_tee}.
+the \ac{tee} protects its assets even when the surrounding \ac{ree} is fully compromised, 
+this separation can be observed in the Figure \ref{fig:ree_vs_tee}.
 \begin{figure}
   \begin{center}
   \includegraphics[scale=0.7]{figs/ree_vs_tee.png}
@@ -156,10 +156,12 @@ adoption within the community, particularly in the context of \ac{rd}.
 While TrustZone provides a robust \ac{tee} for the mobile and embedded ecosystem, its reliance on ARM architecture makes it 
 less suitable for the available infrastructure.
 
+\newpage
+
 \subsection{AMD SEV}
 
-Introduced in 2016, \ac{sev} is stated to be the first x86 technology that was designed to isolate \ac{vm}s from the hypervisor, since 
-historically these have been considered trusted components, this allows for example, clients in the cloud to secure their \ac{vm} 
+Introduced in 2016, \ac{sev} is stated to be the first x86 technology that was designed to isolate a \ac{vm} from the hypervisor, since 
+historically these have been considered trusted components, this allows, for example, clients in the cloud to secure their \ac{vm} 
 workload from the cloud administrator, keeping their data confidential and minimizing exposure.
 AMD did this using main memory encryption in \ac{sev}, with this, individuals \ac{vm}s were assigned an individual key to encrypt all data, 
 preventing the hypervisor from reading clear text information, as cited by \citet{05_amd_sev}.
@@ -193,15 +195,16 @@ each \ac{cvm} is isolated from the host and other encrypted \ac{vm}s. This \ac{v
 environment where its memory and state registers are encrypted via a unique key managed by the \ac{asp}, 
 this safeguards the integrity of guest address translations and strictly isolates the 
 execution by blocking \ac{smi} events and preventing access from the \ac{smm}. 
+
 This architecture also introduces \ac{vmpl}, a four-tiered privilege hierarchy to traditional x86 rings  
 that enables a \ac{svsm} running at the highest level 
-\ac{vmpl}0 to securely offer services like virtual \ac{tpm} and live migration.
+\ac{vmpl} to securely offer services like virtual \ac{tpm} and live migration.
 
 \subsection{Intel TDX}
 
 With the same goals as AMD \ac{sev}, Intel \ac{tdx} is an extension introduced with the 4th Generation Intel Xeon Scalable processors to 
 enable confidential computing. 
-This technology facilitates the deployment of \ac{vm}s, referred to as \ac{td}s, under the supervision of the \ac{seam}, this provides encrypted \ac{cpu} 
+This technology facilitates the deployment of \ac{vm}s, referred to as \ac{td}, under the supervision of the \ac{seam}, this provides encrypted \ac{cpu} 
 state and memory, with integrity protection and remote attestation, addressing scenarios where the cloud host platform is considered 
 untrustworthy within the threat model
 \footnote{Structured approach to identifying potential security risks, defining attacks from the perspective of 
@@ -230,9 +233,9 @@ functional capabilities like hardware-assisted virtualization, memory encryption
 The previous module is loaded in to the \ac{seam} range, a portion of memory that is reserved during boot. Another component present in this range 
 is the \ac{seam} loader, which is responsible for installing and updating the module. 
 \ac{seam} provides two execution modes, the \ac{seam} \ac{vmx} root mode and non-root mode, a \ac{tdx} compatible hypervisor operates in the \ac{vmx} root mode 
-and uses the \texttt{SEAMCALL} introduction to call host-side functions, functions that start with TDH, of the modulea. 
+and uses the \texttt{SEAMCALL} introduction to call host-side functions, functions that start with "TDH", of the module. 
 
-This is possible since the the logical processor changes \ac{vmx} root mode into \ac{seam} \ac{vmx} root mode and starts executing code within the TDX Module, 
+This is possible since the the logical processor changes \ac{vmx} root mode into \ac{seam} \ac{vmx} root mode and starts executing code within the \ac{tdx} Module, 
 upon completing it returns in \ac{vmx} root mode with the instruction \texttt{SEAMRET}. 
 The \ac{td}s run in \ac{seam} \ac{vmx} non-root mode, since \ac{tdx} supports the execution of unmodified user-level applications within a \ac{td}, like a normal 
 \ac{vm}, but the guest \ac{os} kernel (TDX-enlightened OS in Figure \ref{fig:intel_tdx}), needs to be altered in order to align with the \ac{tdx} platform, namely 
@@ -295,7 +298,6 @@ sealing the enclave from modification and enabling execution in Ring 3.
 Finally, the destruction of the enclave occurs with the \texttt{EREMOVE} instruction, which deallocates pages by clearing their \texttt{VALID} bit, ensuring that the \ac{secs} page is only destroyed once all other 
 pages associated with the enclave have been successfully removed, as shown in Figure \ref{fig:sgx_enclave_lifecycle}.
 
-\newpage
 \begin{figure}
   \begin{center}
   \includegraphics[scale=0.6]{figs/sgx_enclave_lifecycle.png}
@@ -303,6 +305,8 @@ pages associated with the enclave have been successfully removed, as shown in Fi
   \label{fig:sgx_enclave_lifecycle}
   \end{center}
 \end{figure}
+
+\newpage
 
 \subsection{Architecture and Workflow}
 
@@ -325,8 +329,6 @@ At this point the loaded code becomes executable in the enclave and the loading 
 
 The execution flow of an enclave is governed by specific \ac{cpu} instructions, these are similar to context switching between user mode and kernel mode, 
 but the enclave execution remains within Ring 3.
-
-\newpage
 
 \subsection{Enclave Page Cache}
 % Explicar a divisão da memória (EPC - Enclave Page Cache).
@@ -353,11 +355,11 @@ Three relevant fields in each entry that affect the ownership of the \ac{epc} pa
 set to one it signifies the page is in use, preventing reallocation or overwriting by other instructions, \texttt{PT}, eight bits that define the type of page and \texttt{ENCLAVESECS} which identifies the 
 enclave that owns the page.
 
-The contents of this map can only be read by the \ac{sgx} as stated in Intel \ac{sdm}.
+The contents of this map can only be read by ab enclave as stated in Intel \ac{sdm}.
 
 \subsection{ECALLs and OCALLs}
 %Mecanismo de ECalls e OCalls (entrar e sair do enclave e comunicação com o mundo "inseguro").
-In Intel SGX, \texttt{ECALL} and \texttt{OCALL} are mechanisms for communication between the untrusted application and the trusted enclave. 
+In Intel \ac{sgx}, \texttt{ECALL} and \texttt{OCALL} are mechanisms for communication between the untrusted application and the trusted enclave. 
 
 \texttt{ECALLs} allow the untrusted application to invoke a pre-defined function inside the enclave, passing input parameters and pointers to shared memory within the application.
 
@@ -375,19 +377,19 @@ One of the most important components to this process is the enclave's identity, 
 its initialization and loading phases, as mentioned previously.
 
 The identity of an enclave is primarily defined by two measurement registers located in the enclave's \ac{secs}. 
-The first, \texttt{MRENCLAVE}, contains a SHA-256 hash that uniquely identifies the enclave's code and data contents, acting as a cryptographic log of the creation process, 
+The first, \texttt{MRENCLAVE}, contains a hash that uniquely identifies the enclave's code and data contents, acting as a cryptographic log of the creation process, 
 it incorporates every instruction used to build the enclave, consequently, any modification to the loaded code, data, or their order results in a completely 
 different \texttt{MRENCLAVE} value, ensuring that the running software corresponds exactly to the developer's intent. 
 
 Complementing this is \texttt{MRSIGNER}, which identifies the entity that signed the enclave rather than the code itself. 
-This register stores the SHA-256 hash of the public RSA key modulus used to sign the \texttt{SIGSTRUCT} certificate, allowing remote parties to trust an 
+This register stores the hash of the public key modulus used to sign the \texttt{SIGSTRUCT} certificate, allowing remote parties to trust an 
 enclave based on the author's reputation. 
 The figure \ref{fig:enclave_identity} shows how an enclave identity is established.
 
 \newpage
 \begin{figure}
   \begin{center}
-  \includegraphics[scale=0.8]{figs/enclave_identity.png}
+  \includegraphics[scale=0.6]{figs/enclave_identity.png}
   \caption{Establishing an Enclave’s Identity, by \citet{sgx}.}
   \label{fig:enclave_identity}
   \end{center}
@@ -395,7 +397,7 @@ The figure \ref{fig:enclave_identity} shows how an enclave identity is establish
 
 The attestation process leverages these identities through a mechanism known as local attestation, where an enclave proves its identity to another enclave on the same platform using the 
 \texttt{EREPORT} instruction. 
-To extend this trust remotely, \ac{sgx} uses a privileged enclave known as the Quoting Enclave, that receives the local report, verifies it, and replaces the local MAC with a 
+To extend this trust remotely, \ac{sgx} uses a privileged enclave known as the Quoting Enclave, that receives the local report, verifies it, and replaces the local \ac{mac} with a 
 cryptographic signature produced by the processor's unique attestation key. 
 This signature, which includes the \texttt{MRENCLAVE} and \texttt{MRSIGNER}, serves as the final proof to the remote service provider that the enclave is authentic and running on genuine hardware.
 
@@ -406,16 +408,32 @@ matches the calculated \texttt{MRENCLAVE} and populates the \texttt{MRSIGNER} fi
 
 \section{Memory and Performance Limitations in SGX}
 Even though \ac{sgx} provides confidentiality and integrity, it introduces performance overheads and resource constraints.
-These limitations are derived from the restricted size of the secure memory region and the cost of transitioning between trusted and 
-untrusted execution modes.
 
 One constraint is the limited capacity of the \ac{epc}, since it resides within the \ac{prm}, where the memory is limited.
 When an application's working set exceeds the available \ac{epc} capacity, the system must perform paging
 operations to evict \ac{epc} pages to unprotected \ac{dram}. 
+
 Unlike normal paging, \ac{sgx} paging requires cryptographic operations, where the hardware encrypts the page before writing it to untrusted memory, and verify and decrypt it upon restoration. 
 This causes a performance overhead, often referred to as the \ac{epc} Bottleneck, making large-memory workloads impractical without optimization. 
 Various approaches appear in related work, such as data partitioning and demand paging optimization, attempt to mitigate this by minimizing the frequency of page swaps.
 
 In addition to memory capacity, the cost of entering (\texttt{ECALL}) and exiting (\texttt{OCALL}) an enclave is worth mentioning, since a 
-domain transition involves several hardware operations, including flushes, security checks, and context saving. 
+domain transition involves several hardware operations, including flushes, security checks, and context saving, as shown in the figure \ref{fig:enclave_overhead}. 
+
+\begin{figure}
+  \begin{center}
+  \includegraphics[scale=0.35]{figs/overhead_calls_sgx.png}
+  \caption{Performance Overhead of an Enclaves as a Function of Data Size, by \citet{sgx_overhead}.}
+  \label{fig:enclave_overhead}
+  \end{center}
+\end{figure}
+
+This happens since \ac{sgx} performance is dependent on the working set size, 
+for data sizes under 64MB, the overhead remains manageable, however, a performance bottleneck is observed beyond 96MB. 
+
+This threshold corresponds to the physical limit of the \ac{epc}, once the enclave's memory usage exceeds this capacity, the \ac{os} 
+is forced to perform secure paging, to swap them to untrusted memory. 
+This results in a performance degradation, with execution times reaching up to 500 times that of native code due to the use of more clock cycles, 
+showing the need for optimized memory management.
+
 

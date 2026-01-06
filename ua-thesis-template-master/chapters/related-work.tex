@@ -2,7 +2,7 @@
 \label{chapter:related_work}
 
 This chapter establishes the context for the proposed work by reviewing the related work in WiFi based indoor positioning and occupancy detection. 
-Besides this, it examines the application of \ac{sgx} in location based systems and analyzes architectural strategies for secure large data processing within enclaves. 
+Besides this, it examines the application of \ac{sgx} in location based systems and analyzes strategies for large data processing within enclaves. 
 While nearly identical solutions, combining already existing infrastructure monitoring with hardware enforced privacy, are scarce in the literature, 
 distinct bodies of research provide the necessary basis for this dissertation.
 
@@ -382,9 +382,11 @@ Furthermore, to avoid the memory footprint of standard libraries, \ac{vc3} uses 
 ensuring that the limited secure memory is dedicated primarily to the user's data and logic.
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{figs/mapReduceSteps.png}
+  \begin{center}
+  \includegraphics[scale=0.7]{figs/mapReduceSteps.png}
   \caption{Steps of MapReduce with mappers (M) and reducers (R), image by \citet{s01_7163017}.}
   \label{fig:mapReduce_steps}
+  \end{center}
 \end{figure}
 
 % The following is regarding the article number as 02 in the SGX folder
@@ -418,10 +420,10 @@ introduce development complexity.
 \section{Summary}
 The review of the literature reveals a gap in the intersection of indoor positioning and privacy-preserving technologies. 
 The dependency on logs introduces challenges that requires the usage of filters, as identified in the reviewed literature, 
-occupancy estimation is affected by stationary devices, transient users or bystanders who are passing by the access point's range, 
+occupancy is affected by stationary devices, transient users or bystanders who are passing by the access point's range, 
 and discontinuous communications from mobile devices entering power-saving modes. 
 
-Although literature validates WiFi connection logs as an effective and scalable proxy for occupancy monitoring, 
+Although literature validates WiFi connection logs as an effective and scalable proxy for occupancy counting, 
 reviewed implementations face a dilemma, overlook user privacy to prioritize utility or rely on opt-in models 
 that introduce scalability and accuracy issues.
 
@@ -432,7 +434,6 @@ context switching between trusted and untrusted environments.
 
 Although frameworks like \ac{vc3} and EnclaveDB address large-scale processing, they are solutions that 
 introduce complexity and dependencies, which are not suitable for the specific requirements of this dissertation, 
-a lightweight, monitoring system capable of handling continuous streams of WiFi 
-logs or over time.
+a lightweight, monitoring system capable of handling continuous streams of WiFi logs or over time.
 
 Consequently, this thesis proposes an architecture that uses the security mechanisms of \ac{sgx} but implements a custom memory management strategy. 
