@@ -406,7 +406,7 @@ matches the calculated \texttt{MRENCLAVE} and populates the \texttt{MRSIGNER} fi
 
 \newpage
 
-\section{Memory and Performance Limitations in SGX}
+\section{Memory and Performance Limitations in \ac{sgx}}
 Even though \ac{sgx} provides confidentiality and integrity, it introduces performance overheads and resource constraints.
 
 One constraint is the limited capacity of the \ac{epc}, since it resides within the \ac{prm}, where the memory is limited.
@@ -436,4 +436,29 @@ is forced to perform secure paging, to swap them to untrusted memory.
 This results in a performance degradation, with execution times reaching up to 500 times that of native code due to the use of more clock cycles, 
 showing the need for optimized memory management.
 
+\section{Attacks on \ac{sgx}}
 
+Although not the focus point of the current work, it is important to mention that \ac{sgx} is not a perfect security mechanism,
+it has been successfully attacked in the past. 
+The present chapter will shortly approach some of the \ac{sgx} known vulnerabilities, categorizing them into side-channel leakage and speculative execution exploits.
+
+\subsection{Controlled-Channel Attacks}
+A design characteristic of \ac{sgx} is that the trusted hardware relies on the untrusted \ac{os} for the management of system resources, including memory paging and scheduling. 
+This dependency creates a vulnerability surface known as controlled-channel attacks. 
+
+Since the \ac{os} maintains the page tables, it can manipulate the \ac{epc} page protections to induce page faults intentionally. 
+By observing which pages are accessed by the enclave in response to these faults, a privileged attacker can infer the control flow of the trusted application. 
+For instance, if a specific page corresponds to a branch of code that processes a specific type of user or sensitive event, observing an access to that page leaks information 
+about the encrypted data being processed. This class of attacks is particularly relevant to this dissertation, as the proposed architecture involves custom memory management strategies.
+
+\subsection{Cache Timing Attacks}
+While \ac{sgx} isolates the enclave's memory in the \ac{prm}, the processor's caches are shared resources between the trusted and untrusted environments. 
+Attackers running on the same physical core can monitor cache lines to determine whether the enclave has loaded specific data.
+
+
+\subsection{Speculative Execution Attacks (Foreshadow)}
+In 2018, a vulnerability known as Foreshadow demonstrated that the isolation guarantees of \ac{sgx} could be bypassed using speculative execution. 
+This attack leveraged a race condition in the processor's address translation to read the contents of the L1 data cache, including the enclave's private keys and data, 
+before the processor could enforce the permission check.
+
+Although Intel has since released microcode patches and hardware mitigations, this highlights that \ac{tee}s are not impervious to microarchitectural leakage.
