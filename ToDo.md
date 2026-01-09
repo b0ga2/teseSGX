@@ -64,5 +64,12 @@ OS STIC devem usá-las após validação.
 - Tentar perceber como vou relacionar os logs com as aulas
 - Pensar quais são os dados de input de output, comparar desempenho uma turma de cada vez ou todas em brutas, pensar em Diffie Helman
 
+
+- Fazer um use case para o cenário final, turmas e horário fixos (obtidos no inicio), e que os alunos podem mudar semanalmente (extração semanal)
+  - Valores a obter quantidade de alunos por sala e nº de aulas que um aluno foi num semestre
+  - Visibilidade intermédia, variação ao longo do ano/semestre 
+  - Ver opções de compressão
+  - Usar formato cache, em que a cada entrada nova é atualizado
+
 ##### Sixth
 - Pesquisar para SOA algo como "SGX Anonimity"
