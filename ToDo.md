@@ -73,3 +73,8 @@ OS STIC devem usá-las após validação.
 
 ##### Sixth
 - Pesquisar para SOA algo como "SGX Anonimity"
+
+#### Seventh 
+1- Os dados ficam sempre cifrados e a computação pode ser feita mesmo perdendo as chaves, o processamento pode ser feito fora do campus (p.e num servidor externo), proteção extra sobre o processamento mesmo no caso de um atacante entrar na rede
+
+2- É a infrastrutura que existe disponivel de momento
