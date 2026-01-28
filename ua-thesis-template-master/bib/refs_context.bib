@@ -156,3 +156,39 @@ keywords = {metadata formats, metadata frameworks, metadata registries, metadata
   version     = {v2-FINAL},
   url         = {https://eduroam.org/}, 
 }
+
+@inproceedings{sok,
+author = {Paju, Arttu and Javed, Muhammad Owais and Nurmi, Juha and Savim\"{a}ki, Juha and McGillion, Brian and Brumley, Billy Bob},
+title = {SoK: A Systematic Review of TEE Usage for Developing Trusted Applications},
+year = {2023},
+isbn = {9798400707728},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3600160.3600169},
+doi = {10.1145/3600160.3600169},
+abstract = {Trusted Execution Environments (TEEs) are a feature of modern central processing units (CPUs) that aim to provide a high assurance, isolated environment in which to run workloads that demand both confidentiality and integrity. Hardware and software components in the CPU isolate workloads, commonly referred to as Trusted Applications (TAs), from the main operating system (OS). This article aims to analyse the TEE ecosystem, determine its usability, and suggest improvements where necessary to make adoption easier. To better understand TEE usage, we gathered academic and practical examples from a total of 223 references. We summarise the literature and provide a publication timeline, along with insights into the evolution of TEE research and deployment. We categorise TAs into major groups and analyse the tools available to developers. Lastly, we evaluate trusted container projects, test performance, and identify the requirements for migrating applications inside them.},
+booktitle = {Proceedings of the 18th International Conference on Availability, Reliability and Security},
+articleno = {34},
+numpages = {15},
+keywords = {Application Security, Confidential Computing, Privacy and Confidentiality, TEE, Trusted Execution Environment, Usability},
+location = {Benevento, Italy},
+series = {ARES '23}
+}
+
+@ARTICLE{improve2,
+author={Brossard, Mathias and Bryant, Guilhem and Gaabouri, Basma El and Fan, Xinxin and Ferreira, Alexandre and Evans, Edmund Grimley and Haster, Christopher and Johnson, Evan and Miller, Derek and Mo, Fan and Mulligan, Dominic P. and Spinale, Nick and van Hensbergen, Eric and Vincent, Hugo J. M. and Xiong, Shale},
+journal={ IEEE Transactions on Emerging Topics in Computing },
+title={{ Private Delegated Computations Using Strong Isolation }},
+year={2024},
+volume={12},
+number={01},
+ISSN={2168-6750},
+pages={386-398},
+abstract={ Computations are now routinely delegated to third-parties. In response, Confidential Computing technologies are being added to microprocessors offering a trusted execution environment (TEE) that provides confidentiality and integrity guarantees to code and data hosted within—even in the face of a privileged attacker. TEEs, along with an attestation protocol, permit remote third-parties to establish a trusted “beachhead” containing known code and data on an otherwise untrusted machine. Yet, they introduce many new problems, including: how to ease provisioning of computations safely into TEEs; how to develop distributed systems spanning multiple classes of TEE; and what to do about the billions of “legacy” devices without support for Confidential Computing? Tackling these problems, we introduce Veracruz, a pragmatic framework that eases the design and implementation of complex privacy-preserving, collaborative, delegated computations among a group of mutually mistrusting principals. Veracruz supports multiple isolation technologies and provides a common programming model and attestation protocol across all of them, smoothing deployment of delegated computations over supported technologies. We demonstrate Veracruz in operation, on private in-cloud object detection on encrypted video streaming from a video camera. In addition to supporting hardware-backed TEEs—like AWS Nitro Enclaves and Arm Confidential Computing Architecture Realms—Veracruz also provides pragmatic “software TEEs” on Armv8-A devices without hardware Confidential Computing capability, using the high-assurance seL4 microkernel and our IceCap framework. },
+keywords={Codes;Smoothing methods;Microprocessors;Object detection;Streaming media;Programming;Isolation technology},
+doi={10.1109/TETC.2023.3281738},
+url = {https://doi.ieeecomputersociety.org/10.1109/TETC.2023.3281738},
+publisher={IEEE Computer Society},
+address={Los Alamitos, CA, USA},
+month=jan}
+

@@ -63,6 +63,7 @@ execution of its applications.
 %Propriedades principais: Confidencialidade e Integridade.
 While various terminologies exist in the literature, this dissertation adopts the term \ac{tee}, this is defined by \citet{01_7345265} 
 as a secure, integrity protected computational environment, typically with isolated memory and specific storage capabilities. 
+Using a combination of hardware and software components in the \ac{cpu}, it isolates specific workloads, commonly referred to as \ac{ta}, from the rest of the system.
 Its primary objectives are to guarantee the authenticity of the executed code, the integrity of the runtime state and the confidentiality of the data, 
 like \ac{cpu} registers, while protecting code, memory, and sensitive \ac{io} from unauthorized access, in addition 
 a \ac{tee} should have the ability to support remote attestation, allowing third parties to verify the trustworthiness of the environment, 
@@ -104,6 +105,28 @@ this separation can be observed in the Figure \ref{fig:ree_vs_tee}.
   \label{fig:ree_vs_tee}
   \end{center}
 \end{figure}
+
+A \ac{tee} technology provides protection for various applications by enforcing isolation and integrity, as mentioned in the systematic review by \citet{sok}, 
+the scenarios for this technology appear in multiple domains, ranging from consumer electronics to critical cloud infrastructure.
+
+In digital media, rights holders frequently employ \ac{tee}s for \ac{drm} to prevent the unauthorized copying of video or audio content, by establishing a hardware channel 
+between the \ac{tee} and the device's display, the system blocks the device owner or malicious software from intercepting decoded media.
+
+Financial applications also benefit from this technology, \ac{tee}s can be used to secure mobile wallets, peer-to-peer payments, and point-of-sale terminals. 
+Furthermore, in blockchain ecosystems, they enable privacy for lightweight clients without compromising the performance of full nodes, acting as trusted backend systems to facilitate secure transactions.
+
+In authentication \ac{tee}s are used to protect biometric identity methods such as facial recognition and fingerprint sensors. 
+For example, the Android \ac{os} stores fingerprint data within the \ac{tee}, making it inaccessible to the \ac{os} environment. 
+This isolation capability is also utilized to support passwordless standards, such as Apple’s passkeys, by combining biometric verification with securely stored cryptographic private keys.
+
+In the context of cloud computing and data analysis, areas particularly relevant to this dissertation, \ac{tee}s provide a critical layer of defense. 
+In a trusted cloud model, they protect the infrastructure against compromise, even if the backend or host \ac{os} is malicious, the adversary remains unable to access the specific 
+Trusted Application (TA) running inside the enclave. 
+This is also common for \ac{ml} in sensitive fields like healthcare, allowing computation on confidential datasets without exposing the underlying information.
+
+Finally, \ac{tee}s also contribute to system stability through runtime integrity and secure modular programming. 
+They can enforce real-time kernel protection by isolating security monitoring services, potentially shutting down systems if kernel binaries are targeted. 
+Additionally, they encourage secure software architectures by decoupling functionalities into self-contained modules, where the execution of one module is protected from the vulnerabilities of others.
 
 \section{TEE Technologies}
 Several \ac{tee} implementations exist, such as ARM TrustZone, AMD \ac{sev}, and Intel's most recent \ac{tdx}. 

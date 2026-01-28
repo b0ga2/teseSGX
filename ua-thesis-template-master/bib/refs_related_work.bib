@@ -356,6 +356,76 @@ location = {Dallas, Texas, USA},
 series = {CCS '17}
 }
 
+@inproceedings{s04,
+author = {Ohrimenko, Olga and Schuster, Felix and Fournet, C\'{e}dric and Mehta, Aastha and Nowozin, Sebastian and Vaswani, Kapil and Costa, Manuel},
+title = {Oblivious multi-party machine learning on trusted processors},
+year = {2016},
+isbn = {9781931971324},
+publisher = {USENIX Association},
+address = {USA},
+abstract = {Privacy-preserving multi-party machine learning allows multiple organizations to perform collaborative data analytics while guaranteeing the privacy of their individual datasets. Using trusted SGX-processors for this task yields high performance, but requires a careful selection, adaptation, and implementation of machine-learning algorithms to provably prevent the exploitation of any side channels induced by data-dependent access patterns.We propose data-oblivious machine learning algorithms for support vector machines, matrix factorization, neural networks, decision trees, and k-means clustering. We show that our efficient implementation based on Intel Skylake processors scales up to large, realistic datasets, with overheads several orders of magnitude lower than with previous approaches based on advanced cryptographic multi-party computation schemes.},
+booktitle = {Proceedings of the 25th USENIX Conference on Security Symposium},
+pages = {619–636},
+numpages = {18},
+location = {Austin, TX, USA},
+series = {SEC'16}
+}
+
+@InProceedings{s05,
+author="Chandra, Swarup
+and Karande, Vishal
+and Lin, Zhiqiang
+and Khan, Latifur
+and Kantarcioglu, Murat
+and Thuraisingham, Bhavani",
+editor="Foley, Simon N.
+and Gollmann, Dieter
+and Snekkenes, Einar",
+title="Securing Data Analytics on SGX with Randomization",
+booktitle="Computer Security -- ESORICS 2017",
+year="2017",
+publisher="Springer International Publishing",
+address="Cham",
+pages="352--369",
+isbn="978-3-319-66402-6"
+}
+
+@misc{s06,
+      title={Slalom: Fast, Verifiable and Private Execution of Neural Networks in Trusted Hardware}, 
+      author={Florian Tramèr and Dan Boneh},
+      year={2019},
+      eprint={1806.03287},
+      archivePrefix={arXiv},
+      primaryClass={stat.ML},
+      url={https://arxiv.org/abs/1806.03287}, 
+}
+
+@inproceedings{s07,
+author = {Mo, Fan and Shamsabadi, Ali Shahin and Katevas, Kleomenis and Demetriou, Soteris and Leontiadis, Ilias and Cavallaro, Andrea and Haddadi, Hamed},
+title = {DarkneTZ: towards model privacy at the edge using trusted execution environments},
+year = {2020},
+isbn = {9781450379540},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3386901.3388946},
+doi = {10.1145/3386901.3388946},
+abstract = {We present DarkneTZ, a framework that uses an edge device's Trusted Execution Environment (TEE) in conjunction with model partitioning to limit the attack surface against Deep Neural Networks (DNNs). Increasingly, edge devices (smartphones and consumer IoT devices) are equipped with pre-trained DNNs for a variety of applications. This trend comes with privacy risks as models can leak information about their training data through effective membership inference attacks (MIAs).We evaluate the performance of DarkneTZ, including CPU execution time, memory usage, and accurate power consumption, using two small and six large image classification models. Due to the limited memory of the edge device's TEE, we partition model layers into more sensitive layers (to be executed inside the device TEE), and a set of layers to be executed in the untrusted part of the operating system. Our results show that even if a single layer is hidden, we can provide reliable model privacy and defend against state of the art MIAs, with only 3\% performance overhead. When fully utilizing the TEE, DarkneTZ provides model protections with up to 10\% overhead.},
+booktitle = {Proceedings of the 18th International Conference on Mobile Systems, Applications, and Services},
+pages = {161–174},
+numpages = {14},
+location = {Toronto, Ontario, Canada},
+series = {MobiSys '20}
+}
+
+@misc{s08,
+      title={GOAT: GPU Outsourcing of Deep Learning Training With Asynchronous Probabilistic Integrity Verification Inside Trusted Execution Environment}, 
+      author={Aref Asvadishirehjini and Murat Kantarcioglu and Bradley Malin},
+      year={2020},
+      eprint={2010.08855},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2010.08855}, 
+}
 
 @article{MapReduce,
 author = {Dean, Jeffrey and Ghemawat, Sanjay},

@@ -259,7 +259,7 @@ reference points to create a database, and an online positioning process that us
 
 \section{Approaches to Privacy in Literature}
 
-The domain of privacy-preserving data processing is made of statistical methodologies, ranging from syntactic models like k-anonymity to rigorous semantic 
+The domain of privacy in data processing is made of statistical methodologies, ranging from syntactic models like k-anonymity to rigorous semantic 
 definitions such as differential privacy. 
 While these approaches are fundamental to the field, a comprehensive theoretical analysis of their guarantees falls outside the scope of this dissertation. 
 Instead, this section provides a high-level categorization of the privacy paradigms observed specifically within the context of indoor positioning literature. 
@@ -346,10 +346,9 @@ students consent to the tracking of their devices.
 
 Existing literature relies on data minimization or obfuscation techniques to achieve privacy. 
 However, these approaches introduce a trade-off, to increase privacy, the granularity of the data must be decreased.  
-For the present use case of occupancy monitoring, where precision is required, this trade-off is not acceptable, consequently, this work moves away 
+For the present use case, where precision must be maintained, this trade-off is not acceptable, consequently, this work moves away 
 from statistical obfuscation and focuses on hardware-enforced confidentiality with \ac{sgx}, avoiding algorithms that add noise, allowing 
 for the processing of exact data while maintaining it's confidentiality and integrity.
-
 
 \section{Previous Works with \ac{sgx} in Indoor Positioning}
 While the literature regarding the specific application of \ac{sgx} to indoor positioning remains limited, a select number of 
