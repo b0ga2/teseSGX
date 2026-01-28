@@ -44,6 +44,7 @@ OS STIC devem usá-las após validação.
   - Preciso de confirmar que parametros o prof quer que eu passe
   - Discutir que campos é que vou realmente utilizar
 - Return base64 ou hex
+- Fazer documentação básica, e adicionar memoria em cache com a lista de alunos
 
 
 #### Fifth Task (2025-11-17 by Tomás Bogalho)
@@ -57,7 +58,8 @@ OS STIC devem usá-las após validação.
     - Ler os artigos a partir do 21 para a frente
     - Escrever Wifi sempre da mesma forma, qual a mais correta?
     - Mencionar que a figura 3.1 também é do autor, o Carlos disse para refazer e dizer que é com base em X
-  - Fazer documentação básica, e adicionar memoria em cache com a lista de alunos
+    - Citações da maneira correta, falar do slides do prof
+    - Se a overall organização está boa
 
 ##### Tasks SGX
 - Recebe ficheiro texto ou csv para binário protegido pelo cifra
