@@ -259,6 +259,13 @@ reference points to create a database, and an online positioning process that us
 
 \section{Approaches to Privacy in Literature}
 
+The domain of privacy-preserving data processing is made of statistical methodologies, ranging from syntactic models like k-anonymity to rigorous semantic 
+definitions such as differential privacy. 
+While these approaches are fundamental to the field, a comprehensive theoretical analysis of their guarantees falls outside the scope of this dissertation. 
+Instead, this section provides a high-level categorization of the privacy paradigms observed specifically within the context of indoor positioning literature. 
+The objective is not to evaluate the cryptographic strength of these mechanisms, but to contextualize how current indoor positioning systems attempt to 
+balance utility with user privacy, highlighting the limitations that motivate the adoption of a \ac{tee} approach.
+
 The ubiquity of WiFi networks as a sensing infrastructure presents a fundamental problem, the same granular data that enables precise occupancy monitoring 
 also introduces significant privacy risks for the individuals being tracked. As noted in the previous sections, transforming a standard wireless network into a 
 soft sensor involves analyzing device footprints, specifically \ac{mac} addresses and signal characteristics, which can serve as strong identifiers of specific individuals.
@@ -334,6 +341,15 @@ presence, the system uses an opt-in model.
 Likewise, \citet{14_10_1145_3704522_3704523} developed a smartphone based attendance system that leverages \ac{rssi} zoning to verify student presence. 
 Since the primary utility is the validation of attendance records using the students smartphone, the architecture operates on an opt-in model where 
 students consent to the tracking of their devices.
+
+\subsection{Summary}
+
+Existing literature relies on data minimization or obfuscation techniques to achieve privacy. 
+However, these approaches introduce a trade-off, to increase privacy, the granularity of the data must be decreased.  
+For the present use case of occupancy monitoring, where precision is required, this trade-off is not acceptable, consequently, this work moves away 
+from statistical obfuscation and focuses on hardware-enforced confidentiality with \ac{sgx}, avoiding algorithms that add noise, allowing 
+for the processing of exact data while maintaining it's confidentiality and integrity.
+
 
 \section{Previous Works with \ac{sgx} in Indoor Positioning}
 While the literature regarding the specific application of \ac{sgx} to indoor positioning remains limited, a select number of 

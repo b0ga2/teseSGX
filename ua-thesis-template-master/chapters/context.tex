@@ -106,9 +106,9 @@ this separation can be observed in the Figure \ref{fig:ree_vs_tee}.
 \end{figure}
 
 \section{TEE Technologies}
-Several \ac{tee} implementations exist, such as ARM TrustZone, AMD \ac{sev}, and Intel's most recent \ac{tdx}, 
-this chapter provides a comparative overview of these technologies, however, Intel \ac{sgx}, the focus of this dissertation, 
-is reviewed in greater detail in the subsequent chapter.
+Several \ac{tee} implementations exist, such as ARM TrustZone, AMD \ac{sev}, and Intel's most recent \ac{tdx}. 
+This chapter provides a comparative overview of these technologies, however, Intel \ac{sgx}, the focus of this dissertation, is reviewed in greater detail in the subsequent section. 
+Intel \ac{tdx} is examined thereafter, as it represents the natural evolution of the \ac{sgx} architecture.
 
 \subsection{ARM TrustZone}
 
@@ -151,12 +151,12 @@ on the security domain.
 
 In recent years, academic and industrial interest in this technology has surged, driven by the availability of 
 technical documentation and accessible development platforms from manufacturers like Xilinx, this transparency has facilitated 
-adoption within the community, particularly in the context of \ac{rd}.
+adoption within the community, particularly in the context of \ac{rd} in \ac{iot} devices.
 
-While TrustZone provides a robust \ac{tee} for the mobile and embedded ecosystem, its reliance on ARM architecture makes it 
-less suitable for the available infrastructure.
-
-\newpage
+While TrustZone is presented the standard for \ac{tee}s in the embedded ecosystem, its adoption in this work is constrained by the architectural model of the proposed solution. 
+The current approach focuses on the centralized processing of aggregated connection logs exported by the network infrastructure, rather than computing directly on the edge devices. 
+Deploying custom trusted applications directly onto the university's \ac{ap}s is impractical, as it would require proprietary access to the firmware and administrative privileges, 
+or the acquisition of specific hardware that would lead to additional costs.
 
 \subsection{AMD SEV}
 
@@ -199,51 +199,6 @@ execution by blocking \ac{smi} events and preventing access from the \ac{smm}.
 This architecture also introduces \ac{vmpl}, a four-tiered privilege hierarchy to traditional x86 rings  
 that enables a \ac{svsm} running at the highest level 
 \ac{vmpl} to securely offer services like virtual \ac{tpm} and live migration.
-
-\subsection{Intel TDX}
-
-With the same goals as AMD \ac{sev}, Intel \ac{tdx} is an extension introduced with the 4th Generation Intel Xeon Scalable processors to 
-enable confidential computing. 
-This technology facilitates the deployment of \ac{vm}s, referred to as \ac{td}, under the supervision of the \ac{seam}, this provides encrypted \ac{cpu} 
-state and memory, with integrity protection and remote attestation, addressing scenarios where the cloud host platform is considered 
-untrustworthy within the threat model
-\footnote{Structured approach to identifying potential security risks, defining attacks from the perspective of 
-an adversary to strengthen system defenses \citep{threat_model}.}. 
-
-Technically, \ac{tdx} builds upon other Intel technologies such as \ac{vt} and \ac{mktme}, together, these components enforce 
-the confidentiality and integrity of \ac{td} memory and \ac{cpu} states, ensuring that they can neither be accessed nor tampered with by other 
-entities in the environment, such as the hypervisor or neighboring \ac{vm}s in the same cloud tenant. Although it also uses \ac{dcap} and \ac{sgx} 
-for remote attestation. 
-
-According to \citet{12_intel_tdx} it achieves the previous using a combination of three components, namely, memory access control, runtime memory encryption and an 
-Intel-signed \ac{tdx} module that does the handling of security-sensitive \ac{td} management operations. 
-
-\newpage
-\begin{figure}
-  \begin{center}
-  \includegraphics[scale=0.5]{figs/intel_tdx_architecture.png}
-  \caption{Intel \ac{tdx} Architecture, image by \citet{12_intel_tdx}.}
-  \label{fig:intel_tdx}
-  \end{center}
-\end{figure}
-
-The Figure \ref{fig:intel_tdx} illustrates the runtime architecture of the \ac{tdx} technology. The two main components are the \ac{tdx} compatible processors, that provide 
-functional capabilities like hardware-assisted virtualization, memory encryption, integrity protection, and the \ac{tdx} Module, that facilitates the manipulation of 
-\ac{td} while applying security guarantees, besides this, the module provides two interface functions, a host-side interface and a guest-side interface. 
-The previous module is loaded in to the \ac{seam} range, a portion of memory that is reserved during boot. Another component present in this range 
-is the \ac{seam} loader, which is responsible for installing and updating the module. 
-\ac{seam} provides two execution modes, the \ac{seam} \ac{vmx} root mode and non-root mode, a \ac{tdx} compatible hypervisor operates in the \ac{vmx} root mode 
-and uses the \texttt{SEAMCALL} introduction to call host-side functions, functions that start with "TDH", of the module. 
-
-This is possible since the the logical processor changes \ac{vmx} root mode into \ac{seam} \ac{vmx} root mode and starts executing code within the \ac{tdx} Module, 
-upon completing it returns in \ac{vmx} root mode with the instruction \texttt{SEAMRET}. 
-The \ac{td}s run in \ac{seam} \ac{vmx} non-root mode, since \ac{tdx} supports the execution of unmodified user-level applications within a \ac{td}, like a normal 
-\ac{vm}, but the guest \ac{os} kernel (TDX-enlightened OS in Figure \ref{fig:intel_tdx}), needs to be altered in order to align with the \ac{tdx} platform, namely 
-managing \ac{tdx} exceptions via an internal handler, implementation of a mechanism for communication between the \ac{td} and the \ac{tdx} module, 
-transitioning memory pages from private to shared \ac{io} operations, although implementation details may vary according to the \ac{os} in use.
-
-Unlike \ac{sev} and \ac{tdx}, which aim to secure entire \ac{vm}, \ac{sgx} focuses on application isolation, and  
-for the specific purpose of this dissertation, a lightweight application to process logs, \ac{sgx} is more suited.
 
 \section{Intel Software Guard Extensions (SGX)}
 
@@ -305,8 +260,6 @@ pages associated with the enclave have been successfully removed, as shown in Fi
   \label{fig:sgx_enclave_lifecycle}
   \end{center}
 \end{figure}
-
-\newpage
 
 \subsection{Architecture and Workflow}
 
@@ -404,8 +357,6 @@ This signature, which includes the \texttt{MRENCLAVE} and \texttt{MRSIGNER}, ser
 The initialization process is finalized by the \texttt{EINIT} instruction, which validates the enclave's \texttt{SIGSTRUCT}, this checks that the measurement in the certificate 
 matches the calculated \texttt{MRENCLAVE} and populates the \texttt{MRSIGNER} field in the \ac{secs}, defining the enclave's identity before it can begin execution.
 
-\newpage
-
 \section{Memory and Performance Limitations in \ac{sgx}}
 Even though \ac{sgx} provides confidentiality and integrity, it introduces performance overheads and resource constraints.
 
@@ -436,29 +387,53 @@ is forced to perform secure paging, to swap them to untrusted memory.
 This results in a performance degradation, with execution times reaching up to 500 times that of native code due to the use of more clock cycles, 
 showing the need for optimized memory management.
 
-\section{Attacks on \ac{sgx}}
+\subsection{Intel TDX}
 
-Although not the focus point of the current work, it is important to mention that \ac{sgx} is not a perfect security mechanism,
-it has been successfully attacked in the past. 
-The present chapter will shortly approach some of the \ac{sgx} known vulnerabilities, categorizing them into side-channel leakage and speculative execution exploits.
+Representing a natural evolution of the \ac{sgx} architecture, Intel \ac{tdx} expands the concept of hardware-enforced isolation from 
+individual application enclaves to entire virtual environments, introduced with the 4th Generation Intel Xeon Scalable processors.  
+This technology facilitates the deployment of confidential \ac{vm}s, referred to as \ac{td}s, under the supervision of the \ac{seam}, that provides encrypted \ac{cpu} 
+state and memory, with integrity protection and remote attestation, addressing scenarios where the host platform is considered 
+untrustworthy within the threat model
+\footnote{Structured approach to identifying potential security risks, defining attacks from the perspective of 
+an adversary to strengthen system defenses \citep{threat_model}.}. 
 
-\subsection{Controlled-Channel Attacks}
-A design characteristic of \ac{sgx} is that the trusted hardware relies on the untrusted \ac{os} for the management of system resources, including memory paging and scheduling. 
-This dependency creates a vulnerability surface known as controlled-channel attacks. 
+While \ac{tdx} shares the same high-level goals as AMD \ac{sev}, it is fundamentally built upon the trusted execution principles established by \ac{sgx}. 
+Internally, it leverages similar architectural concepts, including the use of \texttt{ECALLs} transitions and the \ac{dcap} framework for remote attestation. 
 
-Since the \ac{os} maintains the page tables, it can manipulate the \ac{epc} page protections to induce page faults intentionally. 
-By observing which pages are accessed by the enclave in response to these faults, a privileged attacker can infer the control flow of the trusted application. 
-For instance, if a specific page corresponds to a branch of code that processes a specific type of user or sensitive event, observing an access to that page leaks information 
-about the encrypted data being processed. This class of attacks is particularly relevant to this dissertation, as the proposed architecture involves custom memory management strategies.
+Technically, \ac{tdx} combines these \ac{sgx} foundations with virtualization technologies from other Intel technologies such as \ac{vt} and \ac{mktme}, together, 
+these components enforce the confidentiality and integrity of \ac{td} memory and \ac{cpu}, ensuring that they can neither be accessed nor tampered with by other 
+entities in the environment, such as the hypervisor or neighboring \ac{vm}s in the same cloud tenant. Also tackling memory limitations imposed by \ac{sgx}.
 
-\subsection{Cache Timing Attacks}
-While \ac{sgx} isolates the enclave's memory in the \ac{prm}, the processor's caches are shared resources between the trusted and untrusted environments. 
-Attackers running on the same physical core can monitor cache lines to determine whether the enclave has loaded specific data.
+According to \citet{12_intel_tdx} it achieves the previous using a combination of three components, namely, memory access control, runtime memory encryption and an 
+Intel-signed \ac{tdx} module that does the handling of security-sensitive \ac{td} management operations. 
 
+\begin{figure}
+  \begin{center}
+  \includegraphics[scale=0.5]{figs/intel_tdx_architecture.png}
+  \caption{Intel \ac{tdx} Architecture, image by \citet{12_intel_tdx}.}
+  \label{fig:intel_tdx}
+  \end{center}
+\end{figure}
 
-\subsection{Speculative Execution Attacks (Foreshadow)}
-In 2018, a vulnerability known as Foreshadow demonstrated that the isolation guarantees of \ac{sgx} could be bypassed using speculative execution. 
-This attack leveraged a race condition in the processor's address translation to read the contents of the L1 data cache, including the enclave's private keys and data, 
-before the processor could enforce the permission check.
+The Figure \ref{fig:intel_tdx} illustrates the runtime architecture of the \ac{tdx} technology. The two main components are the \ac{tdx} compatible processors, that provide 
+functional capabilities like hardware-assisted virtualization, memory encryption, integrity protection, and the \ac{tdx} Module, that facilitates the manipulation of 
+\ac{td} while applying security guarantees, besides this, the module provides two interface functions, a host-side interface and a guest-side interface. 
+The previous module is loaded in to the \ac{seam} range, a portion of memory that is reserved during boot. Another component present in this range 
+is the \ac{seam} loader, which is responsible for installing and updating the module. 
+\ac{seam} provides two execution modes, the \ac{seam} \ac{vmx} root mode and non-root mode, a \ac{tdx} compatible hypervisor operates in the \ac{vmx} root mode 
+and uses the \texttt{SEAMCALL} introduction to call host-side functions, functions that start with "TDH", of the module. 
 
-Although Intel has since released microcode patches and hardware mitigations, this highlights that \ac{tee}s are not impervious to microarchitectural leakage.
+This is possible since the the logical processor changes \ac{vmx} root mode into \ac{seam} \ac{vmx} root mode and starts executing code within the \ac{tdx} Module, 
+upon completing it returns in \ac{vmx} root mode with the instruction \texttt{SEAMRET}. 
+The \ac{td}s run in \ac{seam} \ac{vmx} non-root mode, since \ac{tdx} supports the execution of unmodified user-level applications within a \ac{td}, like a normal 
+\ac{vm}, but the guest \ac{os} kernel (TDX-enlightened OS in Figure \ref{fig:intel_tdx}), needs to be altered in order to align with the \ac{tdx} platform, namely 
+managing \ac{tdx} exceptions via an internal handler, implementation of a mechanism for communication between the \ac{td} and the \ac{tdx} module, 
+transitioning memory pages from private to shared \ac{io} operations, although implementation details may vary according to the \ac{os} in use.
+
+Although this technology effectively tackles the memory limitations imposed by \ac{sgx}, eliminating the need for manual memory management in large data processing, 
+its adoption in this work is constrained by current hardware availability. 
+According to Intel specifications
+\footnote{https://www.intel.com/content/www/us/en/support/articles/000091103/processors/intel-xeon-processors.html}
+, \ac{tdx} requires 4th Generation Intel Xeon Scalable Processors, or newer, alongside specific platform support. 
+Given that the computational infrastructure available for the development of this dissertation relies on earlier hardware generations that do not possess these extensions, 
+the focus remains on \ac{sgx}. 
