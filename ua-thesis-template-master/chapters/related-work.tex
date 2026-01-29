@@ -432,6 +432,46 @@ rely on opt-in models that limit scalability.
 While \ac{sgx} provides the necessary hardware enforced privacy, standard big data frameworks like \ac{vc3} or EnclaveDB 
 introduce development complexity.
 
+% New additions
+% The following is regarding the article number 04 in the improvements folder
+In the domain of privacy-preserving \ac{ml}, \citet{s04} addressed the challenge of side-channel leakages in SGX-based data processing. 
+The authors stated that although SGX allows for memory confidentiality, standard ML algorithms show data-dependent memory access patterns that can be observed by a 
+privileged attacker to infer sensitive information, to mitigate this, they proposed data-oblivious for several \ac{ml} algorithms.
+Instead of standard conditional branches, which leak information through the instruction trace, the authors implementation utilizes oblivious primitives based on conditional move 
+instructions and vectorized memory operations. 
+This ensures that the execution trace depends solely on public parameters, such as the dataset size, rather than the private input data. 
+Their evaluation demonstrated that this hardware-assisted approach is significantly more efficient than purely cryptographic alternatives, 
+such as homomorphic encryption, enabling the training of models on realistic datasets with manageable overhead
+
+% he following is regarding the article number 05 in the improvements folder
+Complementing the previous discussion on performance trade-offs, \citet{s05} argued that data-oblivious techniques, while adding security guarantees, 
+often lead to performance overheads for analytics. 
+To address this issue, the authors proposed a randomization-based defense strategy, to do this, instead of eliminating data-dependent access patterns, 
+which requires expensive actions, their approach adds noise into the memory access traces. 
+Specifically, the noise is introduced with the generation of dummy data instances that mimic the valid dataset, these are created by selecting random feature values uniformly distributed within 
+the ranges from the original data, ensuring they possess no distinguishing characteristics. 
+These dummy records are then shuffled with the real user data using a sorting network based on random keys generated via SGX's hardware random number generator function. 
+By masking the true data access sequence with random memory operations, this method prevents side-channel attackers from inferring sensitive information with high confidence. 
+This introduces a strategic trade-off between privacy and efficiency, with the strict determinism of data-obliviousness in favor of a probabilistic protection model, 
+the system achieves significantly higher computational throughput, making it more suitable for large-scale data analytics tasks.
+
+% The following is regarding the article number 06 in the improvemts folder
+Addressing the hardware limitations of executing Neural Networks within \ac{cpu}-bound enclaves, in 2019 \citet{s06} proposed Slalom, a framework for verifiable and private execution. 
+Recognizing that the lack of trusted GPU support in SGX creates a significant bottleneck for heavy matrix operations, the authors introduced a hybrid execution model. 
+In this approach, the enclave delegates work to a remote or local GPU to use its processing power, but this delegation does not align with the confidential necessities, so to ensure security, 
+it uses a verification mechanism based on Freivalds' algorithm, that allows the \ac{tee} to check the integrity of the GPU's output without re-executing the full computation. 
+For privacy-preserving inference, the system utilizes input blinding techniques, ensuring that the data processed by the untrusted GPU remains opaque, this decouples 
+the security logic from the bulk computation, demonstrating a viable path for high-performance deep learning in confidential computing.
+
+% The following is regarding the article number 07 in the improvemts folder
+In parallel with hardware offloading, \citet{s07} addressed the specific challenge of executing \ac{dnn} within the memory-constrained environments of TEEs. 
+Placing an \ac{ml} model inside a \ac{tee} will likely exceed the available secure memory, the authors proposed DarkneTZ, a framework based on model partitioning, 
+this splits the \ac{dnn} execution, only the most sensitive layers are executed within the \ac{tee}, while the remaining heavy layers execute in the untrusted operating system. 
+This hybrid approach minimizes the \ac{tee} memory footprint and execution overhead, while maintaining privacy guarantees against inference attacks. 
+This strategy highlights a distinct architectural trade-off: unlike Slalom, which offloads for performance, DarkneTZ partitions for memory efficiency, 
+a consideration for \ac{sgx} implementations limited by the \ac{epc} size.
+
+
 \section{Summary}
 The review of the literature reveals a gap in the intersection of indoor positioning and privacy-preserving technologies. 
 The dependency on logs introduces challenges that requires the usage of filters, as identified in the reviewed literature, 

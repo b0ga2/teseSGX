@@ -420,8 +420,8 @@ untrustworthy within the threat model
 \footnote{Structured approach to identifying potential security risks, defining attacks from the perspective of 
 an adversary to strengthen system defenses \citep{threat_model}.}. 
 
-While \ac{tdx} shares the same high-level goals as AMD \ac{sev}, it is fundamentally built upon the trusted execution principles established by \ac{sgx}. 
-Internally, it leverages similar architectural concepts, including the use of \texttt{ECALLs} transitions and the \ac{dcap} framework for remote attestation. 
+While \ac{tdx} shares the same high-level goals as AMD \ac{sev}, it is built upon the trusted execution principles established by \ac{sgx}. 
+Internally, it uses similar architectural concepts, including the use of \texttt{ECALLs} transitions and the \ac{dcap} framework for remote attestation. 
 
 Technically, \ac{tdx} combines these \ac{sgx} foundations with virtualization technologies from other Intel technologies such as \ac{vt} and \ac{mktme}, together, 
 these components enforce the confidentiality and integrity of \ac{td} memory and \ac{cpu}, ensuring that they can neither be accessed nor tampered with by other 
