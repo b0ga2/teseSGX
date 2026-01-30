@@ -6,7 +6,7 @@ The present chapter provides a comprehensive understanding of the technical unde
 It begins with the introduction of the concept of sensitive data, followed by \ac{tee}s, giving an overview of this type of mechanism. 
 Then the chapter compares technologies, analyzing the distinctions between several \ac{tee}s implementations. 
 After this, the discussion focuses on Intel \ac{sgx}, detailing its architecture, workflow, security mechanisms and
-technical challenges associated with data processing within an enclave, concluding with known attacks to \ac{sgx}.
+technical challenges associated with data processing within an enclave.
 
 \section{Sensitive Data}
 
@@ -119,9 +119,9 @@ In authentication \ac{tee}s are used to protect biometric identity methods such 
 For example, the Android \ac{os} stores fingerprint data within the \ac{tee}, making it inaccessible to the \ac{os} environment. 
 This isolation capability is also utilized to support passwordless standards, such as Apple’s passkeys, by combining biometric verification with securely stored cryptographic private keys.
 
-In the context of cloud computing and data analysis, areas particularly relevant to this dissertation, \ac{tee}s provide a critical layer of defense. 
+In the context of cloud computing and data analysis, areas relevant to this dissertation, \ac{tee}s provide a critical layer of defense. 
 In a trusted cloud model, they protect the infrastructure against compromise, even if the backend or host \ac{os} is malicious, the adversary remains unable to access the specific 
-Trusted Application (TA) running inside the enclave. 
+\ac{ta} running inside the enclave. 
 This is also common for \ac{ml} in sensitive fields like healthcare, allowing computation on confidential datasets without exposing the underlying information.
 
 Finally, \ac{tee}s also contribute to system stability through runtime integrity and secure modular programming. 
@@ -331,7 +331,7 @@ Three relevant fields in each entry that affect the ownership of the \ac{epc} pa
 set to one it signifies the page is in use, preventing reallocation or overwriting by other instructions, \texttt{PT}, eight bits that define the type of page and \texttt{ENCLAVESECS} which identifies the 
 enclave that owns the page.
 
-The contents of this map can only be read by ab enclave as stated in Intel \ac{sdm}.
+The contents of this map can only be read by an enclave as stated in Intel \ac{sdm}.
 
 \subsection{ECALLs and OCALLs}
 %Mecanismo de ECalls e OCalls (entrar e sair do enclave e comunicação com o mundo "inseguro").

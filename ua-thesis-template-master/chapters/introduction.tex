@@ -29,11 +29,10 @@ Under the same assumption, if the internal network or the privileged infrastruct
 Furthermore, processing this data on-premise limits scalability, by adopting a secure processing model with \ac{sgx}, the University creates the possibility to offload 
 these computational tasks without compromising data confidentiality or integrity. 
 
-While \ac{sgx} is supported by available compatible hardware and offers the secure processing capabilities required to process sensitive information, 
-even remotely, applying it presents a technical challenge, the processing of large volumes of data within an enclave.
-Since it is restricted by the memory limits of the \ac{epc}, besides this, 
-standard \ac{sgx} implementations lack efficient native swapping for large datasets, meaning that an application would 
-quickly run out of available memory in the enclave. 
+While \ac{sgx} is supported by the hardware infrastructure currently available, and offers the secure capabilities required to process sensitive information, 
+both remote and locally, it presents a technical challenge, the processing of large volumes of data within an enclave. 
+Since execution is restricted by the memory limits of the \ac{epc}, and standard implementations lack efficient native swapping, 
+applications can quickly exhaust the available secure memory.
 
 Therefore, the primary motivation of this work is to bridge the gap between the security of \ac{tee}s and the processing of large volume data, 
 this requires the development of an architecture capable of managing memory efficiently.
