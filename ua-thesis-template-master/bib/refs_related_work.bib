@@ -427,6 +427,122 @@ series = {MobiSys '20}
       url={https://arxiv.org/abs/2010.08855}, 
 }
 
+@inproceedings{s09,
+author = {Quoc, Do Le and Gregor, Franz and Arnautov, Sergei and Kunkel, Roland and Bhatotia, Pramod and Fetzer, Christof},
+title = {secureTF: A Secure TensorFlow Framework},
+year = {2020},
+isbn = {9781450381536},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3423211.3425687},
+doi = {10.1145/3423211.3425687},
+abstract = {Data-driven intelligent applications in modern online services have become ubiquitous. These applications are usually hosted in the untrusted cloud computing infrastructure. This poses significant security risks since these applications rely on applying machine learning algorithms on large datasets which may contain private and sensitive information.To tackle this challenge, we designed secureTF, a distributed secure machine learning framework based on Tensorflow for the untrusted cloud infrastructure. secureTF is a generic platform to support unmodified TensorFlow applications, while providing end-to-end security for the input data, ML model, and application code. secureTF is built from ground-up based on the security properties provided by Trusted Execution Environments (TEEs). However, it extends the trust of a volatile memory region (or secure enclave) provided by the single node TEE to secure a distributed infrastructure required for supporting unmodified stateful machine learning applications running in the cloud.The paper reports on our experiences about the system design choices and the system deployment in production use-cases. We conclude with the lessons learned based on the limitations of our commercially available platform, and discuss open research problems for the future work.},
+booktitle = {Proceedings of the 21st International Middleware Conference},
+pages = {44–59},
+numpages = {16},
+keywords = {confidential computing, intel software guard extensions (Intel SGX), secure machine learning, tensorflow},
+location = {Delft, Netherlands},
+series = {Middleware '20}
+}
+
+@INPROCEEDINGS{s10,
+  author={Xu, Tianxing and Zhu, Konglin and Andrzejak, Artur and Zhang, Lin},
+  booktitle={2021 7th IEEE International Conference on Network Intelligence and Digital Content (IC-NIDC)}, 
+  title={Distributed Learning in Trusted Execution Environment: A Case Study of Federated Learning in SGX}, 
+  year={2021},
+  volume={},
+  number={},
+  pages={450-454},
+  keywords={Performance evaluation;Data privacy;Privacy;Costs;Computational modeling;Machine learning;Collaborative work;Federated Learning;Privacy preserving;Trusted execution environment},
+  doi={10.1109/IC-NIDC54101.2021.9660433}}
+
+@ARTICLE{s11,
+  author={Oh, Hyunyoung and Nam, Kevin and Jeon, Seongil and Cho, Yeongpil and Paek, Yunheung},
+  journal={IEEE Access}, 
+  title={MeetGo: A Trusted Execution Environment for Remote Applications on FPGA}, 
+  year={2021},
+  volume={9},
+  number={},
+  pages={51313-51324},
+  keywords={Field programmable gate arrays;Servers;Security;Hardware;Cryptocurrency;Graphics processing units;Data privacy;Field-programmable gate array (FPGA);remote computing;remote attestation;secure communication channel;trusted execution environment (TEE)},
+  doi={10.1109/ACCESS.2021.3069223}}
+
+@INPROCEEDINGS{s12,
+  author={Truong, Jean-Baptiste and Gallagher, William and Guo, Tian and Walls, Robert J.},
+  booktitle={2021 IEEE International Conference on Cloud Engineering (IC2E)}, 
+  title={Memory-Efficient Deep Learning Inference in Trusted Execution Environments}, 
+  year={2021},
+  volume={},
+  number={},
+  pages={161-167},
+  keywords={Deep learning;Privacy;Quantization (signal);Convolution;Memory management;Hardware;Distance measurement;SGX;Trusted Execution Environments;Deep Learning},
+  doi={10.1109/IC2E52221.2021.00031}}
+
+
+
+@article{s13,
+  author       = {Arup Mondal and
+                  Yash More and
+                  Ruthu Hulikal Rooparaghunath and
+                  Debayan Gupta},
+  title        = {Flatee: Federated Learning Across Trusted Execution Environments},
+  journal      = {CoRR},
+  volume       = {abs/2111.06867},
+  year         = {2021},
+  url          = {https://arxiv.org/abs/2111.06867},
+  eprinttype    = {arXiv},
+  eprint       = {2111.06867},
+  timestamp    = {Tue, 16 Nov 2021 12:12:31 +0100},
+  biburl       = {https://dblp.org/rec/journals/corr/abs-2111-06867.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{s14,
+author = {Mo, Fan and Haddadi, Hamed and Katevas, Kleomenis and Marin, Eduard and Perino, Diego and Kourtellis, Nicolas},
+title = {PPFL: privacy-preserving federated learning with trusted execution environments},
+year = {2021},
+isbn = {9781450384438},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3458864.3466628},
+doi = {10.1145/3458864.3466628},
+abstract = {We propose and implement a Privacy-preserving Federated Learning (PPFL) framework for mobile systems to limit privacy leakages in federated learning. Leveraging the widespread presence of Trusted Execution Environments (TEEs) in high-end and mobile devices, we utilize TEEs on clients for local training, and on servers for secure aggregation, so that model/gradient updates are hidden from adversaries. Challenged by the limited memory size of current TEEs, we leverage greedy layer-wise training to train each model's layer inside the trusted area until its convergence. The performance evaluation of our implementation shows that PPFL can significantly improve privacy while incurring small system overheads at the client-side. In particular, PPFL can successfully defend the trained model against data reconstruction, property inference, and membership inference attacks. Furthermore, it can achieve comparable model utility with fewer communication rounds (0.54\texttimes{}) and a similar amount of network traffic (1.002\texttimes{}) compared to the standard federated learning of a complete model. This is achieved while only introducing up to ~15\% CPU time, ~18\% memory usage, and ~21\% energy consumption overhead in PPFL's client-side.},
+booktitle = {Proceedings of the 19th Annual International Conference on Mobile Systems, Applications, and Services},
+pages = {94–108},
+numpages = {15},
+location = {Virtual Event, Wisconsin},
+series = {MobiSys '21}
+}
+
+@inproceedings{s15,
+author = {Zhang, Yuhui and Wang, Zhiwei and Cao, Jiangfeng and Hou, Rui and Meng, Dan},
+title = {ShuffleFL: gradient-preserving federated learning using trusted execution environment},
+year = {2021},
+isbn = {9781450384049},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3457388.3458665},
+doi = {10.1145/3457388.3458665},
+abstract = {Federated Learning (FL) is a promising approach to privacy-preserving machine learning. However, recent works reveal that gradients can leak private data. Using trusted SGX-processors for this task yields gradient-preserving but requires to prevent exploitation of any side-channel attacks.In this work, we present ShuffleFL, a gradient-preserving system using trusted SGX, which combines random group structure and intra-group gradient segment aggregation for combating any side-channel attacks. We analyze the security of our system against semi-honest adversaries. ShuffleFL effectively guarantees the participants' gradient privacy. We demonstrate the performance of ShuffleFL and show its applicability in the federated learning system.},
+booktitle = {Proceedings of the 18th ACM International Conference on Computing Frontiers},
+pages = {161–168},
+numpages = {8},
+keywords = {federated learning, gradient-preserving, trusted execution environment},
+location = {Virtual Event, Italy},
+series = {CF '21}
+}
+
+@article{s16,
+author = {Kato, Fumiyuki and Cao, Yang and Yoshikawa, Masatoshi},
+year = {2022},
+month = {02},
+pages = {},
+title = {OLIVE: Oblivious and Differentially Private Federated Learning on Trusted Execution Environment},
+doi = {10.48550/arXiv.2202.07165}
+}
+
+
+
 @article{MapReduce,
 author = {Dean, Jeffrey and Ghemawat, Sanjay},
 title = {MapReduce: simplified data processing on large clusters},
