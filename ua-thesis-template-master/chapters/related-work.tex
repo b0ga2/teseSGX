@@ -259,7 +259,7 @@ reference points to create a database, and an online positioning process that us
 
 \section{Approaches to Privacy in Literature}
 
-The domain of privacy in data processing is made of several methodologies, ranging from syntactic models like k-anonymity to semantic 
+The domain of privacy in data processing is made of several methodologies, ranging from approaches like k-anonymity to semantic 
 definitions such as differential privacy. 
 While these approaches are fundamental to the field, a comprehensive analysis of their details falls outside the scope of this dissertation. 
 Instead, this section provides a high-level categorization of the privacy paradigms observed specifically within the context of indoor positioning literature. 
@@ -384,6 +384,9 @@ transitions between trusted and untrusted memory.
 Consequently, standard data processing frameworks cannot be directly ported to enclaves without significant performance overhead.
 To address these limitations, the state-of-the-art literature proposes various architectural strategies, 
 ranging from data partitioning and streaming to hardware offloading and oblivious execution.
+
+It is important to note that while some of the discussed frameworks utilize alternative trusted hardware, their architectural 
+principles for mitigating memory constraints are applicable to \ac{sgx} enclaves.
 The following subsections categorize these frameworks by their application domain, reviewing solutions for general-purpose processing, secure analytics, 
 deep learning acceleration, and distributed federated learning.
 
@@ -476,13 +479,14 @@ the security logic from the bulk computation, demonstrating a viable path for hi
 
 % The following is regarding the article number 07 in the improvemts folder
 Addressing data processing under severe memory constraints, \citet{s07} proposed DarkneTZ, a framework designed to execute \ac{dnn} within the limited trusted memory of edge devices. 
-Instead of processing the entire computation inside the \ac{tee}, which would exceed the available secure memory of the \ac{epc}, DarkneTZ employs a model partitioning strategy. 
+Although designed for ARM TrustZone on edge devices rather than Intel \ac{sgx}, their architectural approach is relevant to solving \ac{epc} limitations.
+Instead of processing the entire computation inside the \ac{tee}, DarkneTZ employs a model partitioning strategy. 
 The system splits the data flow, the initial, expensive feature extraction layers are processed in the untrusted environment, while the intermediate activations are securely transferred to the \ac{tee} for the final classification layers. 
 Within the enclave, the processing logic includes a data sanitization step, by normalizing the output confidence scores, before returning them to the untrusted OS. 
 
 % The following is regarding the article number 08 in the improvements folder
 To address the bottleneck of processing \ac{dnn} training workloads within trusted hardware, \citet{s08} proposed GOAT, a system that restructures the data processing pipeline through secure outsourcing. 
-Instead of processing the entire dataset within the enclave, GOAT delegates the intensive matrix operations of forward and backward propagation to an untrusted \ac{gpu}. 
+Instead of processing the entire dataset within the enclave, GOAT delegates the matrix operations of forward and backward propagation to an untrusted \ac{gpu}. 
 To maintain data integrity during this external processing, the system employs an asynchronous probabilistic verification strategy, the \ac{tee} acts as an auditor, selecting data batches to re-process internally. 
 By comparing these trusted computations against the \ac{gpu}'s outputs in parallel with the main training loop, the system statistically guarantees the correctness of the outsourced processing without stalling the data flow, 
 bridging the gap between the integrity of \ac{tee}s and the throughput of hardware accelerators.
@@ -496,52 +500,56 @@ This architecture allows for high-throughput, custom hardware acceleration of se
 effectively preventing the user-defined logic from accessing unauthorized memory regions during execution, but this comes with the additional cost of the \ac{fpga} hardware.
 
 % The following is regarding the article number 12 in the improvements flder
-While frameworks like DarkneTZ address memory limitations by offloading layers to untrusted hardware, \citet{s12} proposed Twine, a runtime system designed to keep the inference execution within the enclave despite the limited \ac{epc} size. 
-Identifying that the standard execution flow of deep learning frameworks triggers excessive and costly \ac{os}-managed paging, Twine modifies the data processing strategy through tensor partitioning and tiling. 
-Instead of processing full layers, the system breaks the input tensors and model weights into smaller spatial blocks that fit within the enclave's physical memory. 
-Coupled with a static memory planner that aggressively recycles buffers throughout the execution graph, this block-wise processing strategy ensures that the working set remains resident in the secure cache, effectively eliminating the performance penalty associated with page swapping.
+While frameworks like DarkneTZ address memory limitations by offloading layers to untrusted hardware, \citet{s12} proposed optimization techniques 
+designed to keep the inference execution within the enclave. 
+Identifying that the standard execution flow of convolutional layers triggers page thrashing, the authors introduced y-plane partitioning. 
+This strategy divides the input and output tensors into horizontal bands that fit within the enclave's secure memory, ensuring that the working set 
+remains resident in the secure cache. 
 
 \subsection{Distributed and Federated Learning}
 In the context of federated learning, where a central server aggregates model updates from numerous remote clients, memory constraints become even more 
 noticeable due to the high dimensionality of modern models. 
 
 % The following is regarding the article number 10 in the improvements folder
-\citet{s10} addressed the performance bottleneck of aggregating gradient vectors within \ac{sgx} by modifying the data processing logic to exploit sparsity. 
+\citet{s10} proposed SGX-FL to address the performance bottleneck of aggregating gradient vectors within \ac{sgx} by modifying the data processing logic to exploit sparsity. 
 Instead of processing full dense updates, which often trigger severe page thrashing in the \ac{epc}, the authors implemented a Top-$k$ gradient selection algorithm directly within the enclave. 
 This technique filters incoming data, aggregating only the most significant gradients while discarding negligible values, thereby drastically reducing the memory working set. 
-Furthermore, the system optimizes the remaining computation through block-wise data loading and double buffering, ensuring that the processing of gradient blocks aligns with the ac{CPU} cache size to minimize memory access latency during the secure aggregation phase.
+Furthermore, the system optimizes the remaining computation through block-wise data loading and double buffering, ensuring that the processing of gradient blocks aligns with the \ac{CPU} cache size to minimize memory access latency during the secure aggregation phase.
 
 % The following is regarding the article number 09 in the improvements folder
 Scaling data processing beyond the limits of a single trusted enclave, \citet{s09} introduced SecureTF, a mechanism for distributed machine learning execution. 
-This mechanism partitions the data processing workflow into a parameter servers architecture, where the computational load is distributed across multiple enclaves, workers compute gradients on private data shards, while parameter servers aggregate these updates to refine the global model. 
-To handle the intensive memory demands of tensor operations that typically exceed the trusted memory of the \ac{epc}, the system uses a shielded execution runtime, in this case SCONE, to manage secure paging and encrypted I/O transparently during execution. 
+This mechanism partitions the data processing workflow into a parameter servers architecture, where the computational load is distributed across multiple enclaves, workers compute gradients on private data, 
+while parameter servers aggregate these updates to refine the global model. 
+To handle the intensive memory demands of tensor operations that typically exceed the trusted memory of the \ac{epc}, the system uses a shielded execution runtime, in this case SCONE
+\footnote{A secure container mechanism for Docker that uses the \ac{sgx} trusted execution support of Intel \ac{cpu}s to protect container 
+processes from outside attacks, by \citet{scone}.}
+, to manage secure paging and encrypted I/O transparently during execution. 
 This allows for the stateful processing of large-scale datasets and complex computation graphs across a cluster of TEEs, ensuring that data remains encrypted not only at rest but also throughout the entire distributed calculation pipeline.
 
-% The following is regarding the article number 13 in the improvements folder
+% The following is regarding the article number 14 in the improvements folder
 In the area of federated learning, secure aggregation typically relies on cryptographic operations such as encryption, which introduces computational overhead. 
-\citet{s13} proposed PPFL, a framework that shifts the processing from cryptographic computation to hardware-based isolation. 
+\citet{s14} proposed PPFL, a framework that shifts the processing from cryptographic computation to hardware-based isolation. 
 By utilizing the \ac{tee} as a trusted aggregator, the system performs model updates in plaintext within the secure memory, avoiding the performance penalties of operations on ciphertext. 
 To optimize the data flow against network latency and client variability, PPFL implements a greedy grouping strategy within the aggregation logic, 
 this mechanism batches and processes incoming gradients from clients without waiting for stragglers, streamlining the training pipeline and reducing the total convergence time compared to cryptographic approaches.
 
-% The following is regarding the article number 14 in the improvements folder
-In scenarios that require local training on devices with low resources, such as federated learning clients, memory limitations are even more noticeable due to the necessity of storing states. 
-\citet{s14} addressed this by restructuring the training algorithm, proposing a layer training strategy. 
-Instead of performing a overall update which requires simultaneous memory allocation for the entire model's gradients and activations, the system decomposes the training sequentially. 
-It loads and updates only a single layer within the \ac{tee} at a time, while freezing the parameters of the remaining network. 
+% The following is regarding the article number 13 in the improvements folder
+\citet{s13} proposed FLATEE, a framework that leverages \ac{tee}s to replace expensive cryptographic protocols in federated learning. 
+By performing model aggregation within enclaves at the server side and incorporating several algorithms for data aggregation and resilience, 
+the system ensures privacy and resilience against poisoning attacks while reducing training and communication latency compared to traditional crypto-based approaches.
 
 % The following is regarding the article number 15 in the improvements folder
-Addressing the vulnerability of gradient linkability, \citet{s15} introduced a shuffling mechanism within the \ac{tee} processing pipeline. 
+Addressing the vulnerability of gradient linkability, \citet{s15} introduced a shuffling mechanism within the \ac{tee} processing pipeline by the name of ShuffleFL. 
 Recognizing that the sequence of data arrival and memory access patterns can reveal the source of a model, even when the payload is encrypted, the proposed system includes 
 a randomization layer before aggregation. 
-Incoming gradients are buffered and subjected to a random permutation inside the enclave, effectively decoupling the gradient values from their identifiers, 
-this ensures unlinkability, preventing the server from correlating specific model updates with their originating clients based on communication metadata or execution timing.
+Incoming gradients are buffered and subjected to a random permutation inside the enclave, decoupling the gradient values from their identifiers, 
+ensuring unlinkability, preventing the server from correlating specific model updates with their originating clients based on communication metadata or execution timing.
 
 % The following is regarding the article number 16 in the improvements folder
 \citet{s16} identified that data-dependent optimizations introduce side-channel vulnerabilities. 
 Processing sparse gradients reveals memory access patterns, specifically, the indices of non-zero updates, which can allow an adversary to 
 infer feature distributions. 
-To address this, the authors proposed Garrus, a framework that reconciles efficiency with security through oblivious sparse aggregation, so 
+To address this, the authors proposed Olive, a framework that reconciles efficiency with security through oblivious sparse aggregation, so 
 instead of directly accessing sparse indices, the system employs hardware oblivious primitives to align and aggregate gradients. 
 By ensuring that the memory access trace remains independent of the actual values and indices of the gradient updates, 
 it closes the leakage channel associated with data processing, with the additional cost of reintroducing some computational overhead 
@@ -550,7 +558,7 @@ compared to simple sparse aggregation.
 % Global Summary
 \section{Summary}
 The review of the literature reveals a gap in the intersection of indoor positioning and privacy-preserving technologies. 
-The dependency on logs introduces challenges that requires the usage of filters, as identified in the reviewed literature, 
+The dependency on logs introduces challenges that require the usage of filters, as identified in the reviewed literature, 
 occupancy is affected by stationary devices, transient users or bystanders who are passing by the access point's range, 
 and discontinuous communications from mobile devices entering power-saving modes. 
 
