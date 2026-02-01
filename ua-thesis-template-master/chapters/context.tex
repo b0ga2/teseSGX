@@ -223,6 +223,12 @@ This architecture also introduces \ac{vmpl}, a four-tiered privilege hierarchy t
 that enables a \ac{svsm} running at the highest level 
 \ac{vmpl} to securely offer services like virtual \ac{tpm} and live migration.
 
+This approach was not selected for this implementation due to architectural and practical constraints, AMD \ac{sev} operates at the \ac{vm} level, 
+encrypting the entire guest memory, even though this mitigates the memory capacity limitations inherent to \ac{sgx}, 
+it significantly expands the \ac{tcb} to include the entire guest \ac{os}, increasing the attack surface. 
+In contrast, \ac{sgx} offers application-level isolation, excluding the \ac{os} from the trust boundary, which is more aligned with the goal of 
+developing a lightweight solution.
+
 \section{Intel Software Guard Extensions (SGX)}
 
 In similarity with previous \ac{tee} implementations, \ac{sgx} is a set of extensions for the Intel architecture with the goal to allow 
@@ -425,7 +431,7 @@ Internally, it uses similar architectural concepts, including the use of \texttt
 
 Technically, \ac{tdx} combines these \ac{sgx} foundations with virtualization technologies from other Intel technologies such as \ac{vt} and \ac{mktme}, together, 
 these components enforce the confidentiality and integrity of \ac{td} memory and \ac{cpu}, ensuring that they can neither be accessed nor tampered with by other 
-entities in the environment, such as the hypervisor or neighboring \ac{vm}s in the same cloud tenant. Also tackling memory limitations imposed by \ac{sgx}.
+entities in the environment, such as the hypervisor or neighboring \ac{vm}s in the same cloud tenant.
 
 According to \citet{12_intel_tdx} it achieves the previous using a combination of three components, namely, memory access control, runtime memory encryption and an 
 Intel-signed \ac{tdx} module that does the handling of security-sensitive \ac{td} management operations. 

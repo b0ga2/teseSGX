@@ -24,12 +24,12 @@ attempts to connect to an \ac{ap}.
 Since this infrastructure is already in place, it represents an opportunity to extract statistical indicators without additional investment. 
 However, this data remains unused due to the privacy risks associated with handling of the logs.
 
-Implicit trust in the internal network is a vulnerability in itself, as modern security paradigms dictate, no infrastructure component should be considered permanently trustable. 
+Moreover, relying on implicit trust in the internal network is a vulnerability in itself, as modern security paradigms dictate, no infrastructure component should be considered permanently trustable. 
 Under the same assumption, if the internal network or the privileged infrastructure were to be compromised, sensitive user data would be immediately exposed. 
 Furthermore, processing this data on-premise limits scalability, by adopting a secure processing model with \ac{sgx}, the University creates the possibility to offload 
 these computational tasks without compromising data confidentiality or integrity. 
 
-While \ac{sgx} is supported by the hardware infrastructure currently available, and offers the secure capabilities required to process sensitive information, 
+However, while \ac{sgx} is supported by the hardware infrastructure currently available, and offers the secure capabilities required to process sensitive information, 
 both remote and locally, it presents a technical challenge, the processing of large volumes of data within an enclave. 
 Since execution is restricted by the memory limits of the \ac{epc}, and standard implementations lack efficient native swapping, 
 applications can quickly exhaust the available secure memory.
@@ -41,6 +41,13 @@ this requires the development of an architecture capable of managing memory effi
 
 The main goal of this dissertation is to deliver a \ac{poc} of an Intel \ac{sgx} implementation that executes authorized applications to produce aggregated data from 
 raw WiFi logs. This process aims to generate statistical data for the university without compromising the anonymity of WiFi users or revealing any sensitive information.
+
+Specifically, the system aims to ingest network events, such as connection and disconnection timestamps and \ac{ap} identifiers, and cross-reference them with 
+institutional data. 
+By correlating these logs with class schedules and student enrollment lists, which will also be used as input to the application, 
+the system aims to extract occupancy metrics, such as the number of students per room and cumulative attendance records per student. 
+Furthermore, the system will also aim to support configurable time windows, allowing these metrics to be calculated over varying intervals, 
+ranging from the past week to an entire semester.
  
 However, extracting and processing these indicators in a trusted environment presents technical challenges, like the limits of the secure memory 
 available to an enclave and the lack of efficient swapping due to security reasons. 

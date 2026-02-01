@@ -342,13 +342,13 @@ Likewise, \citet{14_10_1145_3704522_3704523} developed a smartphone based attend
 Since the primary utility is the validation of attendance records using the students smartphone, the architecture operates on an opt-in model where 
 students consent to the tracking of their devices.
 
-\subsection{Summary}
+%\subsection{Summary}
 
-Existing literature relies on data minimization or obfuscation techniques to achieve privacy. 
-However, these approaches introduce a trade-off, to increase privacy, the granularity of the data must be decreased.  
-For the present use case, where precision must be maintained, this trade-off is not acceptable, consequently, this work moves away 
-from statistical obfuscation and focuses on hardware-enforced confidentiality with \ac{sgx}, avoiding algorithms that add noise, allowing 
-for the processing of exact data while maintaining it's confidentiality and integrity.
+%Existing literature relies on data minimization or obfuscation techniques to achieve privacy. 
+%However, these approaches introduce a trade-off, to increase privacy, the granularity of the data must be decreased.  
+%For the present use case, where precision must be maintained, this trade-off is not acceptable, consequently, this work moves away 
+%from statistical obfuscation and focuses on hardware-enforced confidentiality with \ac{sgx}, avoiding algorithms that add noise, allowing 
+%for the processing of exact data while maintaining it's confidentiality and integrity.
 
 \section{Previous Works with \ac{sgx} in Indoor Positioning}
 While the literature regarding the specific application of \ac{sgx} to indoor positioning remains limited, a select number of 
@@ -378,32 +378,17 @@ This finding is important for the current thesis, as it validates that shifting 
 student data without compromising the real time performance or the accuracy of the occupancy counts. 
 
 \section{Data Processing in \ac{sgx}}
-%\subsection{Secure Data Analytics}
-%01
-%03
-%\subsection{Secure Database Management}
-%02
-% New additions
-%\subsection{Privacy-Preserving \ac{ML}}
-%04
-%06
-%07
-%08
-%09 
-%10
-%12
-%13
-%14
-%15
-%16
-%\subsection{Privacy-Preserving Data Analysis}
-%05
-%\subsection{Trusted Cloud Computing}
-%11
-% The following is regarding the article number as 01 in the SGX folder
+
 Processing large scale data within \ac{sgx} introduces memory challenges, primarily due to the limited size of the \ac{epc} and the high cost of 
 transitions between trusted and untrusted memory. 
+Consequently, standard data processing frameworks cannot be directly ported to enclaves without significant performance overhead.
+To address these limitations, the state-of-the-art literature proposes various architectural strategies, 
+ranging from data partitioning and streaming to hardware offloading and oblivious execution.
+The following subsections categorize these frameworks by their application domain, reviewing solutions for general-purpose processing, secure analytics, 
+deep learning acceleration, and distributed federated learning.
 
+\subsection{General Purpose Data Processing}
+% The following is regarding the article number as 01 in the SGX folder
 \citet{s01_7163017} presented \ac{vc3}, a distributed MapReduce model 
 \footnote{Programming model for processing large data sets, users write map and reduce functions, and the execution of both functions is automatically parallelized and distributed, as defined by \citet{MapReduce}}
 designed to address these limitations by strictly minimizing the \ac{tcb}.
@@ -437,8 +422,14 @@ within the protected region without passing control back to the untrusted host u
 Furthermore, to address the integrity of persistent data without the high memory cost of maintaining, a hash tree over the transaction log, 
 EnclaveDB implements a lightweight protocol using hardware based counters and serialization points to guarantee the data updates and prevent rollback attacks.
 
+\subsection{Secure Analytics and Access Patterns}
+
+Advanced analytics and \ac{ml} algorithms rely on matrix operations, however, executing these workloads within \ac{sgx} introduces a vulnerability, 
+standard algorithms show memory access patterns. 
+These allow privileged adversaries to infer sensitive information from the execution trace, even when the memory contents are encrypted. 
+
 % The following is regarding the article number as 03 in the SGX folder
-In the domain of data analytics, \citet{s03} introduced SGX-BigMatrix, a framework for performing secure matrix operations on encrypted data. 
+In 2017, \citet{s03} introduced SGX-BigMatrix, a framework for performing secure matrix operations on encrypted data. 
 Recognizing that large scale matrices often exceed the limited \ac{epc} capacity, the authors developed a BigMatrix abstraction that partitions data into 
 fixed size, encrypted blocks. 
 These blocks are dynamically loaded into the enclave for processing and evicted to untrusted memory via a software managed swapping mechanism, 
@@ -455,7 +446,7 @@ Instead of standard conditional branches, which leak information through the ins
 instructions and vectorized memory operations. 
 This ensures that the execution trace depends solely on public parameters, such as the dataset size, rather than the private input data. 
 Their evaluation demonstrated that this hardware-assisted approach is significantly more efficient than purely cryptographic alternatives, 
-such as homomorphic encryption, enabling the training of models on realistic datasets with manageable overhead
+such as homomorphic encryption, enabling the training of models on realistic datasets with manageable overhead.
 
 % he following is regarding the article number 05 in the improvements folder
 Complementing the discussion on performance trade-offs by \citet{s04}, \citet{s05} argued that data-oblivious techniques, while adding security guarantees, 
@@ -469,9 +460,15 @@ By masking the true data access sequence with random memory operations, this met
 This introduces a strategic trade-off between privacy and efficiency, with the strict determinism of data-obliviousness in favor of a probabilistic protection model, 
 the system achieves significantly higher computational throughput, making it more suitable for large-scale data analytics tasks.
 
+\subsection{Deep Learning and Hardware Acceleration}
+
+The deployment of \ac{dnn}s in trusted environments faces the difficulty of the conflict between the computational demands of deep learning and the hardware limitations of standard enclaves. 
+\ac{sgx} is \ac{cpu}-bound and lacks direct access to trusted accelerators, such as \ac{gpu}s, creating a bottleneck for matrix operations. 
+Furthermore, the memory footprint of modern models and intermediate activations exceeds the trusted capacity of the \ac{epc}. 
+
 % The following is regarding the article number 06 in the improvemts folder
-Addressing the hardware limitations of executing Neural Networks within \ac{cpu}-bound enclaves, in 2019 \citet{s06} proposed Slalom, a framework for verifiable and private execution. 
-Recognizing that the lack of trusted \ac{gpu} support in SGX creates a significant bottleneck for heavy matrix operations, the authors introduced a hybrid execution model. 
+Addressing the hardware limitations of executing neural networks within \ac{cpu}-bound enclaves, in 2019 \citet{s06} proposed Slalom, a framework for verifiable and private execution. 
+Recognizing that the lack of trusted \ac{gpu} support in \ac{sgx} creates a significant bottleneck for heavy matrix operations, the authors introduced a hybrid execution model. 
 In this approach, the enclave delegates work to a remote or local \ac{gpu} to use its processing power, but this delegation does not align with the confidential necessities, so to ensure security, 
 it uses a verification mechanism based on Freivalds' algorithm, that allows the \ac{tee} to check the integrity of the \ac{gpu}'s output without re-executing the full computation. 
 For privacy-preserving inference, the system utilizes input blinding techniques, ensuring that the data processed by the untrusted \ac{gpu} remains opaque, this decouples 
@@ -490,20 +487,6 @@ To maintain data integrity during this external processing, the system employs a
 By comparing these trusted computations against the \ac{gpu}'s outputs in parallel with the main training loop, the system statistically guarantees the correctness of the outsourced processing without stalling the data flow, 
 bridging the gap between the integrity of \ac{tee}s and the throughput of hardware accelerators.
 
-% The following is regarding the article number 09 in the improvements folder
-Scaling data processing beyond the limits of a single trusted enclave, \citet{s09} introduced SecureTF, a mechanism for distributed machine learning execution. 
-This mechanism partitions the data processing workflow into a parameter servers architecture, where the computational load is distributed across multiple enclaves, workers compute gradients on private data shards, while parameter servers aggregate these updates to refine the global model. 
-To handle the intensive memory demands of tensor operations that typically exceed the trusted memory of the \ac{epc}, the system uses a shielded execution runtime, in this case SCONE, to manage secure paging and encrypted I/O transparently during execution. 
-This allows for the stateful processing of large-scale datasets and complex computation graphs across a cluster of TEEs, ensuring that data remains encrypted not only at rest but also throughout the entire distributed calculation pipeline.
-
-% The following is regarding the article number 10 in the improvements folder
-In the context of Federated Learning, where a central server aggregates model updates from numerous remote clients, memory constraints become even more noticeable due to the high dimensionality of modern models. 
-\citet{s10} addressed the performance bottleneck of aggregating gradient vectors within \ac{sgx} by modifying the data processing logic to exploit sparsity. 
-Instead of processing full dense updates, which often trigger severe page thrashing in the \ac{epc}, the authors implemented a Top-$k$ gradient selection algorithm directly within the enclave. 
-This technique filters incoming data, aggregating only the most significant gradients while discarding negligible values, thereby drastically reducing the memory working set. 
-Furthermore, the system optimizes the remaining computation through block-wise data loading and double buffering, ensuring that the processing of gradient blocks aligns with the ac{CPU} cache size to minimize memory access latency during the secure aggregation phase.
-
-
 % The following is regarding the article number 11 in the improvements folder
 Expanding the scope of secure data processing beyond fixed \ac{cpu} instruction sets, \citet{s11} introduced MeetGo, a \ac{tee} architecture designed for \ac{fpga}s. 
 In this paradigm, data processing is not defined by software instructions but by reconfigurable hardware circuits. 
@@ -512,13 +495,27 @@ The processing pipeline is controlled by a hardware-based security manager, whic
 This architecture allows for high-throughput, custom hardware acceleration of sensitive workloads while enforcing memory isolation through specialized hardware monitors, 
 effectively preventing the user-defined logic from accessing unauthorized memory regions during execution, but this comes with the additional cost of the \ac{fpga} hardware.
 
-
 % The following is regarding the article number 12 in the improvements flder
 While frameworks like DarkneTZ address memory limitations by offloading layers to untrusted hardware, \citet{s12} proposed Twine, a runtime system designed to keep the inference execution within the enclave despite the limited \ac{epc} size. 
 Identifying that the standard execution flow of deep learning frameworks triggers excessive and costly \ac{os}-managed paging, Twine modifies the data processing strategy through tensor partitioning and tiling. 
 Instead of processing full layers, the system breaks the input tensors and model weights into smaller spatial blocks that fit within the enclave's physical memory. 
 Coupled with a static memory planner that aggressively recycles buffers throughout the execution graph, this block-wise processing strategy ensures that the working set remains resident in the secure cache, effectively eliminating the performance penalty associated with page swapping.
 
+\subsection{Distributed and Federated Learning}
+In the context of federated learning, where a central server aggregates model updates from numerous remote clients, memory constraints become even more 
+noticeable due to the high dimensionality of modern models. 
+
+% The following is regarding the article number 10 in the improvements folder
+\citet{s10} addressed the performance bottleneck of aggregating gradient vectors within \ac{sgx} by modifying the data processing logic to exploit sparsity. 
+Instead of processing full dense updates, which often trigger severe page thrashing in the \ac{epc}, the authors implemented a Top-$k$ gradient selection algorithm directly within the enclave. 
+This technique filters incoming data, aggregating only the most significant gradients while discarding negligible values, thereby drastically reducing the memory working set. 
+Furthermore, the system optimizes the remaining computation through block-wise data loading and double buffering, ensuring that the processing of gradient blocks aligns with the ac{CPU} cache size to minimize memory access latency during the secure aggregation phase.
+
+% The following is regarding the article number 09 in the improvements folder
+Scaling data processing beyond the limits of a single trusted enclave, \citet{s09} introduced SecureTF, a mechanism for distributed machine learning execution. 
+This mechanism partitions the data processing workflow into a parameter servers architecture, where the computational load is distributed across multiple enclaves, workers compute gradients on private data shards, while parameter servers aggregate these updates to refine the global model. 
+To handle the intensive memory demands of tensor operations that typically exceed the trusted memory of the \ac{epc}, the system uses a shielded execution runtime, in this case SCONE, to manage secure paging and encrypted I/O transparently during execution. 
+This allows for the stateful processing of large-scale datasets and complex computation graphs across a cluster of TEEs, ensuring that data remains encrypted not only at rest but also throughout the entire distributed calculation pipeline.
 
 % The following is regarding the article number 13 in the improvements folder
 In the area of federated learning, secure aggregation typically relies on cryptographic operations such as encryption, which introduces computational overhead. 
@@ -540,7 +537,6 @@ a randomization layer before aggregation.
 Incoming gradients are buffered and subjected to a random permutation inside the enclave, effectively decoupling the gradient values from their identifiers, 
 this ensures unlinkability, preventing the server from correlating specific model updates with their originating clients based on communication metadata or execution timing.
 
-
 % The following is regarding the article number 16 in the improvements folder
 \citet{s16} identified that data-dependent optimizations introduce side-channel vulnerabilities. 
 Processing sparse gradients reveals memory access patterns, specifically, the indices of non-zero updates, which can allow an adversary to 
@@ -550,13 +546,6 @@ instead of directly accessing sparse indices, the system employs hardware oblivi
 By ensuring that the memory access trace remains independent of the actual values and indices of the gradient updates, 
 it closes the leakage channel associated with data processing, with the additional cost of reintroducing some computational overhead 
 compared to simple sparse aggregation.
-
-
-%The literature confirms that while WiFi connection counts are a viable proxy for occupancy detection, current implementations either lack rigorous privacy protections or 
-%rely on opt-in models that limit scalability. 
-
-%While \ac{sgx} provides the necessary hardware enforced privacy, standard big data frameworks like \ac{vc3} or EnclaveDB 
-%introduce development complexity.
 
 % Global Summary
 \section{Summary}
