@@ -14,6 +14,8 @@ Visto que estamos a falar de processamento de sinais enviados por dispositivos p
 ## Minor
 
 Gostava de ver mais pormenor no que toca ao caso de uso na introdução. Creio que este UC de "processamento de dados WiFi" está desnecessariamente vago aqui.
+    Adicionar que todos usam tlml e todos autenticam na rede
+    Apesar de não saberem podemos utilizao-lo os dados gerados, computação segura, porque são implicitamente colaborativos
 
 Não tem resumo/abstract
 

@@ -80,3 +80,7 @@ OS STIC devem usá-las após validação.
 1- Os dados ficam sempre cifrados e a computação pode ser feita mesmo perdendo as chaves, o processamento pode ser feito fora do campus (p.e num servidor externo), proteção extra sobre o processamento mesmo no caso de um atacante entrar na rede
 
 2- É a infrastrutura que existe disponivel de momento
+
+
+## Eitgh
+- Latex Diff para documento de entrega, não é preciso dizer o porquê
