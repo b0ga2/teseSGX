@@ -350,7 +350,7 @@ students consent to the tracking of their devices.
 %from statistical obfuscation and focuses on hardware-enforced confidentiality with \ac{sgx}, avoiding algorithms that add noise, allowing 
 %for the processing of exact data while maintaining it's confidentiality and integrity.
 
-\section{Previous Works with \ac{sgx} in Indoor Positioning}
+\section{Previous Works with SGX in Indoor Positioning}
 While the literature regarding the specific application of \ac{sgx} to indoor positioning remains limited, a select number of 
 studies have established a base foundation for this approach.
 
@@ -377,7 +377,7 @@ the one time events such as the enclave creation, copying data, sealing and unse
 This finding is important for the current thesis, as it validates that shifting the occupancy estimation logic into an \ac{sgx} enclave is a viable strategy that secures 
 student data without compromising the real time performance or the accuracy of the occupancy counts. 
 
-\section{Data Processing in \ac{sgx}}
+\section{Data Processing in SGX}
 
 Processing large scale data within \ac{sgx} introduces memory challenges, primarily due to the limited size of the \ac{epc} and the high cost of 
 transitions between trusted and untrusted memory. 
@@ -514,7 +514,7 @@ noticeable due to the high dimensionality of modern models.
 \citet{s10} proposed SGX-FL to address the performance bottleneck of aggregating gradient vectors within \ac{sgx} by modifying the data processing logic to exploit sparsity. 
 Instead of processing full dense updates, which often trigger severe page thrashing in the \ac{epc}, the authors implemented a Top-$k$ gradient selection algorithm directly within the enclave. 
 This technique filters incoming data, aggregating only the most significant gradients while discarding negligible values, thereby drastically reducing the memory working set. 
-Furthermore, the system optimizes the remaining computation through block-wise data loading and double buffering, ensuring that the processing of gradient blocks aligns with the \ac{CPU} cache size to minimize memory access latency during the secure aggregation phase.
+Furthermore, the system optimizes the remaining computation through block-wise data loading and double buffering, ensuring that the processing of gradient blocks aligns with the \ac{cpu} cache size to minimize memory access latency during the secure aggregation phase.
 
 % The following is regarding the article number 09 in the improvements folder
 Scaling data processing beyond the limits of a single trusted enclave, \citet{s09} introduced SecureTF, a mechanism for distributed machine learning execution. 
@@ -554,6 +554,15 @@ instead of directly accessing sparse indices, the system employs hardware oblivi
 By ensuring that the memory access trace remains independent of the actual values and indices of the gradient updates, 
 it closes the leakage channel associated with data processing, with the additional cost of reintroducing some computational overhead 
 compared to simple sparse aggregation.
+
+\citet{s18} introduced Veracruz, a framework designed to allow secure delegated computations. 
+The central feature of this architecture is the utilization of a WebAssembly environment within the enclave, which allows the execution of arbitrary 
+programs defined in various languages. 
+This design establishes a dual layer, combining the hardware-enforced protection of the \ac{sgx} enclave with the software-based sandboxing of the Wasm runtime. 
+Functionally, the system acts as a trusted component on the untrusted host, enabling multiple mutually independent parties to 
+provision both input data and computational modules via remotely attested channels. 
+By relying on the runtime binary format, the framework abstracts the hardware complexity and ensures that the data processing logic 
+strictly confined within the secure boundary.
 
 % Global Summary
 \section{Summary}
