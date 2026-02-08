@@ -229,7 +229,7 @@ it significantly expands the \ac{tcb} to include the entire guest \ac{os}, incre
 In contrast, \ac{sgx} offers application-level isolation, excluding the \ac{os} from the trust boundary, which is more aligned with the goal of 
 developing a lightweight solution.
 
-\section{Intel Software Guard Extensions (SGX)}
+\section{Intel Software Guard eXtensions (SGX)}
 
 In similarity with previous \ac{tee} implementations, \ac{sgx} is a set of extensions for the Intel architecture with the goal to allow 
 for integrity and confidentiality during computation in a computer where all privileged components might be compromised, as defined by \citet{sgx}.
@@ -386,7 +386,7 @@ This signature, which includes the \texttt{MRENCLAVE} and \texttt{MRSIGNER}, ser
 The initialization process is finalized by the \texttt{EINIT} instruction, which validates the enclave's \texttt{SIGSTRUCT}, this checks that the measurement in the certificate 
 matches the calculated \texttt{MRENCLAVE} and populates the \texttt{MRSIGNER} field in the \ac{secs}, defining the enclave's identity before it can begin execution.
 
-\section{Memory and Performance Limitations in \ac{sgx}}
+\section{Memory and Performance Limitations in SGX}
 Even though \ac{sgx} provides confidentiality and integrity, it introduces performance overheads and resource constraints.
 
 One constraint is the limited capacity of the \ac{epc}, since it resides within the \ac{prm}, where the memory is limited.
@@ -416,7 +416,7 @@ is forced to perform secure paging, to swap them to untrusted memory.
 This results in a performance degradation, with execution times reaching up to 500 times that of native code due to the use of more clock cycles, 
 showing the need for optimized memory management.
 
-\subsection{Intel TDX}
+\section{Intel Trust Domain Extensions (TDX)}
 
 Representing a natural evolution of the \ac{sgx} architecture, Intel \ac{tdx} expands the concept of hardware-enforced isolation from 
 individual application enclaves to entire virtual environments, introduced with the 4th Generation Intel Xeon Scalable processors.  
@@ -459,7 +459,7 @@ The \ac{td}s run in \ac{seam} \ac{vmx} non-root mode, since \ac{tdx} supports th
 managing \ac{tdx} exceptions via an internal handler, implementation of a mechanism for communication between the \ac{td} and the \ac{tdx} module, 
 transitioning memory pages from private to shared \ac{io} operations, although implementation details may vary according to the \ac{os} in use.
 
-Although this technology effectively tackles the memory limitations imposed by \ac{sgx}, eliminating the need for manual memory management in large data processing, 
+Although this technology tackles the memory limitations imposed by \ac{sgx}, eliminating the need for memory management in large data processing, 
 its adoption in this work is constrained by current hardware availability. 
 According to Intel specifications
 \footnote{https://www.intel.com/content/www/us/en/support/articles/000091103/processors/intel-xeon-processors.html}
