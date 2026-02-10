@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0" version="29.3.8">
+  <diagram name="V1" id="4j5WfrSKtSoRrGyYQByx">
+    <mxGraphModel dx="1820" dy="1110" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="x_j-VCV01RksyPqwb81e-1" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Data Provider (STIC)" vertex="1">
+          <mxGeometry height="60" width="30" x="-660" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="x_j-VCV01RksyPqwb81e-2" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="SGX" vertex="1">
+          <mxGeometry height="60" width="30" x="-120" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="x_j-VCV01RksyPqwb81e-3" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="&lt;div&gt;Consumer&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="30" x="370" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="x_j-VCV01RksyPqwb81e-5" edge="1" parent="1" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="-540" y="560" as="sourcePoint" />
+            <mxPoint x="-280" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="x_j-VCV01RksyPqwb81e-6" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;div align=&quot;left&quot;&gt;&lt;ol&gt;&lt;li&gt;Fornece os &lt;b&gt;inputs &lt;/b&gt;(logs do Wifi, turmas e schedule) e as &lt;b&gt;opções &lt;/b&gt;(intervalo de tempo, se é para uma UC ou para um aluno)&lt;/li&gt;&lt;ol&gt;&lt;li&gt;Estes dados devem ser convertidos para um formato que ocupe pouco espaço, como binário&lt;/li&gt;&lt;li&gt;Devem ser cifrados&lt;/li&gt;&lt;li&gt;Possivelmente até comprimidos&lt;/li&gt;&lt;/ol&gt;&lt;li&gt;Apenas devem ser enviados os dados que são pertinentes, ou seja, deverá existir uma verificação prévia para descartar dados desnecessários&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="310" width="200" x="-750" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="x_j-VCV01RksyPqwb81e-11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;div&gt;ECALL para o Enclave&lt;br&gt;&lt;br&gt;(possivelmente via Diffie Hellman)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="250" x="-540" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="x_j-VCV01RksyPqwb81e-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;div align=&quot;left&quot;&gt;&lt;ol&gt;&lt;li&gt;Decifrar&amp;nbsp;&lt;/li&gt;&lt;li&gt;Descomprimir&lt;/li&gt;&lt;li&gt;Relacionar os inputs&lt;/li&gt;&lt;ol&gt;&lt;li&gt;Como será realizado o cálculo?&amp;nbsp;&lt;/li&gt;&lt;li&gt;Todas as turmas ao mesmo tempo ou uma de cada vez?&lt;/li&gt;&lt;/ol&gt;&lt;/ol&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="240" width="200" x="-270" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="x_j-VCV01RksyPqwb81e-13" edge="1" parent="1" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint y="550" as="sourcePoint" />
+            <mxPoint x="260" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="x_j-VCV01RksyPqwb81e-14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;div&gt;Envio do output&lt;/div&gt;&lt;div&gt;(Qual será o for)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="250" x="10" y="500" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
