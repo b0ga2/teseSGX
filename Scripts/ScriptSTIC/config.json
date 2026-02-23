@@ -1,0 +1,11 @@
+{
+    "input_file": "input_data_10000x.csv",
+    "output_file": "dados_anonimizados.csv",
+    "chunk_size": 50000,
+    "separator": ";",
+    "argon2": {
+        "time_cost": 4,
+        "variant": "i",
+        "encoding": "b64"
+    }
+}

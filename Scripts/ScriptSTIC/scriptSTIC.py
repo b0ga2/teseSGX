@@ -2,6 +2,8 @@ import pandas as pd # for pandas information https://www.w3schools.com/python/pa
 from pyargon2 import hash
 import sys
 import os
+import json
+from dotenv import load_dotenv
 
 # Read the csv
 # Think in a way to do this iterative way, due to the input of large files
@@ -18,12 +20,46 @@ import os
 # usar time_cost, enconding = b64, variant = i
 # o U.U vai no param password e a password dos STIC no salt
 
+# Define default config in case the auxiliar files do not exist
+DEFAULT_CONFIG = {
+    "input_file": "input_data_10000x.csv",
+    "output_file": "dados_anonimizados.csv",
+    "chunk_size": 50000,
+    "separator": ";",
+    "argon2": {
+        "time_cost": 4,
+        "variant": "i",
+        "encoding": "b64"
+    }
+}
+CONFIG_FILE = 'config.json'
+ENV_FILE = '.env'
+DEFAULT_ENV_CONTENT = 'SALT_STATIC="CHANGE_ME_TO_A_SECURE_PASSWORD"\n'
 
-# Conf
-INPUT_FILE = 'input_data_10000x.csv'
-OUTPUT_FILE = 'dados_anonimizados.csv'
-CHUNK_SIZE = 50000 # TODO: Test this value somehow
-SALT_STATIC = "password_dos_STIC" # This is a password introduced by STICK
+# Creates config if it doesnt exist
+if not os.path.exists(CONFIG_FILE):
+    print(f"Warning: {CONFIG_FILE} not found. Creating a default configuration file...")
+    with open(CONFIG_FILE, 'w') as f:
+        json.dump(DEFAULT_CONFIG, f, indent=4)
+
+# Creates env if it doesnt exist
+if not os.path.exists(ENV_FILE):
+    print(f"Warning: {ENV_FILE} not found. Creating a default secrets file...")
+    with open(ENV_FILE, 'w') as f:
+        f.write(DEFAULT_ENV_CONTENT)
+
+# Load the conf file and env
+load_dotenv()
+SALT_STATIC = os.getenv("SALT_STATIC")
+
+# Load settings from conf file
+with open('config.json', 'r') as config_file:
+    config = json.load(config_file)
+INPUT_FILE = config['input_file']
+OUTPUT_FILE = config['output_file']
+CHUNK_SIZE = config['chunk_size']
+SEP = config['separator']
+ARGON_CONF = config['argon2']
 
 # Dictionary used to keep hashes so we dont process the same data twice
 user_hash_cache = {}
