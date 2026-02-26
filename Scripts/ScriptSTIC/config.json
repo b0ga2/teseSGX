@@ -1,5 +1,5 @@
 {
-    "input_file": "input_data_10000x.csv",
+    "input_file": "input_data_altered.csv",
     "output_file": "output_data.csv",
     "chunk_size": 50000,
     "separator": ";",
