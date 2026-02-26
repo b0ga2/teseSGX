@@ -8,7 +8,7 @@ Dados Brutos de Input do STIC (fase de dev):
 - Neste momento o ficheiro de horários sou eu que faço, o a sério é para o futuro.
   - Json - Cada disciplina (identificado pelo código da disciplina) possui várias turmas, salas e intervalo de tempo da aula e em que dia da semana há aula
 
-Passos:
+Passos do STICK:
 1. Filtram do catalyst os alunos que **não** aceitaran o consentimento
 2. Extraio apenas em relação aos dias que estes têm aulas
 3. Anonimizar os resultados
