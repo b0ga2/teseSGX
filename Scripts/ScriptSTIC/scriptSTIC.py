@@ -1,31 +1,16 @@
 import pandas as pd # for pandas information https://www.w3schools.com/python/pandas/default.asp
-from pyargon2 import hash
+from pyargon2 import hash # for more info https://pypi.org/project/pyargon2/
 import sys
 import os
 import json
-from dotenv import load_dotenv
-
-# Read the csv
-# Think in a way to do this iterative way, due to the input of large files
-# Use chunks_size
-# df = pd.read_csv('')
-
-# remove multiples column
-# dont do drop, just select the ones i want to work with
-# df = df.drop(columns=['ts_ms', 'mac'])
-
-# Documentation for argon2 https://pypi.org/project/pyargon2/
-# nº de iterações fixo, que seja alto mas razoavel para a perfomance
-# fazer um dicionário para não repetir chamada da função
-# usar time_cost, enconding = b64, variant = i
-# o U.U vai no param password e a password dos STIC no salt
-
-# Define default config in case the auxiliar files do not exist
+from dotenv import load_dotenv # for more info https://pypi.org/project/python-dotenv/
+ 
 DEFAULT_CONFIG = {
-    "input_file": "input_data_10000x.csv",
-    "output_file": "dados_anonimizados.csv",
+    "input_file": "input_data_altered.csv",
+    "output_file": "output_data.csv",
     "chunk_size": 50000,
     "separator": ";",
+    "columns_to_keep": ["ts_iso", "username", "ap", "event"],
     "argon2": {
         "time_cost": 4,
         "variant": "i",
@@ -34,35 +19,26 @@ DEFAULT_CONFIG = {
 }
 CONFIG_FILE = 'config.json'
 ENV_FILE = '.env'
-DEFAULT_ENV_CONTENT = 'SALT_STATIC="CHANGE_ME_TO_A_SECURE_PASSWORD"\n'
+DEFAULT_ENV_CONTENT = 'SALT_STATIC="CHANGE_TO_A_SECURE_PASSWORD"\n'
 
-# Creates config if it doesnt exist
-if not os.path.exists(CONFIG_FILE):
-    print(f"Warning: {CONFIG_FILE} not found. Creating a default configuration file...")
-    with open(CONFIG_FILE, 'w') as f:
-        json.dump(DEFAULT_CONFIG, f, indent=4)
-
-# Creates env if it doesnt exist
-if not os.path.exists(ENV_FILE):
-    print(f"Warning: {ENV_FILE} not found. Creating a default secrets file...")
-    with open(ENV_FILE, 'w') as f:
-        f.write(DEFAULT_ENV_CONTENT)
-
-# Load the conf file and env
-load_dotenv()
-SALT_STATIC = os.getenv("SALT_STATIC")
-
-# Load settings from conf file
-with open('config.json', 'r') as config_file:
-    config = json.load(config_file)
-INPUT_FILE = config['input_file']
-OUTPUT_FILE = config['output_file']
-CHUNK_SIZE = config['chunk_size']
-SEP = config['separator']
-ARGON_CONF = config['argon2']
-
-# Dictionary used to keep hashes so we dont process the same data twice
+# Dictionary used to keep hashes to aviod the process of the same data twice
 user_hash_cache = {}
+
+SALT_STATIC = None 
+ARGON_CONF = None
+
+def setup_files():
+    # Creates config if it doesnt exist
+    if not os.path.exists(CONFIG_FILE):
+        print(f"Warning: {CONFIG_FILE} not found. Creating a default configuration file...")
+        with open(CONFIG_FILE, 'w') as f:
+            json.dump(DEFAULT_CONFIG, f, indent=4)
+
+    # Creates env if it doesnt exist
+    if not os.path.exists(ENV_FILE):
+        print(f"Warning: {ENV_FILE} not found. Creating a default secrets file...")
+        with open(ENV_FILE, 'w') as f:
+            f.write(DEFAULT_ENV_CONTENT)
 
 def anonimize_user(username):
     # Verify if the value is null
@@ -74,88 +50,125 @@ def anonimize_user(username):
     
     # Verify if the name is in the dictionary
     if username_str in user_hash_cache:
-        #print(f"The user {username_str} is already in the dictionary")
+        print(f"The user {username_str} is already in the dictionary")
         return user_hash_cache[username_str]
     
     # Argon2 config
-    # time_cost: 4 TODO: verificar este valor
-    # type: 'i' (Argon2i) 
-    # encoding: 'b64' (Base64)
     hashed_value = hash(
         password = username_str,
         salt = SALT_STATIC,
-        time_cost = 4,          
-        variant = 'i',            
-        encoding = 'b64'       
+        time_cost = ARGON_CONF['time_cost'],          
+        variant = ARGON_CONF['variant'],            
+        encoding = ARGON_CONF['encoding']     
     )
     
     # Saves the hash and username to the dictionary
     user_hash_cache[username_str] = hashed_value
     return hashed_value
 
+def main():
+    # Declare as global so the functions can read the updated value
+    global SALT_STATIC, ARGON_CONF
+    
+    setup_files()
 
-print(f"Processing the file {INPUT_FILE}...")
+    # Load the conf file and env
+    load_dotenv()
+    SALT_STATIC = os.getenv("SALT_STATIC")
 
-# Verify if file exists
-if os.path.exists(OUTPUT_FILE):
-    os.remove(OUTPUT_FILE)
+    # Load settings from conf file
+    with open('config.json', 'r') as config_file:
+        config = json.load(config_file)
+        
+    INPUT_FILE = config['input_file']
+    OUTPUT_FILE = config['output_file']
+    CHUNK_SIZE = config['chunk_size']
+    SEP = config['separator']
+    ARGON_CONF = config['argon2']
+    COLUMNS_TO_KEEP = config['columns_to_keep']
 
-first_chunk = True
+    print("===================================\n")
+    print(f"INPUT_FILE:  {INPUT_FILE}")
+    print(f"OUTPUT_FILE: {OUTPUT_FILE}")
+    print(f"CHUNK_SIZE:  {CHUNK_SIZE}")
+    print(f"SEPARATOR:   '{SEP}'")
+    print(f"ARGON_CONF:  {ARGON_CONF}")
+    print(f"SALT_STATIC: {SALT_STATIC}") 
+    print(f"COLUMNS_TO_KEEP: {COLUMNS_TO_KEEP}") 
+    print("===================================\n")
 
-counter = 0
+    print(f"Processing the file {INPUT_FILE}...")
 
-df = pd.read_csv(INPUT_FILE)
-num_row = len(df)
-num_iter = (num_row + CHUNK_SIZE - 1) // CHUNK_SIZE
+    # Generate a new output filename if it already exists
+    original_output = OUTPUT_FILE
+    file_counter = 1
+    while os.path.exists(OUTPUT_FILE):
+        # Splits 'data.csv' into 'data' and '.csv'
+        base_name, extension = os.path.splitext(original_output)
+        # Creates the next file
+        OUTPUT_FILE = f"{base_name}{file_counter}{extension}"
+        file_counter += 1
+        
+    print(f"Output will be saved to: {OUTPUT_FILE}")
 
+    first_chunk = True
+    counter = 0
 
-print(f"Total number of rows to process: {num_row}...")
-print(f"Total number of necessary iterations: {num_iter}...")
+    df = pd.read_csv(INPUT_FILE)
+    num_row = len(df)
+    num_iter = (num_row + CHUNK_SIZE - 1) // CHUNK_SIZE
 
-# Open the CSV file in read mode using pandas
-with pd.read_csv(
-    # The path to the file you want to read
-    INPUT_FILE,
+    print(f"Total number of rows to process: {num_row}...")
+    print(f"Total number of necessary iterations: {num_iter}...")
 
-    # Defines the separator used in the CSV.
-    # Since your file uses ';', we must specify it, otherwise pandas looks for ','
-    sep=';',
+    # Open the CSV file in read mode using pandas
+    with pd.read_csv(
+        # Path to file to read
+        INPUT_FILE,
 
-    # Activates the "chunking" mode.
-    # Instead of reading the whole file into RAM, it reads X rows at a time (defined by CHUNK_SIZE).
-    # This returns an iterator (TextFileReader) rather than a single DataFrame.
-    chunksize=CHUNK_SIZE
-) as reader:
+        # Defines the separator used in the CSV.
+        sep=SEP,
 
-    # Iterate through the file in chunks
-    for i, chunk in enumerate(reader):
+        # This tells pandas to ONLY load these specific columns into memory.
+        # No need to drop anything later!
+        usecols=COLUMNS_TO_KEEP,
 
-        # Convert the column to string and remove leading/trailing whitespace
-        chunk['username'] = chunk['username'].astype(str).str.strip()
+        # Instead of reading the whole file into RAM, it reads X rows at a time, defined by CHUNK_SIZE.
+        chunksize=CHUNK_SIZE
+    ) as reader:
 
-        # Apply the anonymization function to the column
-        chunk['username'] = chunk['username'].map(anonimize_user)
+        # Iterate through the file in chunks
+        for i, chunk in enumerate(reader):
 
-        # Write the processed chunk to the output file
-        chunk.to_csv(
-            # The destination file path
-            OUTPUT_FILE,
+            # Convert the column to string and remove leading/trailing whitespace
+            chunk['username'] = chunk['username'].astype(str).str.strip()
 
-            # Use the same separator
-            sep=';',
+            # Apply the anonymization function to the column
+            chunk['username'] = chunk['username'].map(anonimize_user)
 
-            # append
-            mode='a',
+            # Write the processed chunk to the output file
+            chunk.to_csv(
+                # The destination file path
+                OUTPUT_FILE,
 
-            # No write index 
-            index=False,
+                # Use the same separator
+                sep=';',
 
-            # If it's the first chunk, write the header (True). 
-            header=first_chunk
-        )
+                # append
+                mode='a',
 
-        # Update the flag so next chunks don't write the header
-        first_chunk = False
-        print(f"Chunk {i+1} processed.")
+                # No write index 
+                index=False,
 
-print("Processing done")
+                # If it's the first chunk, write the header. 
+                header=first_chunk
+            )
+
+            # Update the flag so next chunks don't write the header
+            first_chunk = False
+            print(f"Chunk {i+1} processed.")
+
+    print("Processing done")
+
+if __name__ == "__main__":
+    main()

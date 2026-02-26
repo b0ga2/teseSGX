@@ -1,8 +1,9 @@
 {
-    "input_file": "input_data_10000x.csv",
-    "output_file": "dados_anonimizados.csv",
+    "input_file": "input_data_altered.csv",
+    "output_file": "output_data.csv",
     "chunk_size": 50000,
     "separator": ";",
+    "columns_to_keep": ["ts_iso", "username", "ap", "event"],
     "argon2": {
         "time_cost": 4,
         "variant": "i",
