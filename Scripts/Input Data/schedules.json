@@ -1,0 +1,44 @@
+{
+  "41948": {
+    "name": "Arquitetura de Computadores I",
+    "acronym": "AC1",
+    "classes": [
+      {
+        "id": "TP1",
+        "room": "04.3.17",
+        "day": "2",
+        "time_interval": "09:00 - 11:00"
+      },
+      {
+        "id": "P1",
+        "room": "04.3.12",
+        "day": "3",
+        "time_interval": "14:00 - 16:00"
+      },
+      {
+        "id": "P14",
+        "room": "04.2.11",
+        "day": "4",
+        "time_interval": "11:00 - 13:00"
+      }
+    ]
+  },
+  "41952": {
+    "name": "Arquitetura de Computadores II",
+    "acronym": "AC2",
+    "classes": [
+      {
+        "id": "TP2",
+        "room": "04.1.04",
+        "day": "5",
+        "time_interval": "10:00 - 12:00"
+      },
+      {
+        "id": "P5",
+        "room": "04.1.02",
+        "day": "6",
+        "time_interval": "16:00 - 18:00"
+      }
+    ]
+  }
+}
