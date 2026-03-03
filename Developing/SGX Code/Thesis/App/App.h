@@ -29,21 +29,27 @@
  *
  */
 
-#include "Enclave.h"
-#include "Enclave_t.h" /* print_string */ // The trusted bridge header
+#ifndef _APP_H_
+#define _APP_H_
+
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
-#include <stdio.h> /* vsnprintf */
-#include <string.h>
 
+#include "sgx_error.h"       /* sgx_status_t */
+#include "sgx_eid.h"     /* sgx_enclave_id_t */
 
-void ecall_load_schedule(const char* schedule_data)
-{
-    ocall_print_string("[Enclave] Securely received the JSON data:\n");
-    ocall_print_string(schedule_data);
-}
+#ifndef TRUE
+# define TRUE 1
+#endif
 
-void ecall_hello_world(void)
-{
-    // The enclave uses the untrusted OS to print to the screen
-    ocall_print_string("Hello World from inside the Secure Enclave!\n");
-}
+#ifndef FALSE
+# define FALSE 0
+#endif
+
+# define ENCLAVE_FILENAME "enclave.signed.so"
+
+extern sgx_enclave_id_t global_eid;    /* global enclave id */
+
+#endif /* _APP_H_ */
