@@ -38,12 +38,16 @@
 
 void ecall_load_schedule(const char* schedule_data)
 {
+    // Safety check
+    if (schedule_data == NULL)
+    {
+        return;
+    }
+
+    // Load the data to the structure
+    
+
+    // DEBUG PRINT
     ocall_print_string("[Enclave] Securely received the JSON data:\n");
     ocall_print_string(schedule_data);
-}
-
-void ecall_hello_world(void)
-{
-    // The enclave uses the untrusted OS to print to the screen
-    ocall_print_string("Hello World from inside the Secure Enclave!\n");
 }

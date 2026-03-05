@@ -146,23 +146,23 @@ int initialize_enclave(void)
 
 void ocall_print_string(const char *str)
 {
-    /* Proxy/Bridge will check the length and null-terminate 
-     * the input string to prevent buffer overflow. 
-     */
     printf("%s", str);
 }
 
 char* read_file_to_string(const char* filename) {
-    FILE *f = fopen(filename, "rb");
+
+    FILE *f = fopen(filename, "r");
     if (f == NULL) {
         printf("Error: Could not open %s\n", filename);
         return NULL;
     }
 
     // Determine file size
-    fseek(f, 0, SEEK_END);
+    fseek(f, 0, SEEK_END); // SEEK_END is relative to the end-of-file
     long fsize = ftell(f);
-    fseek(f, 0, SEEK_SET);
+    fseek(f, 0, SEEK_SET); // SEEK_SET is relative to the start-of-file
+
+    printf("[App] The size of the file %s is %ld bytes\n", filename,fsize);
 
     // Allocate memory (fsize + 1 for the null terminator)
     char *string = (char *)malloc(fsize + 1);
@@ -176,26 +176,31 @@ char* read_file_to_string(const char* filename) {
     fclose(f);
     string[fsize] = '\0'; 
 
+    printf("[App] Total memory allocated (including null terminator): %ld bytes\n", fsize + 1);
+
     return string;
 }
 
 /* Application entry */
 int SGX_CDECL main(int argc, char *argv[])
 {
+    // To avoid compilation errors
     (void)(argc);
     (void)(argv);
 
     /* Initialize the enclave */
     if(initialize_enclave() < 0){
+        printf("[App] Unable to start enclave");
         printf("Enter a character before exit ...\n");
         getchar();
         return -1; 
     }
 
+    // Memory address of the files content
     char* json_data = read_file_to_string("schedules.json");
     
     if (json_data != NULL) {
-        printf("[Untrusted App] Pushing JSON into the secure Enclave...\n");
+        printf("[App] Pushing JSON into the secure Enclave...\n");
 
         sgx_status_t status = ecall_load_schedule(global_eid, json_data);
         
