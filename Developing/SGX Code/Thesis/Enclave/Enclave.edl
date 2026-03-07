@@ -5,6 +5,9 @@ enclave {
     // Include C types so the edger8r tool understands size_t, etc.
     include "stdbool.h"
     include "stdint.h"
+
+    // To use the structure schedule_entry_t
+    include "ScheduleData.h"
     
 
     /* Import ECALL/OCALL from sub-directory EDLs.
@@ -16,12 +19,15 @@ enclave {
     trusted{
 
         /* 
-        * ecall_load_schedule - Passes the weekly schedule into the enclave.
-        * [in]: Copies the buffer from the Untrusted App into the Enclave.
-        * [string]: Specifies that 'schedule_data' is a NULL-terminated string, so SGX automatically calculates the exact length to copy.
+        * ecall_load_schedule - Imports the pre-processed schedule into the enclave.
+        * @param schedule_array: Pointer to the array of 64byte structs created by the App.
+        * @param num_entries: Total number of schedule_entry_t elements to be copied.
+        * [in]: Data flows from Untrusted App to Enclave. SGX allocates trusted memory 
+        * and copies the buffer automatically during the context switch.
+        * [count=num_entries]: Explicitly defines the buffer size as (sizeof(schedule_entry_t) * num_entries)
+        * to prevent buffer overflow and ensure the entire array is available in the TCB.
         */
-        public void ecall_load_schedule([in, string] const char* schedule_data);
-
+        public void ecall_load_schedule([in, count=num_entries] schedule_entry_t* schedule_array, uint32_t num_entries);
         /* 
         * ecall_load_class - Passes the class students into the enclave.
         * [in]: Copies the buffer from the Untrusted App into the Enclave.

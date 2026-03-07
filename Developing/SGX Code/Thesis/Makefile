@@ -86,6 +86,9 @@ else
     Uae_Library_Name := sgx_uae_service
 endif
 
+# Added due to the cJson
+App_C_Files := App/cJSON.c
+
 App_Cpp_Files := App/App.cpp $(wildcard App/Edger8rSyntax/*.cpp) $(wildcard App/TrustedLibrary/*.cpp)
 App_Include_Paths := -IInclude -IApp -I$(SGX_SDK)/include
 
@@ -111,6 +114,9 @@ App_Cpp_Flags := $(App_C_Flags)
 App_Link_Flags := -L$(SGX_LIBRARY_PATH) -l$(Urts_Library_Name) -l$(Uae_Library_Name) -lpthread
 
 App_Cpp_Objects := $(App_Cpp_Files:.cpp=.o)
+
+# Added due to the cJson
+App_C_Objects := $(App_C_Files:.c=.o)
 
 App_Name := app
 
@@ -243,7 +249,12 @@ App/%.o: App/%.cpp  App/Enclave_u.h
 	@$(CXX) $(SGX_COMMON_CXXFLAGS) $(App_Cpp_Flags) -c $< -o $@
 	@echo "CXX  <=  $<"
 
-$(App_Name): App/Enclave_u.o $(App_Cpp_Objects)
+# Added due to the cJson
+App/%.o: App/%.c
+	@$(CC) $(SGX_COMMON_CFLAGS) $(App_C_Flags) -c $< -o $@
+	@echo "CC   <=  $<"
+
+$(App_Name): App/Enclave_u.o $(App_Cpp_Objects) $(App_C_Objects)
 	@$(CXX) $^ -o $@ $(App_Link_Flags)
 	@echo "LINK =>  $@"
 

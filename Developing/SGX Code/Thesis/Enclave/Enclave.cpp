@@ -35,19 +35,27 @@
 #include <stdio.h> /* vsnprintf */
 #include <string.h>
 
+// Variable that stores the schedules
+schedule_entry_t enclave_full_schedule[100];
+uint32_t current_schedule_count = 0;
 
-void ecall_load_schedule(const char* schedule_data)
+
+void ecall_load_schedule(schedule_entry_t* schedule_array, uint32_t count)
 {
     // Safety check
-    if (schedule_data == NULL)
-    {
+    if (schedule_array == NULL || count == 0 || count > 100) {
+        ocall_print_string("[Enclave Error] Invalid schedule data or size.\n");
         return;
     }
 
     // Load the data to the structure
+    memcpy(enclave_full_schedule, schedule_array, sizeof(schedule_entry_t) * count);
+    current_schedule_count = count;
     
 
-    // DEBUG PRINT
-    ocall_print_string("[Enclave] Securely received the JSON data:\n");
-    ocall_print_string(schedule_data);
+    // DEBUG: Verify the first entry
+    char buf[128];
+    snprintf(buf, sizeof(buf), "[Enclave] Success! Loaded %u classes. First Room: %s\n", 
+             current_schedule_count, enclave_full_schedule[0].room);
+    ocall_print_string(buf);
 }
