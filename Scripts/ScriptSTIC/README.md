@@ -2,6 +2,14 @@
 
 This document explains the mechanics of the script for data anonimization and provides an overview of its configuration files.
 
+## Prerequisites (Windows Machine Only)
+
+This script uses encryption (`pyargon2`). To install it on Windows, you must have the **Microsoft C++ Build Tools** installed:
+
+1. Download the installer [here](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
+2. Run the installer and select **"Desktop development with C++"**.
+3. Complete the installation and **restart your computer**.
+
 ## 1. System Preparation (Virtual Environment)
 
 To ensure the script runs without affecting your computer's global settings, it operates inside an isolated folder called a Virtual Environment (`venv`).
