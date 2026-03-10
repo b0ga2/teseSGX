@@ -9,6 +9,7 @@ This script uses encryption (`pyargon2`), a library compiled in C available in P
 Its necessary to have Python installed on the machine.
 
 1. Download the latest Python installer from the official website: 
+   1. https://www.python.org/downloads/
 2. Run the downloaded installer.
 3. On the very first screen of the installer, look at the bottom and check the box that says "Add python.exe to PATH" before clicking "Install Now".
 4. Complete the installation.
@@ -46,11 +47,17 @@ source venv/bin/activate
 
 (Note: You will know it is successfully activated when you see (venv) appear at the very beginning of your command line prompt).
 
+To exit the virtual environment use the following command.
+**Works on all Operating Systems**
+```
+deactivate
+```
+
 **Step 3: Install Required Libraries (First Time Only)**
 Once the environment is active, install the necessary dependencies from the included requirements file by running:
 
 ```Bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 ## 2. Code Explanation & Core Logic
@@ -63,7 +70,7 @@ The script is designed to process datasets without running out of memory, it ach
 
 3. **Cryptographic Hashing:** For each chunk, the script isolates the `username` column. It applies the **Argon2** hashing algorithm, combining the user's data with the "salt" defined in the `.env` file. A local caching dictionary is used to remember previously hashed usernames, speeding up the process for recurring users.
 
-4. **Safe Output:** The processed chunk is appended to a new output file. If the designated output file name already exists, the script creates a new version (e.g., `output_data1.csv`, `output_data2.csv`) to prevent data loss.
+4. **Output:** The processed chunk is appended to a new output file. If the designated output file name already exists, the script creates a new version (e.g., `output_data1.csv`, `output_data2.csv`) to prevent data loss.
 
 ---
 
@@ -77,7 +84,7 @@ If you open the `.env` file, you will see the following structure:
 SALT_STATIC="CHANGE_TO_A_SECURE_PASSWORD"
 ```
 
-**This is the default value and should be changed or shared.**
+**This is the default value and should notNOT be changed or shared.**
 
 ## 4. Operational Parameters (`config.json` File)
 

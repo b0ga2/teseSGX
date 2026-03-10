@@ -191,7 +191,7 @@ def main():
         df_header = pd.read_csv(INPUT_FILE, sep=SEP, nrows=0)
         actual_columns = df_header.columns.tolist()
 
-        # 2. Check if the requested columns actually exist in the file
+        # Check if the requested columns actually exist in the file
         missing_cols = [col for col in COLUMNS_TO_KEEP if col not in actual_columns]
         if missing_cols:
             print(f"\nError: Some columns specified in 'columns_to_keep' DO NOT exist in '{INPUT_FILE}'.")
