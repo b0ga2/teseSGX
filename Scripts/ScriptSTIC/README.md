@@ -2,9 +2,20 @@
 
 This document explains the mechanics of the script for data anonimization and provides an overview of its configuration files.
 
-## Prerequisites (Windows Machine Only)
+## Prerequisites
 
-This script uses encryption (`pyargon2`). To install it on Windows, you must have the **Microsoft C++ Build Tools** installed:
+This script uses encryption (`pyargon2`), a library compiled in C available in Python. 
+
+Its necessary to have Python installed on the machine.
+
+1. Download the latest Python installer from the official website: 
+2. Run the downloaded installer.
+3. On the very first screen of the installer, look at the bottom and check the box that says "Add python.exe to PATH" before clicking "Install Now".
+4. Complete the installation.
+
+### Windows Machine Only
+
+To install it on Windows, you must have the **Microsoft C++ Build Tools** installed:
 
 1. Download the installer [here](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
 2. Run the installer and select **"Desktop development with C++"**.
