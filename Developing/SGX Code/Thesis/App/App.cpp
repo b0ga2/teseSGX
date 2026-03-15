@@ -174,7 +174,7 @@ char* read_file_to_string(const char* filename) {
     long fsize = ftell(f);
     fseek(f, 0, SEEK_SET); // SEEK_SET is relative to the start-of-file
 
-    printf("[App] The size of the file %s is %ld bytes\n", filename,fsize);
+    printf("1 - [App] The size of the file %s is %ld bytes\n", filename,fsize);
 
     // Allocate memory (fsize + 1 for the null terminator)
     char *string = (char *)malloc(fsize + 1);
@@ -188,28 +188,121 @@ char* read_file_to_string(const char* filename) {
     fclose(f);
     string[fsize] = '\0'; 
 
-    printf("[App] Total memory allocated (including null terminator): %ld bytes\n", fsize + 1);
+    printf("2 - [App] Total memory allocated (including null terminator): %ld bytes\n", fsize + 1);
 
     return string;
 }
 
-// Parses the JSON and sends the array to the Enclave
-void parse_and_send_schedule(sgx_enclave_id_t eid, const char* json_string) {
+// Parses the file with the schedules and sends the array to the Enclave
+void parse_and_send_schedule(sgx_enclave_id_t eid, const char* input_file) {
 
     // Safety check
-    if (json_string == NULL) {
-        printf("[App Error] Failed to load JSON\n");
+    if (input_file == NULL) {
+        printf("[App Error] Failed to load file\n");
         return;
     }
 
-    cJSON *json = cJSON_Parse(json_string);
+    cJSON *json = cJSON_Parse(input_file);
 
     if (json == NULL) {
         printf("[App Error] Failed to parse JSON\n");
         return;
     }
+
+    // Create a temporary array to hold the data
+    schedule_entry_t flat_schedule[200];
+    uint32_t total_entries = 0;
+
+    //Using class_var since class is reserved keyword
+    cJSON *class_var = NULL;
+
+    // Loop trhough each class
+    cJSON_ArrayForEach(class_var, json) {
+        uint32_t code = (uint32_t)atoi(class_var->string);
+        cJSON *acronym = cJSON_GetObjectItem(class_var, "acronym");
+        cJSON *classes = cJSON_GetObjectItem(class_var, "classes");
+
+        cJSON *cls = NULL;
+        // Loop through the classes inside this course
+        cJSON_ArrayForEach(cls, classes) {
+
+            if (total_entries >= 200) {
+                printf("[App Error] Warning: Max classes reached.\n");
+                break;
+            }
+
+            schedule_entry_t *entry = &flat_schedule[total_entries];
+            
+            // Zero out the struct for padding
+           memset(entry, 0, sizeof(schedule_entry_t));
+
+            // Course Code & Acronym
+            entry->course_code = code;
+            if (acronym && acronym->valuestring) {
+                strncpy(entry->acronym, acronym->valuestring, 7);
+            }
+            
+            // Class ID
+            cJSON *id = cJSON_GetObjectItem(cls, "id");
+            if (id && id->valuestring) {
+                strncpy(entry->class_id, id->valuestring, 7);
+            } else {
+                strncpy(entry->class_id, "UNK", 7);
+            }
+            
+            // Room
+            cJSON *room = cJSON_GetObjectItem(cls, "room");
+            if (room && room->valuestring) {
+                strncpy(entry->room, room->valuestring, 8);
+            } else {
+                strncpy(entry->room, "TBD", 8);
+            }
+
+            // Day 
+            cJSON *day = cJSON_GetObjectItem(cls, "day");
+            if (day && day->valuestring) {
+                entry->day = (uint8_t)atoi(day->valuestring);
+            }
+
+            // Time Interval
+            cJSON *time = cJSON_GetObjectItem(cls, "time_interval");
+            if (time && time->valuestring) {
+                strncpy(entry->time_interval, time->valuestring, 15);
+            } else {
+                strncpy(entry->time_interval, "TBD", 15);
+            }
+
+            total_entries++;
+        }
+    }
+
+    if (total_entries > 0) {
+
+        // Send data to enclave
+        sgx_status_t status = ecall_load_schedule(eid, flat_schedule, total_entries);
+        
+        if (status == SGX_SUCCESS) {
+            printf("3 - [App] Successfully passed %u classes to the Enclave.\n", total_entries);
+        } else {
+            printf("[App Error] ECALL failed with code: %x\n", status);
+        }
+    } else {
+        printf("[App Error] No classes found in JSON.\n");
+    }
+
+    // Free the JSON memory
+    cJSON_Delete(json);
+
 }
 
+// Parses the file with the classes and sends the array to the Enclave
+void parse_and_send_class(sgx_enclave_id_t eid, const char* input_file) {
+    // Safety check
+    if (input_file == NULL) {
+        printf("[App Error] Failed to load file\n");
+        return;
+    }
+}
 
 
 /* Application entry */
@@ -228,17 +321,64 @@ int SGX_CDECL main(int argc, char *argv[])
         return -1; 
     }
 
-    // Memory address of the files content
-    char* json_data = read_file_to_string("schedules.json");
-    
-    parse_and_send_schedule(global_eid, json_data);
+    int choice = -1; 
+    while (choice != 0) {
+        printf("\n===================================================\n");
+        printf("      SGX Secure Attendance System - Main Menu     \n");
+        printf("===================================================\n");
+        printf("1 - Calculate weekly attendance per class (Load Map)\n");
+        printf("2 - Calculate student attendance frequency (Graphic)\n");
+        printf("0 - Exit Application\n");
+        printf("===================================================\n");
+        printf("Enter your choice: ");
 
-    /* Destroy the enclave */
-    sgx_destroy_enclave(global_eid);
+        // Read the user input
+        if (scanf("%d", &choice) != 1) {
+            // Verify it is a valid number
+            while (getchar() != '\n'); 
+            printf("[App] Invalid input. Please enter a number.\n");
+            continue;
+        }
+
+        printf("\n"); // for clean formatting
+
+        switch (choice) {
+            case 1:{
+                printf("[App] Option 1 Selected: Calculating weekly attendance...\n");
+
+                // Read the input files that are public
+                char* schedule_data = read_file_to_string("schedules.json");
+                //char* classes_data = read_file_to_string("classes.json");
+
+                // Parse them and send them to the enclave
+                parse_and_send_schedule(global_eid, schedule_data);
+                // parse_and_send_class(global_eid, classes_data);
+
+                // Maybe an ecall to warn the enclave to start processing?
+
+
+                break;}
+
+            case 2:{
+                printf("[App] Option 2 Selected: Calculating frequency graphic...\n");
+                
+                break;}
+
+            case 0:{
+                printf("[App] Exiting the application. Destroying Enclave...\n");
+
+                /* Destroy the enclave */
+                sgx_destroy_enclave(global_eid);
+
+                break;}
+
+            default:{
+                printf("[App] Unknown choice (%d). Please select 1, 2, or 0.\n", choice);
+                break;}
+        }
+    }
     
     printf("Info: Enclave successfully returned.\n");
 
-    printf("Enter a character before exit ...\n");
-    getchar();
     return 0;
 }

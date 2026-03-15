@@ -52,10 +52,7 @@ void ecall_load_schedule(schedule_entry_t* schedule_array, uint32_t count)
     memcpy(enclave_full_schedule, schedule_array, sizeof(schedule_entry_t) * count);
     current_schedule_count = count;
     
-
-    // DEBUG: Verify the first entry
     char buf[128];
-    snprintf(buf, sizeof(buf), "[Enclave] Success! Loaded %u classes. First Room: %s\n", 
-             current_schedule_count, enclave_full_schedule[0].room);
+    snprintf(buf, sizeof(buf), "1 - [Enclave] Loaded %u schedules successfully.\n",  current_schedule_count);
     ocall_print_string(buf);
 }

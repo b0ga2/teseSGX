@@ -11,3 +11,24 @@
 
 - Since Im parsing the classes and schedules outside the enclave, should I use an outside library to parse the Json, or do it myself?
   - I found this quite interesting library called cJson wich is only one C and  one header file. I will use it for now since this is only for developments purposes and will likely not be used in production.
+
+
+## 2026/03/10
+- Meeting with Carlos Costa from STIC to test the Python Script
+  - Everything went accordingly :)
+
+### Questions for the next meeting (Sames as previous week because I forgot)
+- Should I parse the content of the schedules, classes and logs inside or outside the enclave?
+  - For now I will parse the classes and schedules outside the enclave, since they are public information.
+  - For the wifi logs, I reckon everything should be done inside the enclave.
+
+- Since Im parsing the classes and schedules outside the enclave, should I use an outside library to parse the Json, or do it myself?
+  - I found this quite interesting library called cJson wich is only one C and  one header file. I will use it for now since this is only for developments purposes and will likely not be used in production.
+
+- The coverage of the APs can be hardcoded or should it be an input file to the enclave as well?
+
+- The goal is to to calculate for each class measure the quantity of students that were present in each week, but this raises some questions:
+  - I assume that a class refers to a specific set of students per course, example TP1 from AC2. Is this correct?
+  - What happens if a class occurs more then once a week? Should I calculate the average of classes or divide the statistics per day?
+- Another similar goal is to calculate the graphic of frequence, which means X students went to Y classes. Is this also per class per course?
+
