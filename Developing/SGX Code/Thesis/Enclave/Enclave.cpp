@@ -30,14 +30,16 @@
  */
 
 #include "Enclave.h"
-#include "Enclave_t.h" /* print_string */ // The trusted bridge header
+#include "Enclave_t.h" /* print_string */
 #include <stdarg.h>
 #include <stdio.h> /* vsnprintf */
 #include <string.h>
 
-// Variable that stores the schedules
+// Variable that stores the schedules and classes
 schedule_entry_t enclave_full_schedule[100];
 uint32_t current_schedule_count = 0;
+student_enrollment_t enclave_enrollments[1000];
+uint32_t total_enrollment_count = 0;
 
 
 void ecall_load_schedule(schedule_entry_t* schedule_array, uint32_t count)
@@ -53,6 +55,23 @@ void ecall_load_schedule(schedule_entry_t* schedule_array, uint32_t count)
     current_schedule_count = count;
     
     char buf[128];
-    snprintf(buf, sizeof(buf), "1 - [Enclave] Loaded %u schedules successfully.\n",  current_schedule_count);
+    snprintf(buf, sizeof(buf), "[Enclave] Loaded %u schedules successfully.\n",  current_schedule_count);
+    ocall_print_string(buf);
+}
+
+void ecall_load_classes(student_enrollment_t* enrollment_array, uint32_t num_entries)
+{
+    //Safety Checks
+    if (enrollment_array == NULL || num_entries == 0 || num_entries > 1000) {
+        ocall_print_string("[Enclave Error] Invalid class data or size.\n");
+        return;
+    }
+
+    // Load data to struct
+    memcpy(enclave_enrollments, enrollment_array, sizeof(student_enrollment_t) * num_entries);
+    total_enrollment_count = num_entries;
+
+    char buf[128];
+    snprintf(buf, sizeof(buf), "[Enclave] Loaded %u student enrollments.\n", total_enrollment_count);
     ocall_print_string(buf);
 }

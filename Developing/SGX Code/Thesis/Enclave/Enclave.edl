@@ -6,8 +6,9 @@ enclave {
     include "stdbool.h"
     include "stdint.h"
 
-    // To use the structure schedule_entry_t
+    // To use the structure schedule_entry_t and student_enrollment_t
     include "ScheduleData.h"
+    include "ClassData.h"
     
 
     /* Import ECALL/OCALL from sub-directory EDLs.
@@ -28,12 +29,17 @@ enclave {
         * to prevent buffer overflow and ensure the entire array is available in the TCB.
         */
         public void ecall_load_schedule([in, count=num_entries] schedule_entry_t* schedule_array, uint32_t num_entries);
+       
         /* 
-        * ecall_load_class - Passes the class students into the enclave.
-        * [in]: Copies the buffer from the Untrusted App into the Enclave.
-        * [string]: Specifies 'class_data' is a NULL-terminated string.
+        * ecall_load_classes - Imports the pre-processed student enrollments into the enclave.
+        * @param enrollment_array: Pointer to the array of 32-byte structs created by the App.
+        * @param num_entries: Total number of student_enrollment_t elements to be copied.
+        * [in]: Data flows from Untrusted App to Enclave. SGX allocates trusted memory 
+        * and copies the buffer automatically during the context switch.
+        * [count=num_entries]: Explicitly defines the buffer size as (sizeof(student_enrollment_t) * num_entries)
+        * to prevent buffer overflow and ensure the entire array is available in the TCB.
         */
-        // public void ecall_load_class([in, string] const char* class_data);
+        public void ecall_load_classes([in, count=num_entries] student_enrollment_t* enrollment_array, uint32_t num_entries);
 
         /* 
         * ecall_process_wifi_logs - Streams a chunk of the Cisco Catalyst network logs. //TODO: Decide the size of each chunk

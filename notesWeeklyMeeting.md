@@ -29,6 +29,7 @@
 
 - The goal is to to calculate for each class measure the quantity of students that were present in each week, but this raises some questions:
   - I assume that a class refers to a specific set of students per course, example TP1 from AC2. Is this correct?
+    - If it is how can I separate one from another? Filename?
   - What happens if a class occurs more then once a week? Should I calculate the average of classes or divide the statistics per day?
 - Another similar goal is to calculate the graphic of frequence, which means X students went to Y classes. Is this also per class per course?
 
