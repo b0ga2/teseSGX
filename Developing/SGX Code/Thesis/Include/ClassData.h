@@ -1,7 +1,9 @@
 #ifndef CLASS_DATA_H
 #define CLASS_DATA_H
 
-#include <stdint.h>
+#include <stdint.h> // To use uint
+
+#define MAX_CLASSES 1000
 
 typedef struct __attribute__((aligned(32))) {
     char class_id[4]; // 4 bytes

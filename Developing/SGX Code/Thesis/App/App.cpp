@@ -15,6 +15,7 @@
 #include "ScheduleData.h"
 #include "cJSON.h"
 
+
 sgx_enclave_id_t global_eid = 0;
 
 
@@ -174,7 +175,7 @@ char* read_file_to_string(const char* filename) {
     long fsize = ftell(f);
     fseek(f, 0, SEEK_SET); // SEEK_SET is relative to the start-of-file
 
-    printf("[App] The size of the file %s is %ld bytes\n", filename,fsize);
+    //printf("[App] The size of the file %s is %ld bytes\n", filename,fsize);
 
     // Allocate memory (fsize + 1 for the null terminator)
     char *string = (char *)malloc(fsize + 1);
@@ -188,29 +189,29 @@ char* read_file_to_string(const char* filename) {
     fclose(f);
     string[fsize] = '\0'; 
 
-    printf("[App] Total memory allocated (including null terminator): %ld bytes\n", fsize + 1);
+    //printf("[App] Total memory allocated (including null terminator): %ld bytes\n", fsize + 1);
 
     return string;
 }
 
 // Parses the file with the schedules and sends the array to the Enclave
-void parse_and_send_schedule(sgx_enclave_id_t eid, const char* input_file) {
+uint32_t parse_and_send_schedule(sgx_enclave_id_t eid, const char* input_file) {
 
     // Safety check
     if (input_file == NULL) {
-        printf("[App Error] Failed to load file\n");
-        return;
+        printf("[App Error] Failed to load file in function parse_and_send_schedule\n\n");
+        return 0;
     }
 
     cJSON *json = cJSON_Parse(input_file);
 
     if (json == NULL) {
-        printf("[App Error] Failed to parse JSON\n");
-        return;
+        printf("[App Error] Failed to parse JSON in function parse_and_send_schedule\n\n");
+        return 0;
     }
 
     // Create a temporary array to hold the data
-    schedule_entry_t flat_schedule[200];
+    schedule_entry_t flat_schedule[MAX_SCHEDULES];
     uint32_t total_entries = 0;
 
     //Using class_var since class is reserved keyword
@@ -226,15 +227,15 @@ void parse_and_send_schedule(sgx_enclave_id_t eid, const char* input_file) {
         // Loop through the classes inside this course
         cJSON_ArrayForEach(cls, classes) {
 
-            if (total_entries >= 200) {
-                printf("[App Error] Warning: Max classes reached.\n");
+            if (total_entries >= MAX_SCHEDULES) {
+                printf("[App Error] Warning: Max schedules reached (%d).\n", MAX_SCHEDULES);
                 break;
             }
 
             schedule_entry_t *entry = &flat_schedule[total_entries];
             
             // Zero out the struct for padding
-           memset(entry, 0, sizeof(schedule_entry_t));
+            memset(entry, 0, sizeof(schedule_entry_t));
 
             // Course Code & Acronym
             entry->course_code = code;
@@ -276,52 +277,55 @@ void parse_and_send_schedule(sgx_enclave_id_t eid, const char* input_file) {
         }
     }
 
+    // Free the JSON memory
+    cJSON_Delete(json);
+
     if (total_entries > 0) {
 
         // Send data to enclave
         sgx_status_t status = ecall_load_schedule(eid, flat_schedule, total_entries);
         
         if (status == SGX_SUCCESS) {
-            printf("[App] Successfully passed %u classes to the Enclave.\n", total_entries);
+            printf("[App] Successfully passed %u schedules to the Enclave.\n", total_entries);
+            printf("[App] Memory allocated for schedules: %zu bytes.\n\n", total_entries * sizeof(schedule_entry_t));
+            return total_entries;
         } else {
-            printf("[App Error] ECALL failed with code: %x\n", status);
+            printf("[App Error] ECALL failed with code: %x\nn", status);
         }
     } else {
-        printf("[App Error] No classes found in JSON.\n");
+        printf("[App Error] No classes found in JSON.\n\n");
     }
 
-    // Free the JSON memory
-    cJSON_Delete(json);
-
+    return 0;
 }
 
 // Parses the file with the classes and sends the array to the Enclave
-void parse_and_send_class(sgx_enclave_id_t eid, const char* input_file) {
+uint32_t parse_and_send_class(sgx_enclave_id_t eid, const char* input_file) {
     // Safety check
     if (input_file == NULL) {
-        printf("[App Error] Failed to load file\n");
-        return;
+        printf("[App Error] Failed to load file\n\n");
+        return 0;
     }
 
     // Allocate an array for the students. 
     student_enrollment_t flat_classes[1000];
     uint32_t total_entries = 0;
 
-    // strtok_r modifies the string it's reading, so its necessary to kee a copy of the char*
+    // strtok_r modifies the string it's reading, so its necessary to kee a copy of the value
     char* mutable_csv = strdup(input_file);
     if (mutable_csv == NULL) {
-        printf("[App Error] Memory allocation failed\n");
-        return;
+        printf("[App Error] Memory allocation failed\n\n");
+        return 0;
     }
     char* line_saveptr = NULL;
-    // Split the file by newlines (\n) or Windows-style newlines (\r\n)
-    char* line = strtok_r(mutable_csv, "\n\r", &line_saveptr);
+    // Split the file by newlines
+    char* line = strtok_r(mutable_csv, "\n", &line_saveptr);
     
     bool is_first_line = true;
 
     while (line != NULL) {
-        if (total_entries >= 1000) {
-            printf("[App Warning] Max capacity reached (1000 students).\n");
+        if (total_entries >= MAX_CLASSES) {
+            printf("[App Warning] Max capacity reached (%d students).\n", MAX_CLASSES);
             break;
         }
 
@@ -335,7 +339,7 @@ void parse_and_send_class(sgx_enclave_id_t eid, const char* input_file) {
             // Check if this is the header and skip it
             if (is_first_line && strcmp(turma, "Turma") == 0) {
                 is_first_line = false;
-                line = strtok_r(NULL, "\n\r", &line_saveptr); // Move to next line
+                line = strtok_r(NULL, "\n", &line_saveptr); // Move to next line
                 continue;
             }
             is_first_line = false;
@@ -353,16 +357,19 @@ void parse_and_send_class(sgx_enclave_id_t eid, const char* input_file) {
         }
 
         // Grab the next line for the next iteration of the loop
-        line = strtok_r(NULL, "\n\r", &line_saveptr);
+        line = strtok_r(NULL, "\n", &line_saveptr);
     }
 
-    printf("[App] Finished parsing CSV. Total enrollments found: %u\n", total_entries);
+    // Free the memory
+    free(mutable_csv);
 
     // Send the strcutures to the Enclave
     if (total_entries > 0) {
         sgx_status_t status = ecall_load_classes(eid, flat_classes, total_entries);
         if (status == SGX_SUCCESS) {
-            printf("[App] Successfully passed %u enrollments to the Enclave.\n", total_entries);
+            printf("[App] Successfully passed %u classes to the Enclave.\n", total_entries);
+            printf("[App] Memory allocated for classes: %zu bytes.\n\n", total_entries * sizeof(student_enrollment_t));
+            return total_entries;
         } else {
             printf("[App Error] ECALL failed with code: %x\n", status);
         }
@@ -370,8 +377,7 @@ void parse_and_send_class(sgx_enclave_id_t eid, const char* input_file) {
         printf("[App Warning] No valid data found in CSV.\n");
     }
 
-    // Free the memory
-    free(mutable_csv);
+    return 0;
 }
 
 
@@ -416,13 +422,31 @@ int SGX_CDECL main(int argc, char *argv[])
             case 1:{
                 printf("[App] Option 1 Selected: Calculating weekly attendance\n\n");
 
+                
+
                 // Read the input files that are public
                 char* schedule_data = read_file_to_string("schedules.json");
                 char* classes_data = read_file_to_string("AC2.csv");
 
                 // Parse them and send them to the enclave
-                parse_and_send_schedule(global_eid, schedule_data);
-                parse_and_send_class(global_eid, classes_data);
+                uint32_t schedules_sent = parse_and_send_schedule(global_eid, schedule_data);
+                uint32_t students_sent = parse_and_send_class(global_eid, classes_data);
+
+                // Free memory
+                if (schedule_data) free(schedule_data);
+                if (classes_data) free(classes_data);
+
+                if (schedules_sent == 0 || students_sent == 0) {
+                    printf("[App Error] Missing data, schedules sent: %u, classes sent: %u. Aborting.\n\n", schedules_sent, students_sent);
+                    break;
+                }
+
+                // Calculate the size of data sent
+                size_t total_bytes_sent_to_enclave = 0;
+                total_bytes_sent_to_enclave += (schedules_sent * sizeof(schedule_entry_t));
+                total_bytes_sent_to_enclave += (students_sent * sizeof(student_enrollment_t));
+            
+                printf("[App] Static data sent to Enclave: %zu bytes\n", total_bytes_sent_to_enclave);
 
                 // Maybe an ecall to warn the enclave to start processing?
                 // if all functions of parsing return true?

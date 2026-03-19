@@ -33,6 +33,13 @@ Isto vai gerar o ficheiro de input do Catalyst
 3. Como dar os dados ao SGX?
 
 
+### 2026/03/19
+- O script de python deve também descartar linhas não relevantes
+  - Analisar mais que linhas são estas
+  - Cifrar o conteudo do ficheiro com a chave pública do SGX
+- Mais um ficheiro de input público que são os APs que cada sala apanha
+
+
 ## Notas para o Dev de SGX
 
 ## Flow de Dados
@@ -45,3 +52,5 @@ Isto vai gerar o ficheiro de input do Catalyst
 
 ## Input de Ficheiros e Cifras
 - Ver a biblioteca do projeto sgx_tprotected_fs para lidar com operações com ficheiros.
+
+

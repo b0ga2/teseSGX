@@ -6,9 +6,10 @@ enclave {
     include "stdbool.h"
     include "stdint.h"
 
-    // To use the structure schedule_entry_t and student_enrollment_t
+    // To use the structures
     include "ScheduleData.h"
     include "ClassData.h"
+    include "WifiLogs.h"
     
 
     /* Import ECALL/OCALL from sub-directory EDLs.

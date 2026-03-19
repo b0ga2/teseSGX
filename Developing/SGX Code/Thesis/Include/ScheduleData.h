@@ -1,7 +1,9 @@
 #ifndef SCHEDULE_DATA_H
 #define SCHEDULE_DATA_H
 
-#include <stdint.h>
+#include <stdint.h> // To use uint
+
+#define MAX_SCHEDULES 200
 
 typedef struct __attribute__((aligned(64))) {
     uint32_t course_code;    // 4 bytes, e.g., 41948

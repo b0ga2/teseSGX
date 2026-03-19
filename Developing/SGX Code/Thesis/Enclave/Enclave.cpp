@@ -36,16 +36,16 @@
 #include <string.h>
 
 // Variable that stores the schedules and classes
-schedule_entry_t enclave_full_schedule[100];
+schedule_entry_t enclave_full_schedule[MAX_SCHEDULES];
 uint32_t current_schedule_count = 0;
-student_enrollment_t enclave_enrollments[1000];
+student_enrollment_t enclave_enrollments[MAX_CLASSES];
 uint32_t total_enrollment_count = 0;
 
 
 void ecall_load_schedule(schedule_entry_t* schedule_array, uint32_t count)
 {
     // Safety check
-    if (schedule_array == NULL || count == 0 || count > 100) {
+    if (schedule_array == NULL || count == 0 || count > MAX_SCHEDULES) {
         ocall_print_string("[Enclave Error] Invalid schedule data or size.\n");
         return;
     }
@@ -62,7 +62,7 @@ void ecall_load_schedule(schedule_entry_t* schedule_array, uint32_t count)
 void ecall_load_classes(student_enrollment_t* enrollment_array, uint32_t num_entries)
 {
     //Safety Checks
-    if (enrollment_array == NULL || num_entries == 0 || num_entries > 1000) {
+    if (enrollment_array == NULL || num_entries == 0 || num_entries > MAX_CLASSES) {
         ocall_print_string("[Enclave Error] Invalid class data or size.\n");
         return;
     }
